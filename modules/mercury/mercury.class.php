@@ -284,6 +284,7 @@ SQLExec("delete from classes where title = 'Mercury'");
  mercury_devices: PHONE varchar(100) NOT NULL DEFAULT ''
  mercury_devices: LOGIN varchar(100) NOT NULL DEFAULT ''
  mercury_devices: PASSWORD varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: LASTUPD varchar(100) NOT NULL DEFAULT ''
 EOD;
   parent::dbInstall($data);
 
