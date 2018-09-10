@@ -247,7 +247,7 @@ $this->getcounters();
 * @access public
 */
  function uninstall() {
-/*
+
   SQLExec('DROP TABLE IF EXISTS mercury_devices');
   SQLExec('DROP TABLE IF EXISTS mercury_config');
   SQLExec('delete from settings where NAME like "%APPMERCURY%"');
@@ -256,7 +256,7 @@ SQLExec("delete from properties where object_id in (select id from objects where
 SQLExec("delete from objects where class_id = (select id from classes where title = 'Mercury')");
 SQLExec("delete from methods where class_id = (select id from classes where title = 'Mercury')");	 
 SQLExec("delete from classes where title = 'Mercury'");	 
-*/
+
   parent::uninstall();
 
  }
@@ -268,7 +268,42 @@ SQLExec("delete from classes where title = 'Mercury'");
 * @access private
 */
  function dbInstall($data = '') {
+  $data = <<<EOD
+ mercury_devices: ID int(10) unsigned NOT NULL auto_increment
+ mercury_devices: TITLE varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: IPADDR varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: PORT varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: HEXADR varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: MODEL varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: SN varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: FIO varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: STREET varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: PHONE varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: LOGIN varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: PASSWORD varchar(100) NOT NULL DEFAULT ''
+EOD;
   parent::dbInstall($data);
+
+  $data = <<<EOD
+ mercury_config: parametr varchar(300)
+ mercury_config: value varchar(10000)  
+EOD;
+   parent::dbInstall($data);
+
+$par['parametr'] = 'EVERY';
+$par['value'] = 30;		 
+SQLInsert('mercury_config', $par);				
+	
+$par['parametr'] = 'LASTCYCLE_TS';
+$par['value'] = "0";		 
+SQLInsert('mercury_config', $par);						
+		
+$par['parametr'] = 'LASTCYCLE_TXT';
+$par['value'] = "0";		 
+SQLInsert('mercury_config', $par);						
+$par['parametr'] = 'DEBUG';
+$par['value'] = "";		 
+SQLInsert('mercury_config', $par);	
  }
 }
 // --------------------------------------------------------------------
