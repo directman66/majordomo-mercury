@@ -58,6 +58,16 @@ function getParams() {
   global $view_mode;
   global $edit_mode;
   global $tab;
+//	 global $title;
+//	 global $port;
+//	 global $hexadr;
+//	 global $ipaddr;
+//	 global $model;
+//	 global $fio;
+//	 global $phone;
+//	 global $street;
+
+
   if (isset($id)) {
    $this->id=$id;
   }
@@ -134,6 +144,11 @@ setGlobal('cycle_mercuryControl','start');
 $this->getdata();
 //echo "start"; 
 }  
+
+ if (isset($this->data_source) && !$_GET['data_source'] && !$_POST['data_source']) {
+  $out['SET_DATASOURCE']=1;
+ }
+
 if ($this->view_mode=='getcounters') {
 $this->getcounters();
 }  
@@ -143,6 +158,17 @@ $this->getinfo2();
 if ($this->view_mode=='getpu') {
 $this->getpu();
 }  
+
+ if ($this->view_mode=='indata_edit') {
+   $this->editdevices($out, $this->id);
+ }
+ if ($this->view_mode=='indata_del') {
+   $this->delete($this->id);
+   $this->redirect("?data_source=$this->data_source&view_mode=node_edit&id=$pid&tab=indata");
+ }	
+
+
+
 }  
  
   
@@ -157,11 +183,17 @@ $this->getpu();
 function usual(&$out) {
  $this->admin($out);
 }
+
+
+
 /**
 * milur_devices search
 *
 * @access public
 */
+
+
+
  
  function processCycle() {
 //   $every=$this->config['EVERY'];
@@ -177,6 +209,23 @@ $latest=$cmd_rec['VALUE'];
 if ($enable==1) {$this->getpu();   }
   } 
   }
+
+
+ function delete($id) {
+  $rec=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID='$id'");
+  // some action for related tables
+  SQLExec("DELETE FROM mercury_devices WHERE ID='".$rec['ID']."'");
+ }
+/**
+* InData edit/add
+*
+* @access public
+*/
+ function editdevices(&$out, $id) {	
+  require(DIR_MODULES.$this->name.'/indata_edit.inc.php');
+ } 
+
+
 //////////////////////////////////////////////
 //////////////////////////////////////////////
 //////////////////////////////////////////////
@@ -275,16 +324,12 @@ SQLExec("delete from classes where title = 'Mercury'");
  mercury_devices: PORT varchar(100) NOT NULL DEFAULT ''
  mercury_devices: HEXADR varchar(100) NOT NULL DEFAULT ''
  mercury_devices: MODEL varchar(100) NOT NULL DEFAULT ''
- mercury_devices: STATUS varchar(100) NOT NULL DEFAULT ''
- mercury_devices: ONLINE varchar(100) NOT NULL DEFAULT ''
- mercury_devices: ONLINETS varchar(100) NOT NULL DEFAULT ''
  mercury_devices: SN varchar(100) NOT NULL DEFAULT ''
  mercury_devices: FIO varchar(100) NOT NULL DEFAULT ''
  mercury_devices: STREET varchar(100) NOT NULL DEFAULT ''
  mercury_devices: PHONE varchar(100) NOT NULL DEFAULT ''
  mercury_devices: LOGIN varchar(100) NOT NULL DEFAULT ''
  mercury_devices: PASSWORD varchar(100) NOT NULL DEFAULT ''
- mercury_devices: LASTUPD varchar(100) NOT NULL DEFAULT ''
 EOD;
   parent::dbInstall($data);
 
