@@ -17,24 +17,24 @@
   // QUERY READY
   global $save_qry;
   if ($save_qry) {
-   $qry=$session->data['snmpdevices_qry'];
+   $qry=$session->data['mercurydevices_qry'];
   } else {
-   $session->data['snmpdevices_qry']=$qry;
+   $session->data['mercurydevices_qry']=$qry;
   }
   if (!$qry) $qry="1";
   // FIELDS ORDER
   global $sortby_snmpdevices;
   if (!$sortby_snmpdevices) {
-   $sortby_snmpdevices=$session->data['snmpdevices_sort'];
+   $sortby_snmpdevices=$session->data['mercurydevices_sort'];
   } else {
-   if ($session->data['snmpdevices_sort']==$sortby_snmpdevices) {
+   if ($session->data['mercurydevices_sort']==$sortby_snmpdevices) {
     if (Is_Integer(strpos($sortby_snmpdevices, ' DESC'))) {
      $sortby_snmpdevices=str_replace(' DESC', '', $sortby_snmpdevices);
     } else {
      $sortby_snmpdevices=$sortby_snmpdevices." DESC";
     }
    }
-   $session->data['snmpdevices_sort']=$sortby_snmpdevices;
+   $session->data['mercurydevices_sort']=$sortby_snmpdevices;
   }
   if (!$sortby_snmpdevices) $sortby_snmpdevices="TITLE";
   $out['SORTBY']=$sortby_snmpdevices;
