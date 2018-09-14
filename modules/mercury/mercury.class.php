@@ -582,6 +582,140 @@ SQLExec("delete from classes where title = 'Mercury'");
 * @access private
 */
  function dbInstall($data = '') {
+
+setGlobal('cycle_mercuryAutoRestart','1');	 	 
+$classname='Mercury';
+addClass($classname); 
+
+
+$prop_id=addClassProperty($classname, 'Adress', 0);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Адрес счетчика'; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'ControlLimit', 0);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Адрес счетчика'; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'Cos1', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']=''; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'Cos2', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']=''; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'Cos3', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']=''; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'CosT', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']=''; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'Ia1', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']=''; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'Ia2', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']=''; //   <-----------
+SQLUpdate('properties',$property); }
+
+
+$prop_id=addClassProperty($classname, 'Ia3', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']=''; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'IaT', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']=''; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'IP', 0);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']=''; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'LimitValue', 0);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']=''; //   <-----------
+SQLUpdate('properties',$property); }
+
+
+$prop_id=addClassProperty($classname, 'Port', 0);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Порт'; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'Pv1', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Порт'; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'Pv2', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Порт'; //   <-----------
+SQLUpdate('properties',$property); }
+
+
+
+$prop_id=addClassProperty($classname, 'Pv3', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Порт'; //   <-----------
+SQLUpdate('properties',$property); }
+
+
+
+$prop_id=addClassProperty($classname, 'PvT', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Порт'; //   <-----------
+SQLUpdate('properties',$property); }
+
+
+
+$prop_id=addClassProperty($classname, 'Total', 0);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Порт'; //   <-----------
+SQLUpdate('properties',$property); }
+
+
+
+$prop_id=addClassProperty($classname, 'Uv1', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Порт'; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'Uv2', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Порт'; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'Uv3', 7);
+
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Порт'; //   <-----------
+SQLUpdate('properties',$property); }
+
+
+
+
+
+
+
+
+
+LimitValue
+
+
+
   $data = <<<EOD
  mercury_devices: ID int(10) unsigned NOT NULL auto_increment
  mercury_devices: TITLE varchar(100) NOT NULL DEFAULT ''
@@ -615,6 +749,27 @@ SQLExec("delete from classes where title = 'Mercury'");
  mercury_devices: Total varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Total1 varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Total2 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Temp1 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Temp2 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Temp3 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Temp4 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Temp5 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Hum1 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Hum2 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Hum3 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Hum4 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Hum5 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Leak1 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Leak2 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Leak3 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Leak4 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Leak5 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: Leak6 varchar(100) NOT NULL DEFAULT ''
+
+
+
+
+
 EOD;
   parent::dbInstall($data);
 
