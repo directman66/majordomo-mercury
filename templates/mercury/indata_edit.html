@@ -1,0 +1,135 @@
+<!-- Table 'outdata' edit -->
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+[#if OK#]
+<div class="alert alert-success"><#LANG_DATA_SAVED#></div>
+[#endif OK#]
+[#if ERR#]
+<div class="alert alert-error"><#LANG_FILLOUT_REQURED#></div>
+[#endif ERR#]
+<fieldset>
+[#if ID=""#]
+<legend><#LANG_NEW_RECORD#></legend>
+[#endif ID#]
+<!-- DID (varchar) -->
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+   Р¤РРћ:(*)
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="FIO" value="[#FIO#]" id="FIO"> 
+Р¤Р°РјРёР»РёСЏ РРјСЏ РћС‚С‡РµСЃС‚РІРѕ Р°Р±РѕРЅРµРЅС‚Р° 
+</div> 
+</div>
+
+<!-- TITLE (varchar) -->
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+РђРґСЂРµСЃ:
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="STREET" value="[#STREET#]" id="STREET">
+Р“РѕСЂРѕРґ, СѓР»РёС†Р°, СЃС‚СЂРѕРµРЅРёРµ...
+</div>
+
+</div>
+
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+РЎРµС‚РµРІРѕР№ IP-Р°РґСЂРµСЃ:
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="ipaddr" value="[#IPADDR#]" id="ipaddr">
+192.168.1.X
+</div>
+
+</div>
+
+
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+РџРѕСЂС‚:
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="port" value="[#PORT#]" id="port"></div>
+</div>
+
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+HEX Р°РґСЂРµСЃ СѓСЃС‚СЂРѕР№СЃС‚РІР°:
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="hexadr" value="[#HEXADR#]" id="port"></div>
+</div>
+
+
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+РњРѕРґРµР»СЊ:
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="model" value="[#MODEL#]" id="model">
+РјРѕРґРµР»СЊ СЃС‡РµС‚С‡РёРєР°
+</div>
+</div>
+
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+РўРµР»РµС„РѕРЅ:
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="phone" value="[#PHONE#]" id="phone">
+РєРѕРЅС‚Р°РєС‚РЅС‹Р№ С‚РµР»РµС„РѕРЅ
+</div>
+</div>
+
+
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+Login:
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="login" value="[#LOGIN#]" id="login">
+Р»РѕРіРёРЅ РґР»СЏ РІС…РѕРґР° РІ Р»РёС‡РЅС‹Р№ РєР°Р±РёРЅРµС‚ Р°Р±РѕРЅРµРЅС‚Р°
+</div>
+</div>
+
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+Password:
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="login" value="[#PASSWORD#]" id="password">
+РїР°СЂРѕР»СЊ РґР»СЏ РІС…РѕРґР° РІ Р»РёС‡РЅС‹Р№ РєР°Р±РёРЅРµС‚ Р°Р±РѕРЅРµРЅС‚Р°
+</div>
+
+</div>
+
+
+
+<!-- LINKED_OBJECT (varchar) -->
+<div class="form-group">
+<!-- <label class="col-lg-3 control-label"[#if ERR_LINKED_OBJECT#] style="color:red;font-weight:bold"[#endif#]>
+ <#LANG_LINKED_OBJECT#>:
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="linked_object" value="[#LINKED_OBJECT#]" id="linked_object"></div>
+</div>
+<!-- LINKED_PROPERTY (varchar) -->
+<!--<div class="form-group">
+ <label class="col-lg-3 control-label"[#if ERR_LINKED_PROPERTY#] style="color:red;font-weight:bold"[#endif#]>
+ <#LANG_LINKED_PROPERTY#>:
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="linked_property" value="[#LINKED_PROPERTY#]" id="linked_property"></div>
+</div>
+-->
+
+
+
+<div class="form-actions">
+ [#if ID!=""#]
+ <button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_SUBMIT#></button>
+ [#else ID#]
+ <button type="submit" name="subm" value="Add" class="btn btn-primary"><#LANG_ADD#></button>
+ [#endif ID#]
+ <a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default"><#LANG_CANCEL#></a>
+
+<input type="hidden" name="id" value="<#ID#>">
+<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
+<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
+<input type="hidden" name="mode" value="update">
+<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+</div>
+
+
+</fieldset>
+</form>
