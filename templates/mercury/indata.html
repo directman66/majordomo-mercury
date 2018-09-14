@@ -1,6 +1,9 @@
-<br/>
+  <br/>
 <p>
+
+[#CURRENT#]
 <a href="?view_mode=indata_edit&tab=config" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> <#LANG_ADD_NEW_RECORD#></a> 
+
 [#if VIEW_MODE="indata_edit"#]		[#inc indata_edit.html#] [#else#][#endif#]
 </p>
 <table width=100% border=0><tr>
@@ -72,6 +75,7 @@
  <td style="vertical-align:middle" width="1%" nowrap>
   <div style="width:120px">
   [#if "<#ACTION#>"=="admin"#]
+   <a href="?view_mode=get_counters&id=[#ID#]" class="btn btn-default" title="Получить показания счетчика"><i class="glyphicon glyphicon-download-alt"></i></a>
    <a href="?view_mode=indata_edit&id=[#ID#]&tab=config" class="btn btn-default" title="Edit"><i class="glyphicon glyphicon-pencil"></i></a>
    <a href="?view_mode=indata_del&id=[#ID#]" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Delete"><i class="glyphicon glyphicon-remove"></i></a>
   [#endif ACTION#]
