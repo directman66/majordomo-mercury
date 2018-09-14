@@ -40,20 +40,7 @@ padding: .3em 1em
 </ul>
 
 [#if TAB="info"|| TAB==""#] [#inc info.html#] [#endif#]
-[#if TAB="config"#]
-<br>
-
-<table class="raz">
-<tr><td>
-
-</td><td>
-<img src="../img/modules/[#MODEL#].png"  align="right" > 
-</td></tr></table>
-
-
-
-
- [#endif#]
+[#if TAB="config"#] [#inc indata.html#] [#endif#]
 
 [#if TAB="debug"#]
 <br>
@@ -66,5 +53,3 @@ Degug:
  [#endif#]
 
 [#if TAB="help"#] [#inc help.html#] [#endif#]
-
-
