@@ -13,30 +13,40 @@
 <!-- DID (varchar) -->
 <div class="form-group">
  <label class="col-lg-3 control-label">
-   Р¤РРћ:(*)
+   TITLE:(*)
+ </label>
+ <div class="col-lg-4"><input type="text" class="form-control" name="TITLE" value="[#TITLE#]" id="TITLE"> 
+<small><small>Описание </small></small>
+</div> 
+</div>
+
+
+<div class="form-group">
+ <label class="col-lg-3 control-label">
+   ФИО:(*)
  </label>
  <div class="col-lg-4"><input type="text" class="form-control" name="FIO" value="[#FIO#]" id="FIO"> 
-Р¤Р°РјРёР»РёСЏ РРјСЏ РћС‚С‡РµСЃС‚РІРѕ Р°Р±РѕРЅРµРЅС‚Р° 
+<small><small>Фамилия Имя Отчество абонента </small></small>
 </div> 
 </div>
 
 <!-- TITLE (varchar) -->
 <div class="form-group">
  <label class="col-lg-3 control-label">
-РђРґСЂРµСЃ:
+Адрес:
  </label>
  <div class="col-lg-4"><input type="text" class="form-control" name="STREET" value="[#STREET#]" id="STREET">
-Р“РѕСЂРѕРґ, СѓР»РёС†Р°, СЃС‚СЂРѕРµРЅРёРµ...
+<small><small>Город, улица, строение...</small></small>
 </div>
 
 </div>
 
 <div class="form-group">
  <label class="col-lg-3 control-label">
-РЎРµС‚РµРІРѕР№ IP-Р°РґСЂРµСЃ:
+<small><small>Сетевой IP-адрес:
  </label>
  <div class="col-lg-4"><input type="text" class="form-control" name="ipaddr" value="[#IPADDR#]" id="ipaddr">
-192.168.1.X
+<small>IP адрес сервера Ser2net или физического пребразователя rs-485-> Ethernet в формате 192.168.1.X</small></small>
 </div>
 
 </div>
@@ -44,34 +54,43 @@
 
 <div class="form-group">
  <label class="col-lg-3 control-label">
-РџРѕСЂС‚:
+Порт:
  </label>
  <div class="col-lg-4"><input type="text" class="form-control" name="port" value="[#PORT#]" id="port"></div>
 </div>
 
 <div class="form-group">
  <label class="col-lg-3 control-label">
-HEX Р°РґСЂРµСЃ СѓСЃС‚СЂРѕР№СЃС‚РІР°:
+HEX адрес устройства:
  </label>
- <div class="col-lg-4"><input type="text" class="form-control" name="hexadr" value="[#HEXADR#]" id="port"></div>
-</div>
+ <div class="col-lg-4"><input type="text" class="form-control" name="hexadr" value="[#HEXADR#]" id="port">
+<small><small> 1B,0E...</small></small>
+</div></div>
 
 
 <div class="form-group">
- <label class="col-lg-3 control-label">
-РњРѕРґРµР»СЊ:
+ <label class="col-lg-4 control-label">
+Модель:
  </label>
- <div class="col-lg-4"><input type="text" class="form-control" name="model" value="[#MODEL#]" id="model">
-РјРѕРґРµР»СЊ СЃС‡РµС‚С‡РёРєР°
+ <div class="col-lg-4">   
+
+
+                        <select name="MODEL" class="form-control" class="span2">
+                   <option value="230"[#if MODEL="230"#] selected[#endif#]>230
+                   <option value="234"[#if MODEL="234"#] selected[#endif#]>234
+                  </select>
+
+
+<small><small>модель счетчика</small></small>
 </div>
 </div>
 
 <div class="form-group">
  <label class="col-lg-3 control-label">
-РўРµР»РµС„РѕРЅ:
+Телефон:
  </label>
  <div class="col-lg-4"><input type="text" class="form-control" name="phone" value="[#PHONE#]" id="phone">
-РєРѕРЅС‚Р°РєС‚РЅС‹Р№ С‚РµР»РµС„РѕРЅ
+<small><small>контактный телефон</small></small>
 </div>
 </div>
 
@@ -81,7 +100,7 @@ HEX Р°РґСЂРµСЃ СѓСЃС‚СЂРѕР№СЃС‚РІР°:
 Login:
  </label>
  <div class="col-lg-4"><input type="text" class="form-control" name="login" value="[#LOGIN#]" id="login">
-Р»РѕРіРёРЅ РґР»СЏ РІС…РѕРґР° РІ Р»РёС‡РЅС‹Р№ РєР°Р±РёРЅРµС‚ Р°Р±РѕРЅРµРЅС‚Р°
+<small><small>логин для входа в личный кабинет абонента</small></small>
 </div>
 </div>
 
@@ -90,7 +109,7 @@ Login:
 Password:
  </label>
  <div class="col-lg-4"><input type="text" class="form-control" name="login" value="[#PASSWORD#]" id="password">
-РїР°СЂРѕР»СЊ РґР»СЏ РІС…РѕРґР° РІ Р»РёС‡РЅС‹Р№ РєР°Р±РёРЅРµС‚ Р°Р±РѕРЅРµРЅС‚Р°
+<small><small>пароль для входа в личный кабинет абонента</small></small>
 </div>
 
 </div>
