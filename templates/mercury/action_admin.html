@@ -1,5 +1,4 @@
 <div>
-
 <style>
 .raz {
   border-spacing: 12.5em 1.3em; /* border-collapse наследуется, применяется только к table или inline-table элементам с border-collapse: separate; */ 
@@ -39,7 +38,57 @@ padding: .3em 1em
 <li [#if TAB=="help" #] class="active" [#endif#]><a href="?view_mode=&tab=help"><span class="glyphicon glyphicon-info-sign"></span> Помощь</a> </li>	
 </ul>
 
-[#if TAB="info"|| TAB==""#] [#inc info.html#] [#endif#]
+[#if TAB="info"|| TAB==""#]
+
+<!--            
+        function OnSelectionChange (select) {
+            var selectedOption = select.options[selectedIndex];
+            alert ("The selected option is " + selectedOption.value);}
+//            alert (select);
+var sql="update mercury_config  set value="+select+" where parametr='CURRENT'";
+-->
+<head>
+    <script type="text/javascript">
+        function OnSelectionChange (select) {
+
+        }
+    </script>
+</head>
+<body>
+<!--<select onchange="OnSelectionChange (this)"> -->
+
+<form action="?" method="get" class="form-horizontal" name="country_change">
+   <input type="hidden" name="view_mode" value="updatecurrent">
+   <div class="form-group">
+      <div class="col-sm-5">
+
+Выбранный счетчик:   
+<select onchange="document.country_change.submit();" class="form-control" name="current" id="current">
+    [#begin RESULT#]<option value="[#FIO#]"[#if id="<#FIO#>"#] selected[#endif#]>[#FIO#]   [#end RESULT#]
+</select>
+
+
+
+   </div>
+   <div class="form-actions">
+      <br>
+<!--      <button type="submit" name="ow_subm" value="setCityId" class="btn btn-primary"><#LANG_SUBMIT#></button> 
+      <input type="hidden" id="current" name="current" value="">
+
+-->
+   </div>
+   </div>
+</form>
+
+</body>
+
+
+
+
+
+ [#inc info.html#] 
+
+[#endif#]
 [#if TAB="config"#] [#inc indata.html#] [#endif#]
 
 [#if TAB="debug"#]
