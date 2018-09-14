@@ -201,7 +201,7 @@ $this->getpu();
  function searchdevices(&$out) {
 
 
-$mhdevices=SQLSelect("SELECT * FROM magichome_devices");
+$mhdevices=SQLSelect("SELECT * FROM mercury_devices");
 $total = count($mhdevices);
 for ($i = 0; $i < $total; $i++)
 { 
@@ -211,9 +211,9 @@ $lastping=$mhdevices[$i]['LASTPING'];
 if (time()-$lastping>300) {
 $online=ping(processTitle($ip));
     if ($online) 
-{SQLexec("update mercury_devices set ONLINE='1', LASTPING=".time()." where IP='$ip'");} 
+{SQLexec("update mercury_devices set ONLINE='1', LASTPING=".time()." where IPADDR='$ip'");} 
 else 
-{SQLexec("update mercury_devices set ONLINE='0', LASTPING=".time()." where IP='$ip'");}
+{SQLexec("update mercury_devices set ONLINE='0', LASTPING=".time()." where IPADDR='$ip'");}
 }}
 
 
@@ -569,7 +569,6 @@ echo "OK.\n\n";
 SQLExec("delete from pvalues where property_id in (select id FROM properties where object_id in (select id from objects where class_id = (select id from classes where title = 'Mercury')))");
 SQLExec("delete from properties where object_id in (select id from objects where class_id = (select id from classes where title = 'Mercury'))");
 SQLExec("delete from objects where class_id = (select id from classes where title = 'Mercury')");
-SQLExec("delete from methods where class_id = (select id from classes where title = 'Mercury')");	 
 SQLExec("delete from classes where title = 'Mercury'");	 
 
   parent::uninstall();
