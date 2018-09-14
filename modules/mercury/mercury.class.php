@@ -699,7 +699,6 @@ $property['DESCRIPTION']='Порт'; //   <-----------
 SQLUpdate('properties',$property); }
 
 $prop_id=addClassProperty($classname, 'Uv3', 7);
-
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Порт'; //   <-----------
 SQLUpdate('properties',$property); }
@@ -712,7 +711,7 @@ SQLUpdate('properties',$property); }
 
 
 
-LimitValue
+
 
 
 
