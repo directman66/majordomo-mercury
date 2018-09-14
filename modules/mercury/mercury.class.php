@@ -199,6 +199,25 @@ $this->getpu();
  }
  
  function searchdevices(&$out) {
+
+
+$mhdevices=SQLSelect("SELECT * FROM magichome_devices");
+$total = count($mhdevices);
+for ($i = 0; $i < $total; $i++)
+{ 
+$ip=$mhdevices[$i]['IPADDR'];
+$lastping=$mhdevices[$i]['LASTPING'];
+//echo time()-$lastping;
+if (time()-$lastping>300) {
+$online=ping(processTitle($ip));
+    if ($online) 
+{SQLexec("update mercury_devices set ONLINE='1', LASTPING=".time()." where IP='$ip'");} 
+else 
+{SQLexec("update mercury_devices set ONLINE='0', LASTPING=".time()." where IP='$ip'");}
+}}
+
+
+
   require(DIR_MODULES.$this->name.'/search.inc.php');
  }
 
@@ -209,10 +228,11 @@ $out["CURRENT"]= $current;
 }
 
 
- function getcurrent(&$out) {
-global $current;
-$cmd_rec = SQLSelect("select VALUE from mercury_config where parametr='CURRENT'");
-$out["CURRENT"]= $current;
+function getcurrent(&$out) {
+
+$cmd_rec = SQLSelectOne("select VALUE from mercury_config where parametr='CURRENT'");
+$out["CURRENT"]= $cmd_rec['VALUE'];
+//$out["CURRENT"]="123";
 }
 
 
@@ -576,6 +596,8 @@ SQLExec("delete from classes where title = 'Mercury'");
  mercury_devices: PHONE varchar(100) NOT NULL DEFAULT ''
  mercury_devices: LOGIN varchar(100) NOT NULL DEFAULT ''
  mercury_devices: PASSWORD varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: LASTPING varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: ONLINE varchar(100) NOT NULL DEFAULT ''
 EOD;
   parent::dbInstall($data);
 
@@ -584,6 +606,41 @@ EOD;
  mercury_config: value varchar(10000)  
 EOD;
    parent::dbInstall($data);
+
+$dev['TITLE']='Устройство №1';
+$dev['IPADDR']='192.168.1.252';
+$dev['PORT']='20252';
+$dev['HEXADR']='0E';
+$dev['MODEL']='230';
+$dev['SN']='';
+$dev['FIO']='Амелин Е.';
+$dev['STREET']='Участок 58';
+$dev['PHONE']='';
+SQLInsert('mercury_devices', $dev);	
+
+$dev['TITLE']='Устройство №2';
+$dev['IPADDR']='192.168.1.254';
+$dev['PORT']='20254';
+$dev['HEXADR']='3A';
+$dev['MODEL']='254';
+$dev['SN']='';
+$dev['FIO']='Муратов М.Э.';
+$dev['STREET']='Участок 74';
+$dev['PHONE']='';
+SQLInsert('mercury_devices', $dev);	
+
+$dev['TITLE']='Устройство №3';
+$dev['IPADDR']='192.168.1.56';
+$dev['PORT']='20256';
+$dev['HEXADR']='1B';
+$dev['MODEL']='56';
+$dev['SN']='';
+$dev['FIO']='Дронов Р.В.';
+$dev['STREET']='Участок 59';
+$dev['PHONE']='';
+SQLInsert('mercury_devices', $dev);	
+
+
 
 $par['parametr'] = 'EVERY';
 $par['value'] = 30;		 
