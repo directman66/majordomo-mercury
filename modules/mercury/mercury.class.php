@@ -139,6 +139,11 @@ $now=date();
 
 $cmd_rec = SQLSelectOne("SELECT VALUE FROM mercury_config where parametr='DEBUG'");
 $out['MSG_DEBUG']=$cmd_rec['VALUE'];
+
+$cmd_rec = SQLSelectOne("SELECT VALUE FROM milur_config where parametr='CURRENT'");
+$out['CURRENT']=$cmd_rec['VALUE'];
+
+
  if ($this->view_mode=='get') {
 setGlobal('cycle_mercuryControl','start'); 
 $this->getdata();
@@ -163,8 +168,15 @@ $this->getpu();
    $this->editdevices($out, $this->id);
  }
 
+ if ($this->view_mode=='updatecurrent') {
+   $this->updatecurrent($out);
+ }
+
+
  if ($this->view_mode=='config'||$this->view_mode==''||$this->view_mode=='indata_edit') {
    $this->searchdevices($out, $this->id);
+   $this->getcurrent($out);
+
  }
 
 
@@ -189,6 +201,20 @@ $this->getpu();
  function searchdevices(&$out) {
   require(DIR_MODULES.$this->name.'/search.inc.php');
  }
+
+ function updatecurrent(&$out) {
+global $current;
+$cmd_rec = SQLSelect("update mercury_config set VALUE='$current' where parametr='CURRENT'");
+$out["CURRENT"]= $current;
+}
+
+
+ function getcurrent(&$out) {
+global $current;
+$cmd_rec = SQLSelect("select VALUE from mercury_config where parametr='CURRENT'");
+$out["CURRENT"]= $current;
+}
+
 
   
  
@@ -566,6 +592,12 @@ SQLInsert('mercury_config', $par);
 $par['parametr'] = 'LASTCYCLE_TS';
 $par['value'] = "0";		 
 SQLInsert('mercury_config', $par);						
+
+$par['parametr'] = 'CURRENT';
+$par['value'] = "";		 
+SQLInsert('mercury_config', $par);						
+
+
 		
 $par['parametr'] = 'LASTCYCLE_TXT';
 $par['value'] = "0";		 
