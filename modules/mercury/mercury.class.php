@@ -263,16 +263,27 @@ function usual(&$out) {
  
  function processCycle() {
 //   $every=$this->config['EVERY'];
- $every=SETTINGS_APPMILUR_EVERY;
+// $every=SETTINGS_APPMILUR_EVERY;
+
+$cmd_rec = SQLSelectOne("SELECT VALUE FROM mercury_config where parametr='EVERY'");
+$every=$cmd_rec['VALUE'];
+
+
 $cmd_rec = SQLSelectOne("SELECT VALUE FROM mercury_config where parametr='LASTCYCLE_TS'");
 $latest=$cmd_rec['VALUE'];
+
    $tdev = time()-$latest;
    $has = $tdev>$every*60;
    if ($tdev < 0) {$has = true;}
    
    if ($has) {  
 
-if ($enable==1) {$this->getpu();   }
+if ($enable==1) {
+
+$cmd_rec = SQLSelect("SELECT ID FROM mercury_devices");
+foreach ($cmd_rec as $ID)
+{getpu($ID);}
+}
   } 
   }
 
@@ -412,7 +423,11 @@ $Tot = merc_gd($socket252,calcCRC($device252,"050002"), 0.001, 1);
 //echo "Total T2: $Tot[0]<br>";
 if ($Tot[0]) {sg($objname.'.Total2',$Tot[0]);$sql['Total2']=$Tot[0];}
 
-SQLUpdate('properties',$property);
+SQLUpdate('mercury_devices',$sql);
+
+SQLexec("update mercury_config set value=UNIX_TIMESTAMP() where parametr='LASTCYCLE_TS'");		   
+
+
 
 //echo "Закрываем сокет...";
 socket_close($socket252);
