@@ -309,7 +309,7 @@ $this->getcounters();
 //////////////////////////////////////////////
 //////////////////////////////////////////////
 //////////////////////////////////////////////
- function getpu($address252, $service_port252,$device252) {
+ function getpu($address252, $service_port252,$device252,$did) {
 //$ot = $this->object_title;
 //setTimeOut($ot.'_updateValue','callMethod("'.$ot.'.GetValues");',10);
 
@@ -330,7 +330,88 @@ if ($result === false) {
 } else {
     echo "OK.<br>";
 }
-if (!function_exists('send')) {
+ 
+send($socket252, calcCRC($device252,"0101010101010101"));
+read($socket252);
+
+//создаем устройство
+
+$classname='Mercury';
+$objname=$classname.'_'.$did;
+
+addClassObject($classname,$objname);
+
+
+# Сила тока по фазам
+# =====================================================
+$Ia = merc_gd($socket252,calcCRC($device252,"081621"), 0.001);
+$It = $Ia[0] + $Ia[1] + $Ia[2];
+//echo "Ia: $Ia[0] - $Ia[1] - $Ia[2] IaT:$It<br>";
+if ($Ia[0]) sg($objname.'.Ia1',$Ia[0]);
+if ($Ia[1]) sg($objname.'.Ia2',$Ia[1]);
+if ($Ia[2]) sg($objname.'.Ia3',$Ia[2]);
+if ($It) sg($objname.'.IaT',$It);
+
+
+# Мощность по фазам
+# =====================================================
+$Pv = merc_gd($socket252,calcCRC($device252,"081600"), 0.01);
+if ( round($Pv[0], 2) != round($Pv[1] + $Pv[2] + $Pv[3], 2) )
+	$error = "error"; else $error = "";
+//echo "Pv: $Pv[0] - $Pv[1] - $Pv[2] - $Pv[3] $error<br>";
+if ($error == "")
+{
+sg($objname.'.PvT',round($Pv[0],0));
+sg($objname.'.Pv1',$Pv[1]);
+sg($objname.'.Pv2',$Pv[2]);
+sg($objname.'.Pv3',$Pv[3]);
+}
+# Cosf по фазам
+# =====================================================
+$Cos = merc_gd($socket252,calcCRC($device252,"081630"), 0.001);
+//echo "Cos: $Cos[0] - $Cos[1] - $Cos[2] - $Cos[3]<br>";
+
+
+if ($Cos[0]) sg($objname.'.CosT',$Cos[0]);
+if ($Cos[0]) sg($objname.'.Cos1',$Cos[1]);
+if ($Cos[0]) sg($objname.'.Cos2',$Cos[2]);
+if ($Cos[0]) sg($objname.'.Cos3',$Cos[3]);
+
+# Напряжение по фазам
+# =====================================================
+$Uv = merc_gd($socket252,calcCRC($device252,"081611"), 0.01);
+echo "Uv: $Uv[0] - $Uv[1] - $Uv[2]<br>";
+
+if ($Uv[0]) sg($objname.'.Uv1',round($Uv[0],0));
+if ($Uv[0]) sg($objname.'.Uv2',round($Uv[1],0));
+if ($Uv[0]) sg($objname.'.Uv3',round($Uv[2],0));
+
+
+# Показания электроэнергии
+# =====================================================
+$Tot = merc_gd($socket252,calcCRC($device252,"050000"), 0.001, 1);
+//echo "Total: $Tot[0]<br>";
+
+if ($Tot[0]) sg($objname.'.Total',round($Tot[0],0));
+
+
+$Tot = merc_gd($socket252,calcCRC($device252,"050001"), 0.001, 1);
+//echo "Total T1: $Tot[0]<br>";
+if ($Tot[0]) sg($objname.'.Total1',$Tot[0]);
+
+
+$Tot = merc_gd($socket252,calcCRC($device252,"050002"), 0.001, 1);
+//echo "Total T2: $Tot[0]<br>";
+if ($Tot[0]) sg($objname.'.Total2',$Tot[0]);
+
+//echo "Закрываем сокет...";
+socket_close($socket252);
+echo "OK.\n\n";
+
+ }
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
     function send  ($socket252, $hex = "") {
      echo "Отправляем запрос ".$hex;
   $in = hex2bin($hex);
@@ -338,18 +419,10 @@ if (!function_exists('send')) {
   socket_write($socket252, $in, strlen($in));
   echo "OK.<br>"; 
    }
- }  
-//
-//function send($socket252, $hex = "")
-//{
-//  echo "Отправляем запрос ".$hex;
-//  $in = hex2bin($hex);
-//  echo " ".$in." ";
-//  socket_write($socket252, $in, strlen($in));
-//  echo "OK.<br>";
-//}
 
-if (!function_exists('read')) {
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+
     function read  ($socket252)
 {
    echo "Читаем ответ:\n\n";
@@ -357,17 +430,12 @@ if (!function_exists('read')) {
    echo bin2hex($out)."<br>";
    return $out;
 }
-}
 
-//function read($socket252)
-//{
-////   echo "Читаем ответ:\n\n";
-///   $out = socket_read($socket252, 2048);
-//   echo bin2hex($out)."<br>";
-//   return $out;
-//}
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
 
-if (!function_exists('dd')) {
     function dd  ($data = "")
 {
      $result = "";
@@ -383,25 +451,11 @@ if (!function_exists('dd')) {
 	}
 	return $result;
 }
-     
-    }
 
-//function dd($data = "")
-//{
-//	$result = "";
-//	$data2 = "";
-//	for ( $j = 0; $j < count($data); $j++ )
-//	{
-//		$data2 = dechex(ord($data[0]));
-//		if ( strlen($data2) == 1  )
-//		$result = "0".$data2;
-//		else
-//		$result .= $data2;
-
-//	}
-//	return $result;
-//}
-if (!function_exists('merc_gd')) {
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
 function merc_gd($socket252, $cmd, $factor = 1, $total = 0)
 {
 	send($socket252, $cmd);
@@ -424,8 +478,9 @@ function merc_gd($socket252, $cmd, $factor = 1, $total = 0)
 	else
 		$ret[0] = hexdec(dd($result[$start_byte+1]).dd($result[$start_byte]).dd($result[$start_byte+3]).dd($result[$start_byte+2]))*$factor;
 	return $ret;
-}}
-if (!function_exists('crc16_modbus')) {
+}
+//////////////////////////////////////////////
+//////////////////////////////////////////////
 function crc16_modbus($msg)
 {
     $data = pack('H*',$msg);
@@ -445,89 +500,15 @@ function crc16_modbus($msg)
         }
     }   
     return sprintf('%04X', $crc);
-}}
-if (!function_exists('calcCRC')) {
+}
+
+//////////////////////////////////////////////
+//////////////////////////////////////////////
 function calcCRC($device252,$msg)
 {
  $mess = $device252.$msg;
  $crc = crc16_modbus($mess);
  return $mess.$crc[2].$crc[3].$crc[0].$crc[1];
-}}
- 
-send($socket252, calcCRC($device252,"0101010101010101"));
-read($socket252);
-
-# Сила тока по фазам
-# =====================================================
-$Ia = merc_gd($socket252,calcCRC($device252,"081621"), 0.001);
-$It = $Ia[0] + $Ia[1] + $Ia[2];
-echo "Ia: $Ia[0] - $Ia[1] - $Ia[2] IaT:$It<br>";
-if ($Ia[0]) $this->setProperty("Ia1",$Ia[0]);
-if ($Ia[1]) $this->setProperty("Ia2",$Ia[1]);
-if ($Ia[2]) $this->setProperty("Ia3",$Ia[2]);
-if ($It) $this->setProperty("IaT",$It);
-# Мощность по фазам
-# =====================================================
-$Pv = merc_gd($socket252,calcCRC($device252,"081600"), 0.01);
-if ( round($Pv[0], 2) != round($Pv[1] + $Pv[2] + $Pv[3], 2) )
-	$error = "error"; else $error = "";
-echo "Pv: $Pv[0] - $Pv[1] - $Pv[2] - $Pv[3] $error<br>";
-if ($error == "")
-{
-$this->setProperty("PvT",round($Pv[0],0));
-$this->setProperty("Pv1",$Pv[1]);
-$this->setProperty("Pv2",$Pv[2]);
-$this->setProperty("Pv3",$Pv[3]);
-}
-# Cosf по фазам
-# =====================================================
-$Cos = merc_gd($socket252,calcCRC($device252,"081630"), 0.001);
-echo "Cos: $Cos[0] - $Cos[1] - $Cos[2] - $Cos[3]<br>";
-if ($Cos[0]) $this->setProperty("CosT",$Cos[0]);
-if ($Cos[1]) $this->setProperty("Cos1",$Cos[1]);
-if ($Cos[2]) $this->setProperty("Cos2",$Cos[2]);
-if ($Cos[3]) $this->setProperty("Cos3",$Cos[3]);
-# Напряжение по фазам
-# =====================================================
-$Uv = merc_gd($socket252,calcCRC($device252,"081611"), 0.01);
-echo "Uv: $Uv[0] - $Uv[1] - $Uv[2]<br>";
-if ($Uv[0]) $this->setProperty("Uv1",round($Uv[0],0));
-if ($Uv[1]) $this->setProperty("Uv2",round($Uv[1],0));
-if ($Uv[2]) $this->setProperty("Uv3",round($Uv[2],0));
-
-# Показания электроэнергии
-# =====================================================
-$Tot = merc_gd($socket252,calcCRC($device252,"050000"), 0.001, 1);
-echo "Total: $Tot[0]<br>";
-if ($Tot[0]) $this->setProperty("Total",round($Tot[0],0));
-$Tot = merc_gd($socket252,calcCRC($device252,"050001"), 0.001, 1);
-echo "Total T1: $Tot[0]<br>";
-if ($Tot[0]) $this->setProperty("Total1",$Tot[0]);
-$Tot = merc_gd($socket252,calcCRC($device252,"050002"), 0.001, 1);
-echo "Total T2: $Tot[0]<br>";
-if ($Tot[0]) $this->setProperty("Total2",$Tot[0]);
-
-echo "Закрываем сокет...";
-socket_close($socket252);
-echo "OK.\n\n";
-
- }
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
- function getinfo2() {
- }
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
- function getcounters() {
 }
 	
 
@@ -778,6 +759,9 @@ EOD;
 EOD;
    parent::dbInstall($data);
 
+$cmd_rec = SQLSelectOne("SELECT * FROM mercury_devices");
+if !($cmd_rec['ID']) {
+
 $dev['TITLE']='Устройство №1';
 $dev['IPADDR']='192.168.1.252';
 $dev['PORT']='20252';
@@ -810,8 +794,11 @@ $dev['FIO']='Дронов Р.В.';
 $dev['STREET']='Участок 59';
 $dev['PHONE']='';
 SQLInsert('mercury_devices', $dev);	
+}
 
 
+$cmd_rec = SQLSelectOne("SELECT * FROM mercury_config");
+if !($cmd_rec['EVERY']) {
 
 $par['parametr'] = 'EVERY';
 $par['value'] = 30;		 
@@ -824,8 +811,6 @@ SQLInsert('mercury_config', $par);
 $par['parametr'] = 'CURRENT';
 $par['value'] = "";		 
 SQLInsert('mercury_config', $par);						
-
-
 		
 $par['parametr'] = 'LASTCYCLE_TXT';
 $par['value'] = "0";		 
@@ -833,7 +818,11 @@ SQLInsert('mercury_config', $par);
 $par['parametr'] = 'DEBUG';
 $par['value'] = "";		 
 SQLInsert('mercury_config', $par);	
- }
+}
+}
+
+
+
 }
 // --------------------------------------------------------------------
 	
