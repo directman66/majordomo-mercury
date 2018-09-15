@@ -146,8 +146,11 @@ $out['CURRENT']=$cmd_rec['VALUE'];
 
  if ($this->view_mode=='get') {
 setGlobal('cycle_mercuryControl','start'); 
-$this->getdata();
-//echo "start"; 
+
+$cmd_rec = SQLSelect("SELECT ID FROM mercury_devices");
+foreach ($cmd_rec as $ID)
+{getpu($ID);}
+
 }  
 
  if (isset($this->data_source) && !$_GET['data_source'] && !$_POST['data_source']) {
@@ -155,14 +158,10 @@ $this->getdata();
  }
 
 if ($this->view_mode=='getcounters') {
-$this->getcounters();
+$this->getpu($this->id);
 }  
-if ($this->view_mode=='getinfo') {
-$this->getinfo2();
-}  
-if ($this->view_mode=='getpu') {
-$this->getpu();
-}  
+
+  
 
  if ($this->view_mode=='indata_edit') {
    $this->editdevices($out, $this->id);
@@ -188,6 +187,8 @@ $this->getpu();
   if ($this->view_mode=='indata_edit') {
    $this->indata_edit($out, $this->id);
   }
+
+
 
 
 
@@ -297,11 +298,6 @@ if ($enable==1) {$this->getpu();   }
 //////////////////////////////////////////////
 //////////////////////////////////////////////
 //////////////////////////////////////////////
- function getdata() {
-$this->getinfo2();
-$this->getpu();
-$this->getcounters();
-}
 //////////////////////////////////////////////
 //////////////////////////////////////////////
 //////////////////////////////////////////////
@@ -309,12 +305,19 @@ $this->getcounters();
 //////////////////////////////////////////////
 //////////////////////////////////////////////
 //////////////////////////////////////////////
- function getpu($address252, $service_port252,$device252,$did) {
+ function getpu($id) {
+
+$rec=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID='$id'");
+
+$address252=$rec['IPADDR'];
+$service_port252=$rec['PORT'];
+$device252=$rec['HEXADR'];
+
 //$ot = $this->object_title;
 //setTimeOut($ot.'_updateValue','callMethod("'.$ot.'.GetValues");',10);
 
 
-/* Создаём сокет TCP/IP. */
+/// Создаём сокет TCP/IP. 
 $socket252 = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 socket_set_option($socket252,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
 if ($socket252 === false) {
@@ -340,17 +343,18 @@ $classname='Mercury';
 $objname=$classname.'_'.$did;
 
 addClassObject($classname,$objname);
-
+$sql=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID=".$id);
 
 # Сила тока по фазам
 # =====================================================
 $Ia = merc_gd($socket252,calcCRC($device252,"081621"), 0.001);
 $It = $Ia[0] + $Ia[1] + $Ia[2];
 //echo "Ia: $Ia[0] - $Ia[1] - $Ia[2] IaT:$It<br>";
-if ($Ia[0]) sg($objname.'.Ia1',$Ia[0]);
-if ($Ia[1]) sg($objname.'.Ia2',$Ia[1]);
-if ($Ia[2]) sg($objname.'.Ia3',$Ia[2]);
-if ($It) sg($objname.'.IaT',$It);
+if ($Ia[0]) {sg($objname.'.Ia1',$Ia[0]); $sql['Ia1']=$Ia[0];}
+if ($Ia[1]) {sg($objname.'.Ia2',$Ia[1]); $sql['Ia2']=$Ia[1];}
+if ($Ia[2]) {sg($objname.'.Ia3',$Ia[2]); $sql['Ia3']=$Ia[2];}
+if ($It) {sg($objname.'.IaT',$It); $sql['IaT']=$It;}
+
 
 
 # Мощность по фазам
@@ -365,6 +369,11 @@ sg($objname.'.PvT',round($Pv[0],0));
 sg($objname.'.Pv1',$Pv[1]);
 sg($objname.'.Pv2',$Pv[2]);
 sg($objname.'.Pv3',$Pv[3]);
+
+$sql['PvT']=round($Pv[0],0);
+$sql['Pv1']=$Pv[1];
+$sql['Pv2']=$Pv[2];
+$sql['Pv3']=$Pv[3];
 }
 # Cosf по фазам
 # =====================================================
@@ -372,52 +381,54 @@ $Cos = merc_gd($socket252,calcCRC($device252,"081630"), 0.001);
 //echo "Cos: $Cos[0] - $Cos[1] - $Cos[2] - $Cos[3]<br>";
 
 
-if ($Cos[0]) sg($objname.'.CosT',$Cos[0]);
-if ($Cos[0]) sg($objname.'.Cos1',$Cos[1]);
-if ($Cos[0]) sg($objname.'.Cos2',$Cos[2]);
-if ($Cos[0]) sg($objname.'.Cos3',$Cos[3]);
+if ($Cos[0]) {sg($objname.'.CosT',$Cos[0]); $sql['CosT']=$Cos[0];}
+if ($Cos[0]) {sg($objname.'.Cos1',$Cos[1]); $sql['Cos1']=$Cos[1];}
+if ($Cos[0]) {sg($objname.'.Cos2',$Cos[2]); $sql['Cos2']=$Cos[2];}
+if ($Cos[0]) {sg($objname.'.Cos3',$Cos[3]); $sql['Cos3']=$Cos[3];}
 
 # Напряжение по фазам
 # =====================================================
 $Uv = merc_gd($socket252,calcCRC($device252,"081611"), 0.01);
 echo "Uv: $Uv[0] - $Uv[1] - $Uv[2]<br>";
 
-if ($Uv[0]) sg($objname.'.Uv1',round($Uv[0],0));
-if ($Uv[0]) sg($objname.'.Uv2',round($Uv[1],0));
-if ($Uv[0]) sg($objname.'.Uv3',round($Uv[2],0));
+if ($Uv[0]) {sg($objname.'.Uv1',round($Uv[0],0));$sql['Uv1']=round($Uv[0],0);}
+if ($Uv[0]) {sg($objname.'.Uv2',round($Uv[1],0));$sql['Uv2']=round($Uv[1],0);}
+if ($Uv[0]) {sg($objname.'.Uv3',round($Uv[2],0));$sql['Uv3']=round($Uv[2],0);}
 
 
 # Показания электроэнергии
 # =====================================================
 $Tot = merc_gd($socket252,calcCRC($device252,"050000"), 0.001, 1);
 //echo "Total: $Tot[0]<br>";
-
-if ($Tot[0]) sg($objname.'.Total',round($Tot[0],0));
+if ($Tot[0]) {sg($objname.'.Total',round($Tot[0],0)); $sql['Total']=round($Tot[0],0);}
 
 
 $Tot = merc_gd($socket252,calcCRC($device252,"050001"), 0.001, 1);
 //echo "Total T1: $Tot[0]<br>";
-if ($Tot[0]) sg($objname.'.Total1',$Tot[0]);
+if ($Tot[0]) {sg($objname.'.Total1',$Tot[0]); $sql['Total1']=$Tot[0];}
 
 
 $Tot = merc_gd($socket252,calcCRC($device252,"050002"), 0.001, 1);
 //echo "Total T2: $Tot[0]<br>";
-if ($Tot[0]) sg($objname.'.Total2',$Tot[0]);
+if ($Tot[0]) {sg($objname.'.Total2',$Tot[0]);$sql['Total2']=$Tot[0];}
+
+SQLUpdate('properties',$property);
 
 //echo "Закрываем сокет...";
 socket_close($socket252);
-echo "OK.\n\n";
+//echo "OK.\n\n";
+
 
  }
 //////////////////////////////////////////////
 //////////////////////////////////////////////
 //////////////////////////////////////////////
     function send  ($socket252, $hex = "") {
-     echo "Отправляем запрос ".$hex;
+//     echo "Отправляем запрос ".$hex;
   $in = hex2bin($hex);
-  echo " ".$in." ";
+//  echo " ".$in." ";
   socket_write($socket252, $in, strlen($in));
-  echo "OK.<br>"; 
+//  echo "OK.<br>"; 
    }
 
 //////////////////////////////////////////////
@@ -425,9 +436,9 @@ echo "OK.\n\n";
 
     function read  ($socket252)
 {
-   echo "Читаем ответ:\n\n";
+//   echo "Читаем ответ:\n\n";
    $out = socket_read($socket252, 2048);
-   echo bin2hex($out)."<br>";
+//   echo bin2hex($out)."<br>";
    return $out;
 }
 
@@ -544,9 +555,9 @@ function calcCRC($device252,$msg)
 */
  function uninstall() {
 
-  SQLExec('DROP TABLE IF EXISTS mercury_devices');
-  SQLExec('DROP TABLE IF EXISTS mercury_config');
-  SQLExec('delete from settings where NAME like "%APPMERCURY%"');
+SQLExec('DROP TABLE IF EXISTS mercury_devices');
+SQLExec('DROP TABLE IF EXISTS mercury_config');
+SQLExec('delete from settings where NAME like "%APPMERCURY%"');
 SQLExec("delete from pvalues where property_id in (select id FROM properties where object_id in (select id from objects where class_id = (select id from classes where title = 'Mercury')))");
 SQLExec("delete from properties where object_id in (select id from objects where class_id = (select id from classes where title = 'Mercury'))");
 SQLExec("delete from objects where class_id = (select id from classes where title = 'Mercury')");
@@ -576,7 +587,7 @@ SQLUpdate('properties',$property); }
 
 $prop_id=addClassProperty($classname, 'ControlLimit', 0);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Адрес счетчика'; //   <-----------
+$property['DESCRIPTION']='Лимит'; //   <-----------
 SQLUpdate('properties',$property); }
 
 $prop_id=addClassProperty($classname, 'Cos1', 7);
@@ -601,97 +612,78 @@ SQLUpdate('properties',$property); }
 
 $prop_id=addClassProperty($classname, 'Ia1', 7);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']=''; //   <-----------
+$property['DESCRIPTION']='Сила тока по фазе 1'; //   <-----------
 SQLUpdate('properties',$property); }
 
 $prop_id=addClassProperty($classname, 'Ia2', 7);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']=''; //   <-----------
+$property['DESCRIPTION']='Сила тока по фазе 2'; //   <-----------
 SQLUpdate('properties',$property); }
 
 
 $prop_id=addClassProperty($classname, 'Ia3', 7);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']=''; //   <-----------
+$property['DESCRIPTION']='Сила тока по фазе 3'; //   <-----------
 SQLUpdate('properties',$property); }
 
 $prop_id=addClassProperty($classname, 'IaT', 7);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']=''; //   <-----------
+$property['DESCRIPTION']='Сила тока общая'; //   <-----------
 SQLUpdate('properties',$property); }
 
-$prop_id=addClassProperty($classname, 'IP', 0);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']=''; //   <-----------
-SQLUpdate('properties',$property); }
 
 $prop_id=addClassProperty($classname, 'LimitValue', 0);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']=''; //   <-----------
-SQLUpdate('properties',$property); }
-
-
-$prop_id=addClassProperty($classname, 'Port', 0);
-if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Порт'; //   <-----------
+$property['DESCRIPTION']='Лимит'; //   <-----------
 SQLUpdate('properties',$property); }
 
 $prop_id=addClassProperty($classname, 'Pv1', 7);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Порт'; //   <-----------
+$property['DESCRIPTION']='Мощность по фазе 1'; //   <-----------
 SQLUpdate('properties',$property); }
 
 $prop_id=addClassProperty($classname, 'Pv2', 7);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Порт'; //   <-----------
+$property['DESCRIPTION']='Мощность по фазе 2'; //   <-----------
 SQLUpdate('properties',$property); }
 
 
 
 $prop_id=addClassProperty($classname, 'Pv3', 7);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Порт'; //   <-----------
+$property['DESCRIPTION']='Мощность по фазе 3'; //   <-----------
 SQLUpdate('properties',$property); }
 
 
 
 $prop_id=addClassProperty($classname, 'PvT', 7);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Порт'; //   <-----------
+$property['DESCRIPTION']='Мощность суммарная'; //   <-----------
 SQLUpdate('properties',$property); }
 
 
 
 $prop_id=addClassProperty($classname, 'Total', 0);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Порт'; //   <-----------
+$property['DESCRIPTION']=''; //   <-----------
 SQLUpdate('properties',$property); }
 
 
 
 $prop_id=addClassProperty($classname, 'Uv1', 7);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Порт'; //   <-----------
+$property['DESCRIPTION']='Напряжение по фазе 1'; //   <-----------
 SQLUpdate('properties',$property); }
 
 $prop_id=addClassProperty($classname, 'Uv2', 7);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Порт'; //   <-----------
+$property['DESCRIPTION']='Напряжение по фазе 2'; //   <-----------
 SQLUpdate('properties',$property); }
 
 $prop_id=addClassProperty($classname, 'Uv3', 7);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
-$property['DESCRIPTION']='Порт'; //   <-----------
+$property['DESCRIPTION']='Напряжение по фазе 3'; //   <-----------
 SQLUpdate('properties',$property); }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -745,11 +737,6 @@ SQLUpdate('properties',$property); }
  mercury_devices: Leak4 varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Leak5 varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Leak6 varchar(100) NOT NULL DEFAULT ''
-
-
-
-
-
 EOD;
   parent::dbInstall($data);
 
@@ -759,8 +746,9 @@ EOD;
 EOD;
    parent::dbInstall($data);
 
-$cmd_rec = SQLSelectOne("SELECT * FROM mercury_devices");
-if !($cmd_rec['ID']) {
+$cmd_rec = SQLSelect("SELECT * FROM mercury_devices");
+if ($cmd_rec[0]['ID']) {null;}
+else {
 
 $dev['TITLE']='Устройство №1';
 $dev['IPADDR']='192.168.1.252';
@@ -797,8 +785,10 @@ SQLInsert('mercury_devices', $dev);
 }
 
 
-$cmd_rec = SQLSelectOne("SELECT * FROM mercury_config");
-if !($cmd_rec['EVERY']) {
+$cmd_rec = SQLSelect("SELECT * FROM mercury_config");
+if ($cmd_rec[0]['EVERY']) {
+null;
+} else {
 
 $par['parametr'] = 'EVERY';
 $par['value'] = 30;		 
