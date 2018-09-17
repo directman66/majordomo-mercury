@@ -78,12 +78,12 @@
  </td>
 
  <td style="vertical-align:middle">
-	[#if ONLINE!=""#]
-		[#if ONLINE==1#]
-   <a href="?view_mode=turnoff&id=[#ID#]" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Выключить">
+	[#if STATE!=""#]
+		[#if STATE==1#]
+   <a href="?view_mode=turnoff&id=[#ID#]" onClick="return confirm('Внимание!!! Данное действие ВЫКЛЮЧИТ реле счетчика. Вы действительно желаете продолжить? Пожалуйста подвтвердите.')" class="btn btn-default" title="Выключить">
 			<span class="label label-success" title="<#LANG_XIMI_APP_ONLINE#>">Вкл.</span> </a>
 		[#else#]
-   <a href="?view_mode=turnon&id=[#ID#]" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Включить">
+   <a href="?view_mode=turnon&id=[#ID#]" onClick="return confirm('Внимание!!! Данное действие ВКЛЮЧИТ реле счетчика. Вы действительно желаете продолжить? Пожалуйста подвтвердите.')" class="btn btn-default" title="Включить">
 			<span class="label label-warning" title="<#LANG_XIMI_APP_OFFLINE#>">Выкл.</span></a>
 		[#endif#]
 	[#else#]
