@@ -150,6 +150,73 @@ $out['MSG_DEBUG']=file_get_contents($file);
 
 $cmd_rec = SQLSelectOne("SELECT VALUE FROM mercury_config where parametr='CURRENT'");
 $out['CURRENT']=$cmd_rec['VALUE'];
+$currentid=$cmd_rec['VALUE'];
+
+$cmd_rec = SQLSelectOne("SELECT * FROM mercury_devices where FIO='$currentid'");
+
+
+$out['MODEL']=$cmd_rec['MODEL'];		
+
+ $out['TS']=date('m/d/Y H:i:s',$cmd_rec['TS']);		
+ $out['COUNTTS']=date('m/d/Y H:i:s',$cmd_rec['TS']);		
+
+// $out['P']=$cmd_rec['Pv1']+$cmd_rec['Pv2']+$cmd_rec['Pv3'];		
+ $out['P']=$cmd_rec['PvT'];		
+ $out['P1']=$cmd_rec['Pv1'];		
+ $out['P2']=$cmd_rec['Pv2'];		
+ $out['P3']=$cmd_rec['Pv3'];		
+
+
+ $out['I']=$cmd_rec['IaT'];		
+ $out['I1']=$cmd_rec['Ia1'];		
+ $out['I2']=$cmd_rec['Ia2'];		
+ $out['I3']=$cmd_rec['Ia3'];		
+
+
+ $out['U1']=$cmd_rec['Uv1'];		
+ $out['U2']=$cmd_rec['Uv2'];		
+ $out['U3']=$cmd_rec['Uv3'];		
+
+ $out['OBKJECTNAME']='Mercury_'.$cmd_rec['ID'];		
+
+$arU=array();
+if ($cmd_rec['Uv1']) {$arU[1]=$cmd_rec['Uv1'];};
+if ($cmd_rec['Uv1']) {$arU[2]=$cmd_rec['Uv2'];};
+if ($cmd_rec['Uv1']) {$arU[3]=$cmd_rec['Uv3'];};
+
+ $out['U']=$this->average($arU);		
+
+ $out['S0']=$cmd_rec['Total'];		
+	 $out['S1']=$cmd_rec['Total1'];		
+ $out['S2']=$cmd_rec['Total2'];	
+	
+
+
+$now=date();
+
+$out['MONTH_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-2629743 ,$now));
+$out['MONTH_RUB']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-2629743,$now));
+
+$out['DAY_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-86400 ,$now));
+$out['DAY_RUB']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-86400 ,$now));
+
+$out['WEEK_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-604800 ,$now));
+$out['WEEK_RUB']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-604800 ,$now));
+
+$out['YEAR_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-31556926 ,$now));
+$out['YEAR_RUB']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-31556926 ,$now));
+
+
+//$cmd_rec = SQLSelectOne("SELECT VALUE FROM milur_config where parametr='DEBUG'");
+//$out['MSG_DEBUG']=$cmd_rec['VALUE'];
+
+
+
+
+
+
+
+
 
 
  if ($this->view_mode=='get') {
@@ -438,6 +505,7 @@ if ($It) {sg($objname.'.IaT',$It); $sql['IaT']=$It;}
 
 
 
+
 # Мощность по фазам
 # =====================================================
 $ncrc=$this->calcCRC($device252,"081600");
@@ -476,8 +544,21 @@ $Uv = $this->merc_gd($socket252,$this->calcCRC($device252,"081611"), 0.01);
 $debug .= "Uv: $Uv[0] - $Uv[1] - $Uv[2]<br>";
 
 if ($Uv[0]) {sg($objname.'.Uv1',round($Uv[0],0));$sql['Uv1']=round($Uv[0],0);}
-if ($Uv[0]) {sg($objname.'.Uv2',round($Uv[1],0));$sql['Uv2']=round($Uv[1],0);}
-if ($Uv[0]) {sg($objname.'.Uv3',round($Uv[2],0));$sql['Uv3']=round($Uv[2],0);}
+if ($Uv[1]) {sg($objname.'.Uv2',round($Uv[1],0));$sql['Uv2']=round($Uv[1],0);}
+if ($Uv[2]) {sg($objname.'.Uv3',round($Uv[2],0));$sql['Uv3']=round($Uv[2],0);}
+
+
+$arU=array();
+
+if (round($Uv[0],0)) {$arU[1]=round($Uv[0],0);}
+if (round($Uv[1],0)) {$arU[2]=round($Uv[1],0);}
+if (round($Uv[2],0)) {$arU[3]=round($Uv[2],0);}
+
+ 
+sg($objname.'.U',$this->average($arU));	
+$sql['U']=$this->average($arU);
+
+
 
 
 # Показания электроэнергии
@@ -499,7 +580,7 @@ if ($Tot[0]) {sg($objname.'.Total2',$Tot[0]);$sql['Total2']=$Tot[0];}
 
 
 
-//SQLUpdate('mercury_devices',$sql);
+SQLUpdate('mercury_devices',$sql);
 
 SQLexec("update mercury_config set value=UNIX_TIMESTAMP() where parametr='LASTCYCLE_TS'");		   
 
@@ -700,6 +781,7 @@ SQLUpdate('properties',$property); }
  mercury_devices: PASSWORD varchar(100) NOT NULL DEFAULT ''
  mercury_devices: LASTPING varchar(100) NOT NULL DEFAULT ''
  mercury_devices: ONLINE varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: TS varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Ia1 varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Ia2 varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Ia3 varchar(100) NOT NULL DEFAULT ''
@@ -713,6 +795,7 @@ SQLUpdate('properties',$property); }
  mercury_devices: Uv1 varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Uv2 varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Uv3 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: U varchar(100) NOT NULL DEFAULT ''
  mercury_devices: IaT varchar(100) NOT NULL DEFAULT ''
  mercury_devices: PvT varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Total varchar(100) NOT NULL DEFAULT ''
@@ -918,7 +1001,12 @@ function crc16_modbus($msg)
 
 //////////////////////////////////////////////
 	
+function average($arr)
+{
+   if (!is_array($arr)) return false;
 
+   return array_sum($arr)/count($arr);
+}
 
 
 
