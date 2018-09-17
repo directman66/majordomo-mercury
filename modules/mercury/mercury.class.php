@@ -142,8 +142,11 @@ if (gg('cycle_mercuryRun')) {
 	
 $now=date();
 
-$cmd_rec = SQLSelectOne("SELECT VALUE FROM mercury_config where parametr='DEBUG'");
-$out['MSG_DEBUG']=$cmd_rec['VALUE'];
+//$cmd_rec = SQLSelectOne("SELECT VALUE FROM mercury_config where parametr='DEBUG'");
+$cachedVoiceDir = ROOT . 'cms/cached/';
+$file = $cachedVoiceDir . 'mercurydebug.txt';
+
+$out['MSG_DEBUG']=file_get_contents($file);
 
 $cmd_rec = SQLSelectOne("SELECT VALUE FROM mercury_config where parametr='CURRENT'");
 $out['CURRENT']=$cmd_rec['VALUE'];
@@ -152,9 +155,21 @@ $out['CURRENT']=$cmd_rec['VALUE'];
  if ($this->view_mode=='get') {
 setGlobal('cycle_mercuryControl','start'); 
 
+$cachedVoiceDir = ROOT . 'cms/cached/';
+$file = $cachedVoiceDir . 'mercurydebug.txt';
+$debug = file_get_contents($file);
+
+$debug = "Запускаем цикл по счетчикам <br>\n";
+file_put_contents($file, $debug);
+
 $cmd_rec = SQLSelect("SELECT ID FROM mercury_devices");
-foreach ($cmd_rec as $ID)
-{getpu($ID);}
+foreach ($cmd_rec as $cmd_r)
+{
+$myid=$cmd_r['ID'];
+$debug .= "Начинаем запрашивать счетчик $myid. <br>\n";
+file_put_contents($file, $debug);
+$this->getpu($myid);
+}
 
 }  
 
@@ -291,9 +306,25 @@ $latest=$cmd_rec['VALUE'];
 
 if ($enable==1) {
 
+
+$cachedVoiceDir = ROOT . 'cms/cached/';
+$file = $cachedVoiceDir . 'mercurydebug.txt';
+$debug = file_get_contents($file);
+
+$debug = "Запускаем цикл по счетчикам <br>\n";
+file_put_contents($file, $debug);
+
 $cmd_rec = SQLSelect("SELECT ID FROM mercury_devices");
-foreach ($cmd_rec as $ID)
-{getpu($ID);}
+foreach ($cmd_rec as $cmd_r)
+{
+$myid=$cmd_r['ID'];
+$debug .= "Начинаем запрашивать счетчик $myid. <br>\n";
+file_put_contents($file, $debug);
+$this->getpu($myid);
+}
+
+
+
 }
   } 
   }
@@ -351,25 +382,25 @@ $debug = file_get_contents($file);
 // Добавляем нового человека в файл
 
 
-$debug = date('d/m/y H:s'). " запущен запрос данных \n";
+$debug .= date('d/m/y H:s'). " запущен запрос данных по счетчику $id<br>\n";
 
 /// Создаём сокет TCP/IP. 
 $socket252 = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 socket_set_option($socket252,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
 if ($socket252 === false) {
-$debug .= "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "\n";
+$debug .= "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "<br>\n";
 } else {
-$debug .= "Сокет создан. \n";
+$debug .= "Сокет создан. <br>\n";
 
 }
 file_put_contents($file, $debug);
 
-$debug .= "Пытаемся соединиться с '$address252' на порту '$service_port252'...\n";
+$debug .= "Пытаемся соединиться с '$address252' на порту '$service_port252'...<br>\n";
 $result = socket_connect($socket252, $address252, $service_port252);
 if ($result === false) {
-$debug .= "Не удалось выполнить socket_connect().\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
+$debug .= "Не удалось выполнить socket_connect().<br>\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "<br>\n";
 } else {
-$debug .= "Соединение установлено.\n";
+$debug .= "Соединение установлено.<br>\n";
 }
 file_put_contents($file, $debug);
 
@@ -476,7 +507,7 @@ SQLexec("update mercury_config set value=UNIX_TIMESTAMP() where parametr='LASTCY
 
 $debug .= "Закрываем сокет...";
 socket_close($socket252);
-$debug .= "OK.\n\n";
+$debug .= "OK.<br>\n<br>\n";
 // Пишем содержимое обратно в файл
 file_put_contents($file, $debug);
 
@@ -811,11 +842,11 @@ $cachedVoiceDir = ROOT . 'cms/cached/';
 $file = $cachedVoiceDir . 'mercurydebug.txt';
 // Открываем файл для получения существующего содержимого
 $debug .= file_get_contents($file);
-$debug .= "Отправляем запрос ".$hex."\n";
+$debug .= "Отправляем запрос ".$hex."<br>\n";
   $in = hex2bin($hex);
 $debug .=  " ".$in." ";
   socket_write($socket252, $in, strlen($in));
-$debug .=  "OK.\n"; 
+$debug .=  "OK.<br>\n"; 
 // Пишем содержимое обратно в файл
 file_put_contents($file, $debug);
 
@@ -854,9 +885,9 @@ $file = $cachedVoiceDir . 'mercurydebug.txt';
 // Открываем файл для получения существующего содержимого
 $debug .= file_get_contents($file);
 
-$debug .="Читаем ответ:\n";
+$debug .="Читаем ответ:<br>\n";
 $out = socket_read($socket252, 2048);
-$debug .= bin2hex($out)."\n";
+$debug .= bin2hex($out)."<br>\n";
 // Пишем содержимое обратно в файл
 file_put_contents($file, $debug);
 
