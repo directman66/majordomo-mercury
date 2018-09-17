@@ -249,6 +249,11 @@ if ($this->view_mode=='turnoff') {
 $this->turnoff($this->id);
 }  
 
+
+if ($this->view_mode=='getinfo') {
+$this->getinfo($this->id);
+}  
+
   
 
  if ($this->view_mode=='indata_edit') {
@@ -462,11 +467,10 @@ $this->getpu($myid);
 //////////////////////////////////////////////
 //////////////////////////////////////////////
 //////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
 
- function turnoff($id) {
+
+ function getinfo($id) {
+
 $rec=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID='$id'");
 
 $address=$rec['IPADDR'];
@@ -482,11 +486,127 @@ $file = $cachedVoiceDir . 'mercurydebug.txt';
 $debug = file_get_contents($file);
 
 
-$debug .= date('d/m/y H:s'). " запущен запрос на выключение счетчика $id<br>\n";
+$debug = date('d/m/y H:s'). " запущен запрос состояния счетчика $id<br>\n";
+file_put_contents($file, $debug);
+
+// Создаём сокет TCP/IP. 
+$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
+if ($socket === false) {
+$debug .=  "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "<br>";
+file_put_contents($file, $debug);
+} else {
+$debug .= "OK.<br>";
+file_put_contents($file, $debug);
+}
+
+$debug .=  "Пытаемся соединиться с '$address' на порту '$service_port'...";
+file_put_contents($file, $debug);
+$result = socket_connect($socket, $address, $service_port);
+if ($result === false) {
+$debug .= "Не удалось выполнить socket_connect().\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "<br>";
+file_put_contents($file, $debug);
+} else {
+$debug .=  "OK.<br>";
+file_put_contents($file, $debug);
+}
+
+//открытие канала связи
+$ncrc=$this->calcCRC($device252,"0101010101010101");
+//sg('test.ncrc',$ncrc);
+ 
+$this->send($socket252, $ncrc);
+$this->read($socket252);
+
+
+
+//создаем устройство
+
+$classname='Mercury';
+$objname=$classname.'_'.$id;
+
+addClassObject($classname,$objname);
+$sql=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID=".$id);
+
+
+//$ncrc=$this->calcCRC($device252,"081621");
+
+//$res =$this->merc_gd($socket252,$ncrc, 0.001);
+//$res = $this->merc_gd($socket,$this->calcCRC($device,"0800"),1);
+
+//sg('test.sn',$res[0].$res[1].$res[2].$res[3].$res[4].$res[5].$res[6]);
+
+$this->send($socket, $this->calcCRC($device,"0800"));
+$res = $this->read($socket);
+
+$sn = hexdec($this->dd($res[1]).$this->dd($res[2]).$this->dd($res[3]).$this->dd($res[4]).$this->dd($res[5]).$this->dd($res[6]).$this->dd($res[7]));
+sg($objname.".SN",$sn);
+$sql['SN']=$sn;
+
+//sg('test.sn',print_r($res));
+sg('test.sn',$sn);
+
+$this->send($socket, $this->calcCRC($device,"0818"));
+$res = $this->read($socket);
+$flimit = hexdec($this->dd($res[1]).$this->dd($res[2]));
+
+$debug .=  $flimit."<br>";
+file_put_contents($file, $debug);
+
+if (($flimit & 512) == 512)
+{sg($objname.".ControlLimit",1);
+$sql['STATE']='1';
+}
+else
+{sg($objname.".ControlLimit",0);
+$sql['STATE']='0';}
+
+$debug .=  "Закрываем сокет...";
+file_put_contents($file, $debug);
+
+socket_close($socket);
+$debug .=  "OK.\n\n";
 file_put_contents($file, $debug);
 
 
-/* Создаём сокет TCP/IP. */
+
+
+
+$debug .= "Закрываем сокет...";
+file_put_contents($file, $debug);
+socket_close($socket);
+$debug .= "OK.\n\n";
+file_put_contents($file, $debug);
+
+SQLUpdate('mercury_devices',$sql);
+}
+
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+
+ function turnoff($id) {
+/*
+$rec=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID='$id'");
+
+$address=$rec['IPADDR'];
+$service_port=$rec['PORT'];
+$device=$rec['HEXADR'];
+
+
+$cachedVoiceDir = ROOT . 'cms/cached/';
+$file = $cachedVoiceDir . 'mercurydebug.txt';
+
+
+// Открываем файл для получения существующего содержимого
+$debug = file_get_contents($file);
+
+
+$debug .= date('d/m/y H:s'). " запущен запрос на получение инфо счетчика $id<br>\n";
+file_put_contents($file, $debug);
+
+
+// Создаём сокет TCP/IP. 
 $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
 if ($socket === false) {
@@ -521,17 +641,18 @@ $objname=$classname.'_'.$id;
 
 if (gg($objname.".state") == 1)
  $flimit = "01";
-send($socket, $this->calcCRC($device,"032D".$flimit));
+$this->send($socket, $this->calcCRC($device,"032D".$flimit));
 $res = $this->read($socket);
 $limit = dechex(gg($objname.".LimitValue") * 100);
 $this->send($socket, $this->calcCRC($device,"032C".$limit));
 $res = $this->read($socket);
 
 	$debug .= "Закрываем сокет...";
-file_put_contents($file, $debug);
+file_put_content	s($file, $debug);
 socket_close($socket);
 $debug .= "OK.\n\n";
 file_put_contents($file, $debug);
+*/
 
 }
 
@@ -600,16 +721,19 @@ file_put_contents($file, $debug);
 
 sg($objname.".LimitValue",$res[0]);
 $this->send($socket, $this->calcCRC($device,"0818"));
-$res = read($socket);
-$flimit = hexdec(dd($res[1]).$this->dd($res[2]));
+$res = $this->read($socket);
+$flimit = hexdec($this->dd($res[1]).$this->dd($res[2]));
 
 $debug .=  $flimit."<br>";
 file_put_contents($file, $debug);
 
 if (($flimit & 512) == 512)
-sg($objname.".ControlLimit",1);
+{sg($objname.".ControlLimit",1);
+$sql['STATE']='1';
+}
 else
-sg($objname.".ControlLimit",0);
+{sg($objname.".ControlLimit",0);
+$sql['STATE']='0';}
 
 $debug .=  "Закрываем сокет...";
 file_put_contents($file, $debug);
@@ -678,7 +802,7 @@ $debug .= "Соединение установлено.<br>\n";
 file_put_contents($file, $debug);
 
 $ncrc=$this->calcCRC($device252,"0101010101010101");
-sg('test.ncrc',$ncrc);
+//sg('test.ncrc',$ncrc);
  
 $this->send($socket252, $ncrc);
 $this->read($socket252);
@@ -982,6 +1106,7 @@ SQLUpdate('properties',$property); }
  mercury_devices: HEXADR varchar(100) NOT NULL DEFAULT ''
  mercury_devices: MODEL varchar(100) NOT NULL DEFAULT ''
  mercury_devices: SN varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: MADEDT varchar(100) NOT NULL DEFAULT ''
  mercury_devices: FIO varchar(100) NOT NULL DEFAULT ''
  mercury_devices: STREET varchar(100) NOT NULL DEFAULT ''
  mercury_devices: PHONE varchar(100) NOT NULL DEFAULT ''
