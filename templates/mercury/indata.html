@@ -36,6 +36,7 @@
 <th>Порт</th>
 <th>Модель</th>   
 <th>Online</th>    
+<th>Сост.</th>    
 <th>IaT</th>    
 <th>PvT</th>   
  <th>U</th>
@@ -75,6 +76,22 @@
 	[#endif#]
 
  </td>
+
+ <td style="vertical-align:middle">
+	[#if ONLINE!=""#]
+		[#if ONLINE==1#]
+   <a href="?view_mode=turnoff&id=[#ID#]" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Выключить">
+			<span class="label label-success" title="<#LANG_XIMI_APP_ONLINE#>">Вкл.</span> </a>
+		[#else#]
+   <a href="?view_mode=turnon&id=[#ID#]" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Включить">
+			<span class="label label-warning" title="<#LANG_XIMI_APP_OFFLINE#>">Выкл.</span></a>
+		[#endif#]
+	[#else#]
+		&nbsp;
+	[#endif#]
+
+ </td>
+
  <td style="vertical-align:middle">
    [#IaT#]
  </td>
@@ -128,4 +145,3 @@
 [#endif RESULT#]
 <!-- / results -->
 </td></tr></table>
-
