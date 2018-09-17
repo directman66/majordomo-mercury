@@ -359,50 +359,59 @@ socket_set_option($socket252,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0)
 if ($socket252 === false) {
 $debug .= "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "\n";
 } else {
-$debug .= "Socket created. \n";
+$debug .= "Сокет создан. \n";
 
 }
 file_put_contents($file, $debug);
 
-$debug .= "Пытаемся соединиться с '$address252' на порту '$service_port252'...";
+$debug .= "Пытаемся соединиться с '$address252' на порту '$service_port252'...\n";
 $result = socket_connect($socket252, $address252, $service_port252);
 if ($result === false) {
 $debug .= "Не удалось выполнить socket_connect().\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
 } else {
-$debug .= "OK.\n";
+$debug .= "Соединение установлено.\n";
 }
 file_put_contents($file, $debug);
- 
-$this->send($socket252, $this->calcCRC($device252,"0101010101010101"));
 
-/*
-read($socket252);
+$ncrc=$this->calcCRC($device252,"0101010101010101");
+sg('test.ncrc',$ncrc);
+ 
+$this->send($socket252, $ncrc);
+$this->read($socket252);
 
 
 
 //создаем устройство
 
 $classname='Mercury';
-$objname=$classname.'_'.$did;
+$objname=$classname.'_'.$id;
 
 addClassObject($classname,$objname);
 $sql=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID=".$id);
 
 # Сила тока по фазам
 # =====================================================
-$Ia =merc_gd($socket252,calcCRC($device252,"081621"), 0.001);
+
+$ncrc=$this->calcCRC($device252,"081621");
+
+$Ia =$this->merc_gd($socket252,$ncrc, 0.001);
 $It = $Ia[0] + $Ia[1] + $Ia[2];
+
 $debug .= "Ia: $Ia[0] - $Ia[1] - $Ia[2] IaT:$It<br>";
+file_put_contents($file, $debug);
+
 if ($Ia[0]) {sg($objname.'.Ia1',$Ia[0]); $sql['Ia1']=$Ia[0];}
 if ($Ia[1]) {sg($objname.'.Ia2',$Ia[1]); $sql['Ia2']=$Ia[1];}
 if ($Ia[2]) {sg($objname.'.Ia3',$Ia[2]); $sql['Ia3']=$Ia[2];}
 if ($It) {sg($objname.'.IaT',$It); $sql['IaT']=$It;}
-file_put_contents($file, $debug);
+
 
 
 # Мощность по фазам
 # =====================================================
-$Pv =$this->merc_gd($socket252,$this->calcCRC($device252,"081600"), 0.01);
+$ncrc=$this->calcCRC($device252,"081600");
+$Pv =$this->merc_gd($socket252,$ncrc, 0.01);
+
 if ( round($Pv[0], 2) != round($Pv[1] + $Pv[2] + $Pv[3], 2) )
 	$error = "error"; else $error = "";
 $debug .= "Pv: $Pv[0] - $Pv[1] - $Pv[2] - $Pv[3] $error<br>";
@@ -420,7 +429,8 @@ $sql['Pv3']=$Pv[3];
 }
 # Cosf по фазам
 # =====================================================
-$Cos = $this->merc_gd($socket252,$this->calcCRC($device252,"081630"), 0.001);
+$ncrc=$this->calcCRC($device252,"081630");
+$Cos = $this->merc_gd($socket252,$ncrc, 0.001);
 $debug .= "Cos: $Cos[0] - $Cos[1] - $Cos[2] - $Cos[3]<br>";
 
 
@@ -431,7 +441,7 @@ if ($Cos[0]) {sg($objname.'.Cos3',$Cos[3]); $sql['Cos3']=$Cos[3];}
 
 # Напряжение по фазам
 # =====================================================
-$Uv = merc_gd($socket252,calcCRC($device252,"081611"), 0.01);
+$Uv = $this->merc_gd($socket252,$this->calcCRC($device252,"081611"), 0.01);
 $debug .= "Uv: $Uv[0] - $Uv[1] - $Uv[2]<br>";
 
 if ($Uv[0]) {sg($objname.'.Uv1',round($Uv[0],0));$sql['Uv1']=round($Uv[0],0);}
@@ -455,10 +465,10 @@ $Tot = $this->merc_gd($socket252,$this->calcCRC($device252,"050002"), 0.001, 1);
 $debug .= "Total T2: $Tot[0]<br>";
 if ($Tot[0]) {sg($objname.'.Total2',$Tot[0]);$sql['Total2']=$Tot[0];}
 
-*/
 
 
-SQLUpdate('mercury_devices',$sql);
+
+//SQLUpdate('mercury_devices',$sql);
 
 SQLexec("update mercury_config set value=UNIX_TIMESTAMP() where parametr='LASTCYCLE_TS'");		   
 
@@ -772,7 +782,7 @@ SQLInsert('mercury_config', $par);
 function calcCRC($device252,$msg)
 {
  $mess = $device252.$msg;
- $crc = crc16_modbus($mess);
+ $crc = $this->crc16_modbus($mess);
  return $mess.$crc[2].$crc[3].$crc[0].$crc[1];
 }
 //////////////////////////////////////////////
@@ -798,14 +808,14 @@ function calcCRC($device252,$msg)
 //////////////////////////////////////////////
 function send  ($socket252, $hex = "") {
 $cachedVoiceDir = ROOT . 'cms/cached/';
-$file = $cachedVoiceDir . 'mercurydebugsend.txt';
+$file = $cachedVoiceDir . 'mercurydebug.txt';
 // Открываем файл для получения существующего содержимого
-$debug = file_get_contents($file);
+$debug .= file_get_contents($file);
 $debug .= "Отправляем запрос ".$hex."\n";
   $in = hex2bin($hex);
 $debug .=  " ".$in." ";
   socket_write($socket252, $in, strlen($in));
-$debug .=  "OK.<br>\n"; 
+$debug .=  "OK.\n"; 
 // Пишем содержимое обратно в файл
 file_put_contents($file, $debug);
 
@@ -815,8 +825,8 @@ file_put_contents($file, $debug);
 //////////////////////////////////////////////
 function merc_gd($socket252, $cmd, $factor = 1, $total = 0)
 {
-send($socket252, $cmd);
-$result = read($socket252);
+$this->send($socket252, $cmd);
+$result =$this->read($socket252);
 
 	$ret = array();
 	
@@ -829,27 +839,28 @@ $result = read($socket252);
          	if ( dechex(ord($result[$start_byte + $i * 3])) >= 40 )
 			$result[$start_byte + $i * 3] = chr(dechex(ord($result[$start_byte + $i * 3])) - 40);
 			if ( strlen($result) > $start_byte + 2 + $i * 3 )
-			$ret[$i] = hexdec(dd($result[$start_byte + $i * 3]).dd($result[$start_byte + $i * 3 + 2]).dd($result[$start_byte + $i * 3 + 1]))*$factor;
+			$ret[$i] = hexdec($this->dd($result[$start_byte + $i * 3]).$this->dd($result[$start_byte + $i * 3 + 2]).$this->dd($result[$start_byte + $i * 3 + 1]))*$factor;
 		}
 	}
 	else
-		$ret[0] = hexdec(dd($result[$start_byte+1]).dd($result[$start_byte]).dd($result[$start_byte+3]).dd($result[$start_byte+2]))*$factor;
+		$ret[0] = hexdec($this->dd($result[$start_byte+1]).$this->dd($result[$start_byte]).$this->dd($result[$start_byte+3]).$this->dd($result[$start_byte+2]))*$factor;
 	return $ret;
 }
 //////////////////////////////////////////////
 function read  ($socket252)
 {
 $cachedVoiceDir = ROOT . 'cms/cached/';
-$file = $cachedVoiceDir . 'mercurydebugread.txt';
+$file = $cachedVoiceDir . 'mercurydebug.txt';
 // Открываем файл для получения существующего содержимого
-$debug = file_get_contents($file);
+$debug .= file_get_contents($file);
 
-$debug .="Читаем ответ:\n\n";
-   $out = socket_read($socket252, 2048);
-$debug .= bin2hex($out)."<br>";
+$debug .="Читаем ответ:\n";
+$out = socket_read($socket252, 2048);
+$debug .= bin2hex($out)."\n";
 // Пишем содержимое обратно в файл
 file_put_contents($file, $debug);
-   return $out;
+
+return $out;
 }
 
 //////////////////////////////////////////////
