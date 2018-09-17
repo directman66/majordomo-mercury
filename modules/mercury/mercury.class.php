@@ -131,11 +131,14 @@ if (gg('cycle_mercuryRun')) {
 * @access public
 */
 function admin(&$out) {
+
+if (gg('cycle_mercuryRun')) {
         if ((time() - gg('cycle_mercuryRun')) < 360*2 ) {
 			$out['CYCLERUN'] = 1;
 		} else {
 			$out['CYCLERUN'] = 0;
 		}
+}
 	
 $now=date();
 
