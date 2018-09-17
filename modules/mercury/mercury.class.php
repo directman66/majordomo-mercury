@@ -1020,6 +1020,8 @@ sg($objn.".lasttimestamp", time());
 sg($objn.".lasttotal2", $currentcount);
 ';
 
+addClassMethod($classname,'ChangeT1',$ChangeT1);	 
+addClassMethod($classname,'ChangeT2',$ChangeT2);	 
 
 
 
