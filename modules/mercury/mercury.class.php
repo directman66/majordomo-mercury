@@ -83,6 +83,7 @@ function getParams() {
   if (isset($tab)) {
    $this->tab=$tab;
   }
+  $this->checkSettings();
 }
 /**
 * Run
@@ -178,7 +179,8 @@ $out['MODEL']=$cmd_rec['MODEL'];
  $out['U2']=$cmd_rec['Uv2'];		
  $out['U3']=$cmd_rec['Uv3'];		
 
- $out['OBJECTNAME']='Mercury_'.$cmd_rec['ID'];		
+$objectname='Mercury_'.$cmd_rec['ID'];		
+$out['OBJECTNAME']=$objectname;
 
 $arU=array();
 if ($cmd_rec['Uv1']) {$arU[1]=$cmd_rec['Uv1'];};
@@ -195,26 +197,17 @@ if ($cmd_rec['Uv1']) {$arU[3]=$cmd_rec['Uv3'];};
 
 $now=date();
 
-$out['MONTH_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-2629743 ,$now));
-$out['MONTH_RUB']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-2629743,$now));
+$out['MONTH_WATT']=round(getHistorySum($objectname.'.potrebleno_w', $now-2629743 ,$now));
+$out['MONTH_RUB']=round(getHistorySum($objectname.'.potrebleno_w_rub', $now-2629743,$now));
 
-$out['DAY_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-86400 ,$now));
-$out['DAY_RUB']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-86400 ,$now));
+$out['DAY_WATT']=round(getHistorySum($objectname.'.potrebleno_w', $now-86400 ,$now));
+$out['DAY_RUB']=round(getHistorySum($objectname.'.potrebleno_w_rub', $now-86400 ,$now));
 
-$out['WEEK_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-604800 ,$now));
-$out['WEEK_RUB']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-604800 ,$now));
+$out['WEEK_WATT']=round(getHistorySum($objectname.'.potrebleno_w', $now-604800 ,$now));
+$out['WEEK_RUB']=round(getHistorySum($objectname.'.potrebleno_w_rub', $now-604800 ,$now));
 
-$out['YEAR_WATT']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w', $now-31556926 ,$now));
-$out['YEAR_RUB']=round(getHistorySum(SETTINGS_APPMILUR_MODEL.'.potrebleno_w_rub', $now-31556926 ,$now));
-
-
-//$cmd_rec = SQLSelectOne("SELECT VALUE FROM milur_config where parametr='DEBUG'");
-//$out['MSG_DEBUG']=$cmd_rec['VALUE'];
-
-
-
-
-
+$out['YEAR_WATT']=round(getHistorySum($objectname.'.potrebleno_w', $now-31556926 ,$now));
+$out['YEAR_RUB']=round(getHistorySum($objectname.'.potrebleno_w_rub', $now-31556926 ,$now));
 
 
 
@@ -276,12 +269,53 @@ $this->getpu($this->id);
    $this->indata_edit($out, $this->id);
   }
 
+}
+
+   
+
+function checkSettings() {
+  $settings=array(
+    array(
+    'NAME'=>'APPMERCURY_T1', 
+    'TITLE'=>'Стоимость Тариф 1, RUB',
+    'TYPE'=>'text',
+    'DEFAULT'=>'2.99' )
+ ,  array(    'NAME'=>'APPMERCURY_T2', 
+    'TITLE'=>'Стоимость Тариф 2, RUB',
+    'TYPE'=>'text',  
+    'DEFAULT'=>'1.42'    )
+,array('NAME'=>'APPMERCURY_INTERVAL', 
+    'TITLE'=>'Период опроса (min)', 
+    'TYPE'=>'text',
+    'DEFAULT'=>'5'    )
+,   array(    'NAME'=>'APPMERCURY_ENABLE', 
+    'TITLE'=>'Включен цикл',
+    'TYPE'=>'yesno',
+    'DEFAULT'=>'1'    )
+,   array(    'NAME'=>'APPMERCURY_ENABLEDEBUG', 
+    'TITLE'=>'Включена отладка',
+    'TYPE'=>'yesno',
+    'DEFAULT'=>'2'    )   );
+   foreach($settings as $k=>$v) {
+    $rec=SQLSelectOne("SELECT ID FROM settings WHERE NAME='".$v['NAME']."'");
+    if (!$rec['ID']) {
+     $rec['NAME']=$v['NAME'];
+     $rec['VALUE']=$v['DEFAULT'];
+     $rec['DEFAULTVALUE']=$v['DEFAULT'];
+     $rec['TITLE']=$v['TITLE'];
+     $rec['TYPE']=$v['TYPE'];
+     $rec['DATA']=$v['DATA'];
+     $rec['ID']=SQLInsert('settings', $rec);
+     Define('SETTINGS_'.$rec['NAME'], $v['DEFAULT']);
+    }
+   }}
 
 
+ 	
+ 
+	
+	
 
-
-
-}  
 
  function indata_edit(&$out, $id) {
   require(DIR_MODULES.$this->name.'/indata_edit.inc.php');
@@ -341,7 +375,7 @@ function usual(&$out) {
 
 
 /**
-* milur_devices search
+
 *
 * @access public
 */
@@ -351,7 +385,7 @@ function usual(&$out) {
  
  function processCycle() {
 //   $every=$this->config['EVERY'];
-// $every=SETTINGS_APPMILUR_EVERY;
+
 
 
 $cmd_rec = SQLSelectOne("SELECT VALUE FROM mercury_config where parametr='ENABLE'");
@@ -605,13 +639,13 @@ file_put_contents($file, $debug);
 //////////////////////////////////////////////
 
 /**
-* milur_devices edit/add
+
 *
 * @access public
 */
  
 /**
-* milur_devices delete record
+
 *
 * @access public
 */
