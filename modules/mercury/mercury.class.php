@@ -157,7 +157,8 @@ $cmd_rec = SQLSelectOne("SELECT * FROM mercury_devices where FIO='$currentid'");
 
 $out['MODEL']=$cmd_rec['MODEL'];		
 
- $out['TS']=date('m/d/Y H:i:s',$cmd_rec['TS']);		
+
+ $out['TS2']=date('m/d/Y H:i:s',$cmd_rec['TS']);		
  $out['COUNTTS']=date('m/d/Y H:i:s',$cmd_rec['TS']);		
 
 // $out['P']=$cmd_rec['Pv1']+$cmd_rec['Pv2']+$cmd_rec['Pv3'];		
@@ -177,7 +178,7 @@ $out['MODEL']=$cmd_rec['MODEL'];
  $out['U2']=$cmd_rec['Uv2'];		
  $out['U3']=$cmd_rec['Uv3'];		
 
- $out['OBKJECTNAME']='Mercury_'.$cmd_rec['ID'];		
+ $out['OBJECTNAME']='Mercury_'.$cmd_rec['ID'];		
 
 $arU=array();
 if ($cmd_rec['Uv1']) {$arU[1]=$cmd_rec['Uv1'];};
@@ -555,8 +556,8 @@ if (round($Uv[1],0)) {$arU[2]=round($Uv[1],0);}
 if (round($Uv[2],0)) {$arU[3]=round($Uv[2],0);}
 
  
-sg($objname.'.U',$this->average($arU));	
-$sql['U']=$this->average($arU);
+sg($objname.'.U',round($this->average($arU)));	
+$sql['U']=round($this->average($arU));
 
 
 
@@ -565,7 +566,9 @@ $sql['U']=$this->average($arU);
 # =====================================================
 $Tot = $this->merc_gd($socket252,$this->calcCRC($device252,"050000"), 0.001, 1);
 $debug .= "Total: $Tot[0]<br>";
-if ($Tot[0]) {sg($objname.'.Total',round($Tot[0],0)); $sql['Total']=round($Tot[0],0);}
+if ($Tot[0]) {sg($objname.'.Total',round($Tot[0],0)); $sql['Total']=round($Tot[0],0);
+$sql['TS']=time();
+}
 
 
 $Tot = $this->merc_gd($socket252,$this->calcCRC($device252,"050001"), 0.001, 1);
