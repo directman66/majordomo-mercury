@@ -183,6 +183,7 @@ $out['MODEL']=$cmd_rec['MODEL'];
 $objectname='Mercury_'.$cmd_rec['ID'];		
 $out['OBJECTNAME']=$objectname;
 
+if (gg($objectname.'.FIO')!=$cmd_rec['FIO'])  sg($objectname.'.FIO',$cmd_rec['FIO']);		
 
 
 
@@ -194,17 +195,17 @@ $out['OBJECTNAME']=$objectname;
 
 $now=time();
 
-$out['MONTH_WATT']=round(getHistorySum($objectname.'.potrebleno_w', $now-2629743 ,$now));
-$out['MONTH_RUB']=round(getHistorySum($objectname.'.potrebleno_w_rub', $now-2629743,$now));
+$out['MONTH_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-2629743 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-2629743 ,$now));
+$out['MONTH_RUB']=0;
 
-$out['DAY_WATT']=round(getHistorySum($objectname.'.potrebleno_w', $now-86400 ,$now));
-$out['DAY_RUB']=round(getHistorySum($objectname.'.potrebleno_w_rub', $now-86400 ,$now));
+$out['DAY_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-86400 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-86400 ,$now));
+$out['DAY_RUB']=0;
 
-$out['WEEK_WATT']=round(getHistorySum($objectname.'.potrebleno_w', $now-604800 ,$now));
-$out['WEEK_RUB']=round(getHistorySum($objectname.'.potrebleno_w_rub', $now-604800 ,$now));
+$out['WEEK_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-604800 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-604800 ,$now));
+$out['WEEK_RUB']=0;
 
-$out['YEAR_WATT']=round(getHistorySum($objectname.'.potrebleno_w', $now-31556926 ,$now));
-$out['YEAR_RUB']=round(getHistorySum($objectname.'.potrebleno_w_rub', $now-31556926 ,$now));
+$out['YEAR_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-31556926 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-31556926 ,$now));
+$out['YEAR_RUB']=0;
 
 
 
@@ -989,6 +990,38 @@ setGlobal('cycle_mercuryAutoRestart','1');
 $classname='Mercury';
 addClass($classname); 
 
+$ChangeT1='
+$objn=$this->object_title;
+$currentcount=$this->getProperty("Total1");
+$lasttotal=gg($objn.".lasttotal1");
+
+SQLUpdate("objects", array("ID"=>$this->id, "DESCRIPTION"=>gg($objn.".FIO")." P:".gg($objn.".PvT")." U:".gg($objn.".U")." ".gg("sysdate")."  ".gg("timenow"))); 
+if (IsSet($lasttotal) and ($lasttotal<>0) )
+{
+$rashod=$currentcount-$lasttotal;
+sg($objn.".rashodt1",$rashod);}
+
+
+sg($objn.".lasttimestamp", time());
+sg($objn.".lasttotal1", $currentcount);';
+$ChangeT2='
+$objn=$this->object_title;
+$currentcount=$this->getProperty("Total2");
+$lasttotal=gg($objn.".lasttotal2");
+
+SQLUpdate("objects", array("ID"=>$this->id, "DESCRIPTION"=>gg($objn.".FIO")." P:".gg($objn.".PvT")." U:".gg($objn.".U")." ".gg("sysdate")."  ".gg("timenow"))); 
+if (IsSet($lasttotal) and ($lasttotal<>0) )
+{
+$rashod=$currentcount-$lasttotal;
+sg($objn.".rashodt2",$rashod);}
+
+
+sg($objn.".lasttimestamp", time());
+sg($objn.".lasttotal2", $currentcount);
+';
+
+
+
 
 $prop_id=addClassProperty($classname, 'Adress', 0);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
@@ -1094,6 +1127,33 @@ $prop_id=addClassProperty($classname, 'Uv3', 7);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Напряжение по фазе 3'; //   <-----------
 SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'rashodt1', 365);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Израсходовано по тарифу 1'; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'rashodt2', 365);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Израсходовано по тарифу 1'; //   <-----------
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'Total1', 0);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Текущее значение счетчика по тарифу 1'; //   <-----------
+$property['ONCHANGE']="ChangeT1"; //	   	       
+SQLUpdate('properties',$property); }
+
+$prop_id=addClassProperty($classname, 'Total2', 0);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Текущее значение счетчика по тарифу 2'; //   <-----------
+$property['ONCHANGE']="ChangeT2"; //	   	       
+SQLUpdate('properties',$property); }
+
+
+
+
+
 
 
 
@@ -1255,13 +1315,13 @@ function calcCRC($device252,$msg)
 //////////////////////////////////////////////
 //////////////////////////////////////////////
 function send  ($socket252, $hex = "") {
-$cachedVoiceDir = ROOT . 'cms/cached/';
-$file = $cachedVoiceDir . 'mercurydebug.txt';
-// Открываем файл для получения существующего содержимого
+$file = ROOT . 'cms/cached/mercurydebug.txt';
 $debug .= file_get_contents($file);
+
 $debug .= "Отправляем запрос ".$hex."<br>\n";
+file_put_contents($file, $debug);
   $in = hex2bin($hex);
-$debug .=  " ".$in." ";
+//$debug .=  " ".$in." ";
   socket_write($socket252, $in, strlen($in));
 $debug .=  "OK.<br>\n"; 
 // Пишем содержимое обратно в файл
@@ -1295,17 +1355,17 @@ $result =$this->read($socket252);
 	return $ret;
 }
 //////////////////////////////////////////////
-function read  ($socket252)
+function read($socket252)
 {
-$cachedVoiceDir = ROOT . 'cms/cached/';
-$file = $cachedVoiceDir . 'mercurydebug.txt';
-// Открываем файл для получения существующего содержимого
+
+$file = ROOT . 'cms/cached/mercurydebug.txt';
+
 $debug .= file_get_contents($file);
 
 $debug .="Читаем ответ:<br>\n";
 $out = socket_read($socket252, 2048);
 $debug .= bin2hex($out)."<br>\n";
-// Пишем содержимое обратно в файл
+
 file_put_contents($file, $debug);
 
 return $out;
