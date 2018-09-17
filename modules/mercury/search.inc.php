@@ -39,7 +39,7 @@
   if (!$sortby_snmpdevices) $sortby_snmpdevices="TITLE";
   $out['SORTBY']=$sortby_snmpdevices;
   // SEARCH RESULTS
-  $res=SQLSelect("SELECT * FROM mercury_devices WHERE $qry ORDER BY ".$sortby_snmpdevices);
+  $res=SQLSelect("SELECT mercury_devices.*, DATE_FORMAT(FROM_UNIXTIME(TS), '%d-%m-%Y') as TS3 FROM mercury_devices WHERE $qry ORDER BY ".$sortby_snmpdevices);
   if ($res[0]['ID']) {
    colorizeArray($res);
    $total=count($res);
