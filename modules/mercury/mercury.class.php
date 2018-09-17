@@ -178,19 +178,16 @@ $out['MODEL']=$cmd_rec['MODEL'];
  $out['U1']=$cmd_rec['Uv1'];		
  $out['U2']=$cmd_rec['Uv2'];		
  $out['U3']=$cmd_rec['Uv3'];		
+ $out['U']=$cmd_rec['U'];		
 
 $objectname='Mercury_'.$cmd_rec['ID'];		
 $out['OBJECTNAME']=$objectname;
 
-$arU=array();
-if ($cmd_rec['Uv1']) {$arU[1]=$cmd_rec['Uv1'];};
-if ($cmd_rec['Uv1']) {$arU[2]=$cmd_rec['Uv2'];};
-if ($cmd_rec['Uv1']) {$arU[3]=$cmd_rec['Uv3'];};
 
- $out['U']=$this->average($arU);		
+
 
  $out['S0']=$cmd_rec['Total'];		
-	 $out['S1']=$cmd_rec['Total1'];		
+ $out['S1']=$cmd_rec['Total1'];		
  $out['S2']=$cmd_rec['Total2'];	
 	
 
