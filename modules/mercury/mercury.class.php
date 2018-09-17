@@ -112,11 +112,13 @@ function run() {
   $out['TAB']=$this->tab;
   $this->data=$out;
 
+if (gg('cycle_mercuryRun')) {
         if ((time() - gg('cycle_mercuryRun')) < 360*2 ) {
 			$out['CYCLERUN'] = 1;
 		} else {
 			$out['CYCLERUN'] = 0;
 		}
+}
 
   $p=new parser(DIR_TEMPLATES.$this->name."/".$this->name.".html", $this->data, $this);
   $this->result=$p->result;
