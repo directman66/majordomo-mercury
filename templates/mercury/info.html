@@ -13,8 +13,8 @@ padding: .3em 1em
 [#CURRENT#]
 <table class="raz">
 <tr>  
-<td ><b><a href="?data_source=<#DATA_SOURCE#>&view_mode=getpu&tab=" title="Нажмите, чтобы обновить">Обновлено:    [#TS#] </a><b></td>
-<td ><b><a href="?data_source=<#DATA_SOURCE#>&view_mode=getcounters&tab=" title="Нажмите, чтобы обновить">Показания: [#COUNTTS#]</a><b></td>
+<td ><b><a href="?data_source=<#DATA_SOURCE#>&view_mode=getpu&tab=" title="Нажмите, чтобы обновить">Обновлено:    [#TS2#] </a><b></td>
+<td ><b><a href="?data_source=<#DATA_SOURCE#>&view_mode=getcounters&tab=" title="Нажмите, чтобы обновить">Показания: [#TS2#]</a><b></td>
 
 <td><b>Расходы:<br></td>
 
@@ -54,6 +54,7 @@ padding: .3em 1em
 <td>Мощность:</td>
 <td>Напряжение:</td>
 </tr><tr>
+[#OBJECTNAME#]
 <td><iframe src="/module/charts.html?id=config&period=24h&property=[#OBJECTNAME#].PvT&bg=light" width=600 height=400></iframe> </td>
 <td><iframe src="/module/charts.html?id=config&period=24h&property=[#OBJECTNAME#].U" width=600 height=400 bgcolor='red'></iframe> </td>
 </tr>
