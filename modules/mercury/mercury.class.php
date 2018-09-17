@@ -141,7 +141,7 @@ if (gg('cycle_mercuryRun')) {
 		}
 }
 	
-$now=date();
+
 
 //$cmd_rec = SQLSelectOne("SELECT VALUE FROM mercury_config where parametr='DEBUG'");
 $cachedVoiceDir = ROOT . 'cms/cached/';
@@ -195,7 +195,7 @@ if ($cmd_rec['Uv1']) {$arU[3]=$cmd_rec['Uv3'];};
 	
 
 
-$now=date();
+$now=time();
 
 $out['MONTH_WATT']=round(getHistorySum($objectname.'.potrebleno_w', $now-2629743 ,$now));
 $out['MONTH_RUB']=round(getHistorySum($objectname.'.potrebleno_w_rub', $now-2629743,$now));
