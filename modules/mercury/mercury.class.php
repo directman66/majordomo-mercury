@@ -140,7 +140,7 @@ $now=date();
 $cmd_rec = SQLSelectOne("SELECT VALUE FROM mercury_config where parametr='DEBUG'");
 $out['MSG_DEBUG']=$cmd_rec['VALUE'];
 
-$cmd_rec = SQLSelectOne("SELECT VALUE FROM milur_config where parametr='CURRENT'");
+$cmd_rec = SQLSelectOne("SELECT VALUE FROM mercury_config where parametr='CURRENT'");
 $out['CURRENT']=$cmd_rec['VALUE'];
 
 
