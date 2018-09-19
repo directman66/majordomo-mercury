@@ -1130,6 +1130,11 @@ if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop
 $property['DESCRIPTION']='Напряжение по фазе 3'; //   <-----------
 SQLUpdate('properties',$property); }
 
+$prop_id=addClassProperty($classname, 'U', 7);
+if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
+$property['DESCRIPTION']='Напряжение, среднее значение по 3 фазам'; //   <-----------
+SQLUpdate('properties',$property); }
+
 $prop_id=addClassProperty($classname, 'rashodt1', 365);
 if ($prop_id) {$property=SQLSelectOne("SELECT * FROM properties WHERE ID=".$prop_id);
 $property['DESCRIPTION']='Израсходовано по тарифу 1'; //   <-----------
