@@ -196,16 +196,16 @@ if (gg($objectname.'.FIO')!=$cmd_rec['FIO'])  sg($objectname.'.FIO',$cmd_rec['FI
 $now=time();
 
 $out['MONTH_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-2629743 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-2629743 ,$now));
-$out['MONTH_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-2629743 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-2629743 ,$now)*SETTINGS_APPMERCURY_T1));
+$out['MONTH_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-2629743 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-2629743 ,$now)*SETTINGS_APPMERCURY_T2));
 
 $out['DAY_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-86400 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-86400 ,$now));
-$out['DAY_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-86400 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-86400 ,$now)*SETTINGS_APPMERCURY_T1));
+$out['DAY_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-86400 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-86400 ,$now)*SETTINGS_APPMERCURY_T2));
 
 $out['WEEK_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-604800 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-604800 ,$now));
-$out['WEEK_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-604800 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-604800 ,$now)*SETTINGS_APPMERCURY_T1));
+$out['WEEK_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-604800 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-604800 ,$now)*SETTINGS_APPMERCURY_T2));
 
 $out['YEAR_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-31556926 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-31556926 ,$now));
-$out['YEAR_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-31556926 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-31556926 ,$now)*SETTINGS_APPMERCURY_T1));
+$out['YEAR_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-31556926 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-31556926 ,$now)*SETTINGS_APPMERCURY_T2));
 
 
 
@@ -238,6 +238,7 @@ $this->getpu($myid);
 
 if ($this->view_mode=='get_counters') {
 $this->getpu($this->id);
+$this->getrates($this->id);
 }  
 
 
@@ -284,7 +285,30 @@ $this->getinfo($this->id);
 
 }
 
-   
+  
+
+
+
+function getrates($id) {
+
+$cmd_rec = SQLSelectOne("SELECT * FROM mercury_devices where ID='$id'");
+
+$objectname='Mercury_'.$cmd_rec['ID'];		
+$now=time();
+$cmd_rec['MONTH_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-2629743 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-2629743 ,$now));
+$cmd_rec['MONTH_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-2629743 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-2629743 ,$now)*SETTINGS_APPMERCURY_T2));
+
+$cmd_rec['DAY_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-86400 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-86400 ,$now));
+$cmd_rec['$DAY_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-86400 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-86400 ,$now)*SETTINGS_APPMERCURY_T2));
+
+$cmd_rec['WEEK_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-604800 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-604800 ,$now));
+$cmd_rec['$WEEK_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-604800 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-604800 ,$now)*SETTINGS_APPMERCURY_T2));
+
+$cmd_rec['YEAR_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-31556926 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-31556926 ,$now));
+$cmd_rec['$YEAR_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-31556926 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-31556926 ,$now)*SETTINGS_APPMERCURY_T2));
+SQLUpdate('mercury_devices',$cmd_rec);
+}
+ 
 
 function checkSettings() {
   $settings=array(
@@ -436,6 +460,7 @@ $myid=$cmd_r['ID'];
 $debug .= "Начинаем запрашивать счетчик $myid. <br>\n";
 file_put_contents($file, $debug);
 $this->getpu($myid);
+$this->getrates($this->id);
 }
 
 
@@ -1183,6 +1208,8 @@ SQLUpdate('properties',$property); }
  mercury_devices: ONLINE varchar(100) NOT NULL DEFAULT ''
  mercury_devices: STATE varchar(100) NOT NULL DEFAULT ''
  mercury_devices: TS varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: USERIP varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: USERHASH varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Ia1 varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Ia2 varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Ia3 varchar(100) NOT NULL DEFAULT ''
@@ -1218,6 +1245,16 @@ SQLUpdate('properties',$property); }
  mercury_devices: Leak4 varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Leak5 varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Leak6 varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: MONTH_WATT varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: MONTH_RUB varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: DAY_WATT varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: DAY_RUB varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: WEEK_WATT varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: WEEK_RUB varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: YEAR_WATT varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: YEAR_RUB varchar(100) NOT NULL DEFAULT ''
+
+
 EOD;
   parent::dbInstall($data);
 
