@@ -283,6 +283,12 @@ $this->getinfo($this->id);
    $this->indata_edit($out, $this->id);
   }
 
+
+  if ($this->view_mode=='getrates') {
+   $this->getrates($this->id);
+  }
+
+
 }
 
   
@@ -294,6 +300,7 @@ function getrates($id) {
 $cmd_rec = SQLSelectOne("SELECT * FROM mercury_devices where ID='$id'");
 
 $objectname='Mercury_'.$cmd_rec['ID'];		
+pmesg($objectname);
 $now=time();
 $cmd_rec['MONTH_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-2629743 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-2629743 ,$now));
 $cmd_rec['MONTH_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-2629743 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-2629743 ,$now)*SETTINGS_APPMERCURY_T2));
