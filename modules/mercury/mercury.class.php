@@ -297,24 +297,43 @@ $this->getinfo($this->id);
 
 function getrates($id) {
 
-$cmd_rec = SQLSelectOne("SELECT * FROM mercury_devices where ID='$id'");
+if (!$id){
 
-$objectname='Mercury_'.$cmd_rec['ID'];		
-pmesg($objectname);
+$all_rec = SQLSelect("SELECT * FROM mercury_devices");
+foreach ($all_rec as $rc) {
+$this->updaterates($rc['ID']);
+}
+} else {
+
+$this->updaterates($id);
+}
+}
+
+function updaterates($id) {
+
+//pmesg($objectname);
+$objectname='Mercury_'.$id;		
+$cmd_rec = SQLSelectOne("SELECT * FROM mercury_devices where ID='$id'");
 $now=time();
 $cmd_rec['MONTH_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-2629743 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-2629743 ,$now));
 $cmd_rec['MONTH_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-2629743 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-2629743 ,$now)*SETTINGS_APPMERCURY_T2));
 
 $cmd_rec['DAY_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-86400 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-86400 ,$now));
-$cmd_rec['$DAY_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-86400 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-86400 ,$now)*SETTINGS_APPMERCURY_T2));
+$cmd_rec['DAY_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-86400 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-86400 ,$now)*SETTINGS_APPMERCURY_T2));
 
 $cmd_rec['WEEK_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-604800 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-604800 ,$now));
-$cmd_rec['$WEEK_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-604800 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-604800 ,$now)*SETTINGS_APPMERCURY_T2));
+$cmd_rec['WEEK_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-604800 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-604800 ,$now)*SETTINGS_APPMERCURY_T2));
 
 $cmd_rec['YEAR_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-31556926 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-31556926 ,$now));
-$cmd_rec['$YEAR_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-31556926 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-31556926 ,$now)*SETTINGS_APPMERCURY_T2));
+$cmd_rec['YEAR_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-31556926 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-31556926 ,$now)*SETTINGS_APPMERCURY_T2));
 SQLUpdate('mercury_devices',$cmd_rec);
 }
+
+function processSubscription($event_name, $details='') {
+  if ($event_name=='HOURLY') {
+		$this->getrates();
+  }
+ }	
  
 
 function checkSettings() {
