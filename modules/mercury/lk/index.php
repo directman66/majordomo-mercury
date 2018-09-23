@@ -12,11 +12,14 @@ function generateCode($length=6) {
     return $code;
 }
 
+// Соединямся с БД
+
+chdir(dirname(__FILE__) . '/..');
+include_once("./config.php");
+include_once("./lib/loader.php");
 
 
-
-///$link=mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-$link=mysqli_connect('localhost', 'pi', 'DB_PASSWORD', 'db_terminal');
+$link=mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
 if(isset($_POST['submit']))
 {
@@ -61,9 +64,13 @@ $sql="UPDATE mercury_devices SET USERIP='$insip', USERHASH='$hash' WHERE LOGIN='
 //Не прикреплять к IP(не безопасно) <input type="checkbox" name="not_attach_ip"><br>
 }
 ?>
+<center><h4>
 <form method="POST">
+
 Логин <input name="login" type="text" required><br>
 Пароль <input name="password" type="password" required><br>
 
 <input name="submit" type="submit" value="Войти">
 </form>
+
+</center></h4>
