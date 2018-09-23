@@ -407,7 +407,8 @@ else
   require(DIR_MODULES.$this->name.'/search.inc.php');
  }
 
- function updatecurrent(&$out) {
+// function updatecurrent(&$out) {
+ function updatecurrent($out) {
 global $current;
 $cmd_rec = SQLSelect("update mercury_config set VALUE='$current' where parametr='CURRENT'");
 $out["CURRENT"]= $current;
@@ -416,9 +417,11 @@ $out["CURRENT"]= $current;
 
 function getcurrent(&$out) {
 
-$cmd_rec = SQLSelectOne("select VALUE from mercury_config where parametr='CURRENT'");
-$out["CURRENT"]= $cmd_rec['VALUE'];
+//$cmd_rec = SQLSelectOne("select VALUE from mercury_config where parametr='CURRENT'");
+//$out["CURRENT"]= $cmd_rec['VALUE'];
 //$out["CURRENT"]="123";
+global $current;
+$out["CURRENT"]=$current;
 }
 
 
@@ -898,15 +901,16 @@ if ( round($Pv[0], 2) != round($Pv[1] + $Pv[2] + $Pv[3], 2) )
 $debug .= "Pv: $Pv[0] - $Pv[1] - $Pv[2] - $Pv[3] $error<br>";
 if ($error == "")
 {
-sg($objname.'.PvT',round($Pv[0],0));
-sg($objname.'.Pv1',$Pv[1]);
-sg($objname.'.Pv2',$Pv[2]);
-sg($objname.'.Pv3',$Pv[3]);
+//if (round($Pv[0],0)) sg($objname.'.PvT',round($Pv[0],0));
+if ($Pv[0]) sg($objname.'.PvT',round($Pv[0],0));
+if ($Pv[1]) sg($objname.'.Pv1',$Pv[1]);
+if ($Pv[2]) sg($objname.'.Pv2',$Pv[2]);
+if ($Pv[3]) sg($objname.'.Pv3',$Pv[3]);
 
-$sql['PvT']=round($Pv[0],0);
-$sql['Pv1']=$Pv[1];
-$sql['Pv2']=$Pv[2];
-$sql['Pv3']=$Pv[3];
+if ($Pv[0]) $sql['PvT']=round($Pv[0],0);
+if ($Pv[1]) $sql['Pv1']=$Pv[1];
+if ($Pv[2]) $sql['Pv2']=$Pv[2];
+if ($Pv[3]) $sql['Pv3']=$Pv[3];
 }
 # Cosf по фазам
 # =====================================================
@@ -936,10 +940,16 @@ if (round($Uv[0],0)) {$arU[1]=round($Uv[0],0);}
 if (round($Uv[1],0)) {$arU[2]=round($Uv[1],0);}
 if (round($Uv[2],0)) {$arU[3]=round($Uv[2],0);}
 
- 
-sg($objname.'.U',round($this->average($arU)));	
-$sql['U']=round($this->average($arU));
+//echo $this->average($arU);
+if ( (round($Uv[0],0))&&(round($Uv[1],0))&&(round($Uv[2],0))){
 
+
+$temp=round($this->average($arU));
+if  ($temp) {
+sg($objname.'.U',$temp);	
+$sql['U']=$temp;
+}
+}
 
 
 
@@ -1488,4 +1498,3 @@ function average($arr)
 
 //////////////////////////////////////////////
 //////////////////////////////////////////////
-
