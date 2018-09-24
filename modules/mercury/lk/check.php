@@ -2,7 +2,7 @@
 // Скрипт проверки
 
 
- chdir('../../');
+chdir(dirname(__FILE__) . '/../../..');
  include_once("./config.php");
  include_once("./lib/loader.php");
  include_once(DIR_MODULES."application.class.php");
