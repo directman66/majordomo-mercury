@@ -64,6 +64,12 @@ sg('test.merktitle',$title);
 
    $rec['STREET']=$street;
 
+  global $login;
+  $rec['LOGIN']=$login;
+
+  global $password;
+  $rec['PASSWORD']=$password;
+
    
    //UPDATING RECORD
 //sg('test.merk',$ok);
