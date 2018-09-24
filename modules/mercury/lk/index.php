@@ -14,7 +14,7 @@ function generateCode($length=6) {
 
 // Соединямся с БД
 
-chdir(dirname(__FILE__) . '/..');
+chdir(dirname(__FILE__) . '/../..');
 include_once("./config.php");
 include_once("./lib/loader.php");
 
