@@ -62,8 +62,8 @@ $sumu=0;
 foreach ($pred as $rec) 
 {
 $obsh=$rec['Total1']+$rec['Total2'];
-$sump=$sump+$rec['PvT'];
-$sumi=$sumi+$rec['IaT'];
+if (isset($rec['PvT'])) $sump=$sump+$rec['PvT'];
+if (isset($rec['IaT'])) $sumi=$sumi+$rec['IaT'];
 $ts=date('m/d/Y H:i:s',$cmd_rec['TS']);		
 
 if ($rec['ONLINE']==1)
