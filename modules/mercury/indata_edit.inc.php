@@ -70,6 +70,11 @@ sg('test.merktitle',$title);
   global $password;
   $rec['PASSWORD']=$password;
 
+
+  global $predsed;
+  $rec['PREDSED']=$predsed;
+
+
    
    //UPDATING RECORD
 //sg('test.merk',$ok);
