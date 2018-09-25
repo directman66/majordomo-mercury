@@ -41,11 +41,39 @@ $userdata=SQLSelectOne($sql);
         print "Доброе время суток! Пользователь:".$userdata['FIO']."(". $userdata['STREET'].")<br><br>";
 
         print "По данным системы мониторинга, потребление вашего счетчика составляет  ".$userdata['PvT'] .' Вт, напряжение на фазах '.$userdata['U']." В, измеренная сила тока ".$userdata['IaT'].' A.<br><br>';
-        print "Регистры счетчика: Тариф 1: ".$userdata['Total1'].", Тариф 2: ".$userdata['Total2'] .'<br><br>';
+        print "Регистры счетчика: Тариф 1: ".$userdata['Total1'].", Тариф 2: ".$userdata['Total2'] .'<br>';
+$obsh=$userdata['Total1']+$userdata['Total2'];
+        print "Общее значение счетчика накопленной энергии: ".$obsh .'<br><br>';
         print "Расходы за день: ".$userdata['DAY_WATT']." Вт /  ".$userdata['DAY_RUB'] .' руб.<br>';
         print "Расходы за неделю: ".$userdata['WEEK_WATT']." Вт /  ".$userdata['WEEK_RUB'] .'руб.<br>';
         print "Расходы за месяц: ".$userdata['MONTH_WATT']." Вт /  ".$userdata['MONTH_RUB'] .'руб.<br>';
         print "Расходы за год: ".$userdata['YEAR_WATT']." Вт /  ".$userdata['YEAR_RUB'] .'руб.<br>';
+
+if ($userdata['PREDSED']=='1') {
+echo "<br><br>Профиль председателя.<br>";
+
+$sql="SELECT * FROM mercury_devices ";
+$pred=SQLSelect($sql);
+echo '<table width="100%" cellspacing="0" cellpadding="4" border="1">';
+echo "<tr><td>".'ФИО'."</td><td>".'Адрес'."</td><td>".'Сост.'."</td><td>".'ONLINE'."</td><td>Обновлено</td><td>".'IaT'."</td><td>".'PvT'."</td><td>".'U'."</td><td>Показания</td><tr>";
+$sump=0;
+$sumi=0;
+$sumu=0;
+foreach ($pred as $rec) 
+{
+$obsh=$rec['Total1']+$rec['Total2'];
+$sump=$sump+$obsh;
+$sumi=$sumi+$rec['IvT'];
+
+echo "<tr><td>".$rec['FIO']."</td><td>".$rec['STREET']."</td><td>".$rec['STATE']."</td><td>".$rec['ONLINE']."</td><td>".$rec['TS']."</td><td>".$rec['IaT']."</td><td>".$rec['PvT']."</td><td>".$rec['U']."</td><td>".$obsh."</td><tr>";
+}
+echo "<tr><td>Итого</td><td></td><td></td><td></td><td></td><td>".$sumi."</td><td>".$sump."</td><td></td><td></td></tr>";
+echo "</table>";
+
+
+
+}
+
 
 
 
@@ -180,7 +208,7 @@ echo $stroka;
 Highcharts.chart('chart3', {
 
   chart: {
-    borderWidth: 1,
+    borderWidth: 0,
     plotBorderWidth: 0,
     spacingTop: 10
     ,width: 350
