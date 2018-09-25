@@ -1289,7 +1289,7 @@ SQLUpdate('properties',$property); }
  mercury_devices: WEEK_RUB varchar(100) NOT NULL DEFAULT ''
  mercury_devices: YEAR_WATT varchar(100) NOT NULL DEFAULT ''
  mercury_devices: YEAR_RUB varchar(100) NOT NULL DEFAULT ''
- mercury_devices: ISPREDSED int(10) NOT NULL DEFAULT ''
+ mercury_devices: PREDSED int(10) NOT NULL DEFAULT ''
 
 
 EOD;
