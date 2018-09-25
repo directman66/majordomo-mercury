@@ -38,7 +38,7 @@ $userdata=SQLSelectOne($sql);
     }
     else
     {
-        print "Доброе время суток! Пользователь:".$userdata['FIO']."(". $userdata['STREET'].")<br><br>";
+        print "<h1>Доброе время суток! Пользователь:".$userdata['FIO']."(". $userdata['STREET'].")</h1><br><br>";
 
         print "По данным системы мониторинга, потребление вашего счетчика составляет  ".$userdata['PvT'] .' Вт, напряжение на фазах '.$userdata['U']." В, измеренная сила тока ".$userdata['IaT'].' A.<br><br>';
         print "Регистры счетчика: Тариф 1: ".$userdata['Total1'].", Тариф 2: ".$userdata['Total2'] .'<br>';
@@ -50,7 +50,7 @@ $obsh=$userdata['Total1']+$userdata['Total2'];
         print "Расходы за год: ".$userdata['YEAR_WATT']." Вт /  ".$userdata['YEAR_RUB'] .'руб.<br>';
 
 if ($userdata['PREDSED']=='1') {
-echo "<br><br>Профиль председателя.<br>";
+echo "<br><br><h1>Профиль председателя.</h1><br>";
 
 $sql="SELECT * FROM mercury_devices ";
 $pred=SQLSelect($sql);
