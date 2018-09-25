@@ -159,6 +159,9 @@ $cmd_rec = SQLSelectOne("SELECT * FROM mercury_devices where FIO='$currentid'");
 $out['MODEL']=$cmd_rec['MODEL'];		
 
 
+$out['FIO']=$cmd_rec['FIO'];		
+
+
  $out['TS2']=date('m/d/Y H:i:s',$cmd_rec['TS']);		
  $out['COUNTTS']=date('m/d/Y H:i:s',$cmd_rec['TS']);		
 
