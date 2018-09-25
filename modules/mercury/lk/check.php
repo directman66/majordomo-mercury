@@ -62,8 +62,8 @@ $sumu=0;
 foreach ($pred as $rec) 
 {
 $obsh=$rec['Total1']+$rec['Total2'];
-$sump=$sump+$obsh;
-$sumi=$sumi+$rec['IvT'];
+$sump=$sump+$rec['PvT'];
+$sumi=$sumi+$rec['IaT'];
 
 echo "<tr><td>".$rec['FIO']."</td><td>".$rec['STREET']."</td><td>".$rec['STATE']."</td><td>".$rec['ONLINE']."</td><td>".$rec['TS']."</td><td>".$rec['IaT']."</td><td>".$rec['PvT']."</td><td>".$rec['U']."</td><td>".$obsh."</td><tr>";
 }
