@@ -1289,6 +1289,7 @@ SQLUpdate('properties',$property); }
  mercury_devices: WEEK_RUB varchar(100) NOT NULL DEFAULT ''
  mercury_devices: YEAR_WATT varchar(100) NOT NULL DEFAULT ''
  mercury_devices: YEAR_RUB varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: ISPREDSED int(10) NOT NULL DEFAULT ''
 
 
 EOD;
@@ -1313,6 +1314,9 @@ $dev['SN']='';
 $dev['FIO']='Амелин Е.';
 $dev['STREET']='Участок 58';
 $dev['PHONE']='';
+$dev['LOGIN']='amelin';
+$dev['PASSWORD']='amelin';
+
 SQLInsert('mercury_devices', $dev);	
 
 $dev['TITLE']='Устройство №2';
@@ -1324,6 +1328,8 @@ $dev['SN']='';
 $dev['FIO']='Муратов М.Э.';
 $dev['STREET']='Участок 74';
 $dev['PHONE']='';
+$dev['LOGIN']='muratov';
+$dev['PASSWORD']='muratov';
 SQLInsert('mercury_devices', $dev);	
 
 $dev['TITLE']='Устройство №3';
@@ -1335,7 +1341,38 @@ $dev['SN']='';
 $dev['FIO']='Дронов Р.В.';
 $dev['STREET']='Участок 59';
 $dev['PHONE']='';
+$dev['LOGIN']='dronov';
+$dev['PASSWORD']='dronov';
+
 SQLInsert('mercury_devices', $dev);	
+
+$dev['TITLE']='Устройство №4';
+$dev['IPADDR']='192.168.1.57';
+$dev['PORT']='20257';
+$dev['HEXADR']='46';
+$dev['MODEL']='234';
+$dev['SN']='';
+$dev['FIO']='Долженков';
+$dev['STREET']='Участок в 3 очереди';
+$dev['PHONE']='';
+$dev['LOGIN']='doljenkov';
+$dev['PASSWORD']='doljenkov';
+SQLInsert('mercury_devices', $dev);	
+
+
+$dev['TITLE']='Устройство №5';
+$dev['IPADDR']='192.168.1.57';
+$dev['PORT']='20257';
+$dev['HEXADR']='1E';
+$dev['MODEL']='234';
+$dev['SN']='';
+$dev['FIO']='Есин';
+$dev['LOGIN']='esin';
+$dev['PASSWORD']='esin';
+$dev['STREET']='Участок в 3 очереди';
+$dev['PHONE']='';
+SQLInsert('mercury_devices', $dev);	
+
 }
 
 
