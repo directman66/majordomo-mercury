@@ -64,8 +64,9 @@ foreach ($pred as $rec)
 $obsh=$rec['Total1']+$rec['Total2'];
 $sump=$sump+$rec['PvT'];
 $sumi=$sumi+$rec['IaT'];
+$ts=date('m/d/Y H:i:s',$cmd_rec['TS']);		
 
-echo "<tr><td>".$rec['FIO']."</td><td>".$rec['STREET']."</td><td>".$rec['STATE']."</td><td>".$rec['ONLINE']."</td><td>".$rec['TS']."</td><td>".$rec['IaT']."</td><td>".$rec['PvT']."</td><td>".$rec['U']."</td><td>".$obsh."</td><tr>";
+echo "<tr><td>".$rec['FIO']."</td><td>".$rec['STREET']."</td><td>".$rec['STATE']."</td><td>".$rec['ONLINE']."</td><td>".$ts."</td><td>".$rec['IaT']."</td><td>".$rec['PvT']."</td><td>".$rec['U']."</td><td>".$obsh."</td><tr>";
 }
 echo "<tr><td>Итого</td><td></td><td></td><td></td><td></td><td>".$sumi."</td><td>".$sump."</td><td></td><td></td></tr>";
 echo "</table>";
