@@ -55,6 +55,11 @@
  </td>
 
  <td style="vertical-align:middle">
+   [#SN#]    [#MADEDT#]
+ </td>
+
+
+ <td style="vertical-align:middle">
    [#IPADDR#]
  </td>
  </td>
@@ -111,6 +116,7 @@
  <td style="vertical-align:middle" width="1%" nowrap>
   <div style="width:120px">
   [#if "<#ACTION#>"=="admin"#]
+   <a href="?view_mode=getinfo&id=[#ID#]"  title="Обновить параметры счетчиков (состояние, sn)"><i class="glyphicon glyphicon-download-alt"></i></a>
    <a href="?view_mode=get_counters&id=[#ID#]" class="btn btn-default" title="Получить показания счетчика"><i class="glyphicon glyphicon-download-alt"></i></a>
    <a href="?view_mode=indata_edit&id=[#ID#]&tab=config" class="btn btn-default" title="Edit"><i class="glyphicon glyphicon-pencil"></i></a>
    <a href="?view_mode=indata_del&id=[#ID#]" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Delete"><i class="glyphicon glyphicon-remove"></i></a>
