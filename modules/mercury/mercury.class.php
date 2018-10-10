@@ -595,30 +595,67 @@ $sql=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID=".$id);
 
 //sg('test.sn',$res[0].$res[1].$res[2].$res[3].$res[4].$res[5].$res[6]);
 
+//$this->send($socket, $this->calcCRC($device,"0101010101010101"));
+//read($socket);
+
+
+//При работе с трехфазными счетчиками Меркурий (Меркурий 230, Меркурий 233, Меркурий 236 и Меркурий 234)
+// к команде отправляемой счетчику необходимо добавлять в начало посылки байт - "01" . Для однофазных счетчиков этого не требуется.
+
+//Опросить счётчики, находящиеся в сети и получить их сетевые адреса (групповой запрос)
+$this->send($socket, $this->calcCRC($device,"0805"));
+$res = $this->read($socket);
+$sn = hexdec($this->dd($res[1])).hexdec($this->dd($res[2])).hexdec($this->dd($res[3])).hexdec($this->dd($res[4]));
+$made = hexdec($this->dd($res[5])).".".hexdec($this->dd($res[6])).".".hexdec($this->dd($res[7]));
+
+
+
+
+//запрос серийного номера и даты производства
 $this->send($socket, $this->calcCRC($device,"0800"));
 $res = $this->read($socket);
-
-$sn = hexdec($this->dd($res[1]).$this->dd($res[2]).$this->dd($res[3]).$this->dd($res[4]).$this->dd($res[5]).$this->dd($res[6]).$this->dd($res[7]));
-sg($objname.".SN",$sn);
+$sn = hexdec($this->dd($res[1])).hexdec($this->dd($res[2])).hexdec($this->dd($res[3])).hexdec($this->dd($res[4]));
+$made = hexdec($this->dd($res[5])).".".hexdec($this->dd($res[6])).".".hexdec($this->dd($res[7]));
 $sql['SN']=$sn;
+$sql['MADEDT']=$made;
 
 //sg('test.sn',print_r($res));
-sg('test.sn',$sn);
+//sg('test.sn',$sn);
 
+//версия ПО
+$this->send($socket, $this->calcCRC($device,"0803"));
+$res = $this->read($socket);
+$po= hexdec($this->dd($res[1])).".".hexdec($this->dd($res[2])).".".hexdec($this->dd($res[3]));
+$sql['PO']=$po;
+
+
+//коэффициент трансформации
+$this->send($socket, $this->calcCRC($device,"0802"));
+$res = $this->read($socket);
+$kn= hexdec($this->dd($res[1])).".".hexdec($this->dd($res[2]));
+$kn= hexdec($this->dd($res[3])).".".hexdec($this->dd($res[4]));
+$sql['KN']=$kn;
+$sql['KT']=$kt;
+
+
+//чтение слова состояние нагрузки
 $this->send($socket, $this->calcCRC($device,"0818"));
 $res = $this->read($socket);
 $flimit = hexdec($this->dd($res[1]).$this->dd($res[2]));
-
+/*
 $debug .=  $flimit."<br>";
 file_put_contents($file, $debug);
 
 if (($flimit & 512) == 512)
-{sg($objname.".ControlLimit",1);
+{
 $sql['STATE']='1';
 }
 else
-{sg($objname.".ControlLimit",0);
+{
 $sql['STATE']='0';}
+*/
+$sql['STATEWORD']=$flimit;
+
 
 $debug .=  "Закрываем сокет...";
 file_put_contents($file, $debug);
@@ -1247,6 +1284,7 @@ SQLUpdate('properties',$property); }
  mercury_devices: LASTPING varchar(100) NOT NULL DEFAULT ''
  mercury_devices: ONLINE varchar(100) NOT NULL DEFAULT ''
  mercury_devices: STATE varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: STATEWORD varchar(100) NOT NULL DEFAULT ''
  mercury_devices: TS varchar(100) NOT NULL DEFAULT ''
  mercury_devices: USERIP varchar(100) NOT NULL DEFAULT ''
  mercury_devices: USERHASH varchar(100) NOT NULL DEFAULT ''
@@ -1294,6 +1332,9 @@ SQLUpdate('properties',$property); }
  mercury_devices: YEAR_WATT varchar(100) NOT NULL DEFAULT ''
  mercury_devices: YEAR_RUB varchar(100) NOT NULL DEFAULT ''
  mercury_devices: PREDSED int(10) 
+ mercury_devices: PO varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: KN varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: KT varchar(100) NOT NULL DEFAULT ''
 
 
 EOD;
@@ -1412,7 +1453,9 @@ function calcCRC($device252,$msg)
 {
  $mess = $device252.$msg;
  $crc = $this->crc16_modbus($mess);
+// return $mess.$crc[2].$crc[3].$crc[0].$crc[1];
  return $mess.$crc[2].$crc[3].$crc[0].$crc[1];
+// return $device252.$mess.$crc[2].$crc[3].$crc[0].$crc[1];
 }
 //////////////////////////////////////////////
 //////////////////////////////////////////////
@@ -1442,7 +1485,8 @@ $debug .= file_get_contents($file);
 $debug .= "Отправляем запрос ".$hex."<br>\n";
 file_put_contents($file, $debug);
   $in = hex2bin($hex);
-//$debug .=  " ".$in." ";
+$debug .=  " ".$in." ";
+echo $hex."<br>";
   socket_write($socket252, $in, strlen($in));
 $debug .=  "OK.<br>\n"; 
 // Пишем содержимое обратно в файл
