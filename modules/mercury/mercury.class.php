@@ -1479,14 +1479,15 @@ function calcCRC($device252,$msg)
 //////////////////////////////////////////////
 //////////////////////////////////////////////
 function send  ($socket252, $hex = "") {
-$file = ROOT . 'cms/cached/mercurydebug.txt';
+//$file = ROOT . 'cms/cached/mercurydebug.txt';
+$file = ROOT . 'cms/cached/mercurysend.txt';
 $debug .= file_get_contents($file);
 
 $debug .= "Отправляем запрос ".$hex."<br>\n";
 file_put_contents($file, $debug);
   $in = hex2bin($hex);
 $debug .=  " ".$in." ";
-echo $hex."<br>";
+//echo $hex."<br>";
   socket_write($socket252, $in, strlen($in));
 $debug .=  "OK.<br>\n"; 
 // Пишем содержимое обратно в файл
