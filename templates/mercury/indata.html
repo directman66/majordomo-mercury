@@ -31,9 +31,8 @@
 <tr>
 
 <th>ФИО абонента</th>
-<th>Адрес</th>  
-<th>IP</th>  
-<th>Порт</th>
+<th>Серийный номер</th>  
+<th>IP/Порт</th>  
 <th>Модель</th>   
 <th>Online</th>    
 <th>Сост.</th>    
@@ -48,23 +47,19 @@
 <tr style="height:52px" class="hover_btn2">
  <td style="vertical-align:middle">
    <a href="?view_mode=getinfo&id=[#ID#]"  title="Обновить параметры счетчиков (состояние, sn)">
-   [#FIO#]   </a>
- </td>
- <td style="vertical-align:middle">
+   [#FIO#]   </a> <br>
    [#STREET#]
  </td>
 
  <td style="vertical-align:middle">
-   [#SN#]    [#MADEDT#]
+   [#SN#]  <br>  [#MADEDT#]
  </td>
 
 
  <td style="vertical-align:middle">
-   [#IPADDR#]
- </td>
- </td>
- <td style="vertical-align:middle">
-   [#PORT#]
+   [#IPADDR#] <br>
+   [#PORT#]  :  [#HEXADR#]
+
  </td>
  <td style="vertical-align:middle">
    [#MODEL#]
