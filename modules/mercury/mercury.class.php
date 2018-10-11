@@ -270,9 +270,9 @@ $this->getinfo($this->id);
    $this->updatecurrent($out);
  }
 
-
- if ($this->view_mode=='config'||$this->view_mode==''||$this->view_mode=='indata_edit') {
    $this->searchdevices($out, $this->id);
+ if ($this->view_mode=='config'||$this->view_mode==''||$this->view_mode=='indata_edit') {
+//   $this->searchdevices($out, $this->id);
    $this->getcurrent($out);
 
  }
@@ -572,6 +572,8 @@ file_put_contents($file, $debug);
 
 //открытие канала связи
 $ncrc=$this->calcCRC($device252,"0101010101010101");
+//$ncrc=$this->send($socket, $this->calcCRC($device,"0102020202020202"));
+
 //sg('test.ncrc',$ncrc);
  
 $this->send($socket252, $ncrc);
@@ -638,23 +640,34 @@ $sql['KN']=$kn;
 $sql['KT']=$kt;
 
 
+//логинимся под админом
+$this->send($socket, $this->calcCRC($device,"0102020202020202"));
+$res = $this->read($socket);
+
 //чтение слова состояние нагрузки
 $this->send($socket, $this->calcCRC($device,"0818"));
 $res = $this->read($socket);
+$flimithex=$this->dd($res[1]).$this->dd($res[2]);
 $flimit = hexdec($this->dd($res[1]).$this->dd($res[2]));
-/*
-$debug .=  $flimit."<br>";
-file_put_contents($file, $debug);
+//echo strtoupper(substr($flimithex,0,4));
+//echo "<br>";
+//echo hex2bin($flimithex);
 
-if (($flimit & 512) == 512)
+$state='';
+
+if ((strtoupper(substr($flimithex,0,4))=='0008') or (strtoupper(substr($flimithex,0,4))=='F000') )
 {
-$sql['STATE']='1';
-}
-else
-{
-$sql['STATE']='0';}
-*/
-$sql['STATEWORD']=$flimit;
+//echo 'включено';
+$state='1';
+} 
+
+
+if (strtoupper(substr($flimithex,0,4))=='084A' )
+{$state='0';
+//echo 'выключено';
+} 
+$sql['STATE']=$state;
+$sql['STATEWORD']=$flimithex.':'.$flimit;
 
 
 $debug .=  "Закрываем сокет...";
@@ -682,97 +695,10 @@ SQLUpdate('mercury_devices',$sql);
 //////////////////////////////////////////////
 
  function turnoff($id) {
-/*
 $rec=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID='$id'");
-
 $address=$rec['IPADDR'];
 $service_port=$rec['PORT'];
 $device=$rec['HEXADR'];
-
-
-$cachedVoiceDir = ROOT . 'cms/cached/';
-$file = $cachedVoiceDir . 'mercurydebug.txt';
-
-
-// Открываем файл для получения существующего содержимого
-$debug = file_get_contents($file);
-
-
-$debug .= date('d/m/y H:s'). " запущен запрос на получение инфо счетчика $id<br>\n";
-file_put_contents($file, $debug);
-
-
-// Создаём сокет TCP/IP. 
-$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
-if ($socket === false) {
-$debug .=  "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "<br>";
-file_put_contents($file, $debug);
-} else {
-$debug .= "OK.<br>";
-file_put_contents($file, $debug);
-}
-
-$debug .=  "Пытаемся соединиться с '$address' на порту '$service_port'...";
-file_put_contents($file, $debug);
-$result = socket_connect($socket, $address, $service_port);
-if ($result === false) {
-$debug .= "Не удалось выполнить socket_connect().\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "<br>";
-file_put_contents($file, $debug);
-} else {
-$debug .=  "OK.<br>";
-file_put_contents($file, $debug);
-}
-
-
-
-$ccrc=calcCRC($device,"0102020202020202");
-$this->send($socket, $ccrc);
-$this->read($socket);
- $flimit = "00";
-
-$classname='Mercury';
-$objname=$classname.'_'.$id;
-
-
-if (gg($objname.".state") == 1)
- $flimit = "01";
-$this->send($socket, $this->calcCRC($device,"032D".$flimit));
-$res = $this->read($socket);
-$limit = dechex(gg($objname.".LimitValue") * 100);
-$this->send($socket, $this->calcCRC($device,"032C".$limit));
-$res = $this->read($socket);
-
-	$debug .= "Закрываем сокет...";
-file_put_content	s($file, $debug);
-socket_close($socket);
-$debug .= "OK.\n\n";
-file_put_contents($file, $debug);
-*/
-
-}
-
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-//////////////////////////////////////////////
-
- function turnon($id) {
-
-
-$rec=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID='$id'");
-
-$address=$rec['IPADDR'];
-$service_port=$rec['PORT'];
-$device=$rec['HEXADR'];
-
-
 
 $cachedVoiceDir = ROOT . 'cms/cached/';
 $file = $cachedVoiceDir . 'mercurydebug.txt';
@@ -809,27 +735,145 @@ $debug .=  "OK.<br>";
 file_put_contents($file, $debug);
 }
 
+//$this->send($socket, $this->calcCRC($device,"0101010101010101"));
+$this->send($socket, $this->calcCRC($device,"0102020202020202"));
+$this->read($socket);
+//$res = $this->merc_gd($socket,$this->calcCRC($device,"0819"),0.01);
+$this->send($socket, $this->calcCRC($device,"033101"));
+$res = $this->read($socket);
+ sleep(2);
 $this->send($socket, $this->calcCRC($device,"0101010101010101"));
-read($socket);
-$res = $this->merc_gd($socket,$this->calcCRC($device,"0819"),0.01);
-$debug .=  print_r($res);
-file_put_contents($file, $debug);
-
-sg($objname.".LimitValue",$res[0]);
+$res = $this->read($socket);
+//чтение слова состояние нагрузки
 $this->send($socket, $this->calcCRC($device,"0818"));
 $res = $this->read($socket);
+$flimithex=$this->dd($res[1]).$this->dd($res[2]);
 $flimit = hexdec($this->dd($res[1]).$this->dd($res[2]));
+//echo strtoupper(substr($flimithex,0,4));
+//echo "<br>";
+//echo hex2bin($flimithex);
 
-$debug .=  $flimit."<br>";
+$state='';
+
+if ((strtoupper(substr($flimithex,0,4))=='0008') or (strtoupper(substr($flimithex,0,4))=='F000') )
+{
+//echo 'включено';
+$state='1';
+} 
+
+
+if (strtoupper(substr($flimithex,0,4))=='084A' )
+{$state='0';
+//echo 'выключено';
+} 
+$sql=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID=".$id);
+$sql['STATE']=$state;
+$sql['STATEWORD']=$flimithex.':'.$flimit;
+SQLUpdate('mercury_devices',$sql);
+
+
+
+
+$debug .=  "Закрываем сокет...";
 file_put_contents($file, $debug);
 
-if (($flimit & 512) == 512)
-{sg($objname.".ControlLimit",1);
-$sql['STATE']='1';
+socket_close($socket);
+$debug .=  "OK.\n\n";
+file_put_contents($file, $debug);
+
 }
-else
-{sg($objname.".ControlLimit",0);
-$sql['STATE']='0';}
+
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+
+ function turnon($id) {
+$rec=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID='$id'");
+$address=$rec['IPADDR'];
+$service_port=$rec['PORT'];
+$device=$rec['HEXADR'];
+
+$cachedVoiceDir = ROOT . 'cms/cached/';
+$file = $cachedVoiceDir . 'mercurydebug.txt';
+
+
+// Открываем файл для получения существующего содержимого
+$debug = file_get_contents($file);
+
+$classname='Mercury';
+$objname=$classname.'_'.$id;
+
+
+$debug .= date('d/m/y H:s'). " запущен запрос на включение счетчика $id<br>\n";
+file_put_contents($file, $debug);
+
+
+/* Создаём сокет TCP/IP. */
+$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
+if ($socket === false) {
+$debug .=  "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "<br>";
+} else {
+$debug .=  "OK.<br>";
+}
+
+$debug .=  "Пытаемся соединиться с '$address' на порту '$service_port'...";
+file_put_contents($file, $debug);
+$result = socket_connect($socket, $address, $service_port);
+if ($result === false) {
+$debug .=  "Не удалось выполнить socket_connect().\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "<br>";
+file_put_contents($file, $debug);
+} else {
+$debug .=  "OK.<br>";
+file_put_contents($file, $debug);
+}
+
+//$this->send($socket, $this->calcCRC($device,"0101010101010101"));
+$this->send($socket, $this->calcCRC($device,"0102020202020202"));
+$this->read($socket);
+//$res = $this->merc_gd($socket,$this->calcCRC($device,"0819"),0.01);
+$this->send($socket, $this->calcCRC($device,"033100"));
+$res = $this->read($socket);
+
+  sleep(2);
+$this->send($socket, $this->calcCRC($device,"0101010101010101"));
+$res = $this->read($socket);
+//чтение слова состояние нагрузки
+$this->send($socket, $this->calcCRC($device,"0818"));
+$res = $this->read($socket);
+$flimithex=$this->dd($res[1]).$this->dd($res[2]);
+$flimit = hexdec($this->dd($res[1]).$this->dd($res[2]));
+//echo strtoupper(substr($flimithex,0,4));
+//echo "<br>";
+//echo hex2bin($flimithex);
+
+$state='';
+
+if ((strtoupper(substr($flimithex,0,4))=='0008') or (strtoupper(substr($flimithex,0,4))=='F000') )
+{
+//echo 'включено';
+$state='1';
+} 
+
+
+if (strtoupper(substr($flimithex,0,4))=='084A' )
+{$state='0';
+//echo 'выключено';
+} 
+$sql=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID=".$id);
+$sql['STATE']=$state;
+$sql['STATEWORD']=$flimithex.':'.$flimit;
+SQLUpdate('mercury_devices',$sql);
+
+
+
 
 $debug .=  "Закрываем сокет...";
 file_put_contents($file, $debug);
@@ -1486,8 +1530,9 @@ $debug .= file_get_contents($file);
 $debug .= "Отправляем запрос ".$hex."<br>\n";
 file_put_contents($file, $debug);
   $in = hex2bin($hex);
-$debug .=  " ".$in." ";
-//echo $hex."<br>";
+$debug .=  " ".$hex." ";
+//echo SETTINGS_APPMERCURY_ENABLEDEBUG;
+if (SETTINGS_APPMERCURY_ENABLEDEBUG=="1")  echo "send:".$hex."<br>";
   socket_write($socket252, $in, strlen($in));
 $debug .=  "OK.<br>\n"; 
 // Пишем содержимое обратно в файл
@@ -1531,7 +1576,7 @@ $debug .= file_get_contents($file);
 $debug .="Читаем ответ:<br>\n";
 $out = socket_read($socket252, 2048);
 $debug .= bin2hex($out)."<br>\n";
-
+if (SETTINGS_APPMERCURY_ENABLEDEBUG=="1") echo  "answ:".bin2hex($out).'<br>';
 file_put_contents($file, $debug);
 
 return $out;
