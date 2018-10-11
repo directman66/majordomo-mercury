@@ -2,12 +2,21 @@
 /*
 * @version 0.1 (wizard)
 */
+
   if ($this->owner->name=='panel') {
    $out['CONTROLPANEL']=1;
   }
   $table_name='mercury_devices';
   $rec=SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
 
+if (ctype_xdigit($rec['HEXADR'])) {
+        $out['HEXADR2']=0;
+    } else {
+//        $out['HEXADR2']="ВНИМАНИ! Строка  должна состоять только из шестнадцатеричных цифр.";
+        $out['HEXADR2']=1;
+}
+
+//      $out['HEXADR2']=1;
 //sg('test.merk',$this->mode);
   if ($this->mode=='update') {
    $ok=1;
@@ -16,7 +25,7 @@
 	 global $title;
 
    $rec['TITLE']=$title;
-sg('test.merktitle',$title);
+//sg('test.merktitle',$title);
 
   
 
@@ -31,12 +40,8 @@ sg('test.merktitle',$title);
 
 	 global $hexadr;
    $rec['HEXADR']=$hexadr;
-/*
-   if ($rec['HEXADR']=='') {
-    $out['ERR_HEXADR']=1;
-    $ok=0;
-   }
-*/
+
+
 
 
 	 global $ipaddr;
@@ -86,6 +91,8 @@ sg('test.merktitle',$title);
      $rec['ID']=SQLInsert($table_name, $rec); // adding new record
     }
     $out['OK']=1;
+
+
    } else {
     $out['ERR']=1;
    }
