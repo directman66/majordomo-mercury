@@ -36,6 +36,7 @@
 <th>Модель</th>   
 <th>Online</th>    
 <th>Сост.</th>    
+<th></th>    
 <th>IaT</th>    
 <th>PvT</th>   
  <th>U</th>
@@ -46,7 +47,7 @@
 [#begin RESULT#]
 <tr style="height:52px" class="hover_btn2">
  <td style="vertical-align:middle">
-   <a href="?view_mode=getinfo&id=[#ID#]"  title="Обновить параметры счетчиков (состояние, sn)">
+   <a href="?view_mode=getinfo&id=[#ID#]&tab=config"  title="Обновить параметры счетчиков (состояние, sn)">
    [#FIO#]   </a> <br>
    [#STREET#]
  </td>
@@ -81,16 +82,21 @@
  <td style="vertical-align:middle">
 	[#if STATE!=""#]
 		[#if STATE==1#]
-   <a href="?view_mode=turnoff&id=[#ID#]" onClick="return confirm('Внимание!!! Данное действие ВЫКЛЮЧИТ реле счетчика. Вы действительно желаете продолжить? Пожалуйста подвтвердите.')" class="btn btn-default" title="Выключить">
+   <a href="?view_mode=turnoff&id=[#ID#]&tab=config" onClick="return confirm('Внимание!!! Данное действие ВЫКЛЮЧИТ реле счетчика. Вы действительно желаете продолжить? Пожалуйста подвтвердите.')" class="btn btn-default" title="Выключить">
 			<span class="label label-success" title="<#LANG_XIMI_APP_ONLINE#>">Вкл.</span> </a>
 		[#else#]
-   <a href="?view_mode=turnon&id=[#ID#]" onClick="return confirm('Внимание!!! Данное действие ВКЛЮЧИТ реле счетчика. Вы действительно желаете продолжить? Пожалуйста подвтвердите.')" class="btn btn-default" title="Включить">
+   <a href="?view_mode=turnon&id=[#ID#]&tab=config" onClick="return confirm('Внимание!!! Данное действие ВКЛЮЧИТ реле счетчика. Вы действительно желаете продолжить? Пожалуйста подвтвердите.')" class="btn btn-default" title="Включить">
 			<span class="label label-warning" title="<#LANG_XIMI_APP_OFFLINE#>">Выкл.</span></a>
 		[#endif#]
 	[#else#]
 		&nbsp;
 	[#endif#]
 
+
+ </td>
+
+ <td style="vertical-align:middle">
+	[#STATEWORD#]
  </td>
 
  <td style="vertical-align:middle">
@@ -111,10 +117,10 @@
  <td style="vertical-align:middle" width="1%" nowrap>
   <div style="width:120px">
   [#if "<#ACTION#>"=="admin"#]
-   <a href="?view_mode=getinfo&id=[#ID#]"  title="Обновить параметры счетчиков (состояние, sn)"><i class="glyphicon glyphicon-download-alt"></i></a>
-   <a href="?view_mode=get_counters&id=[#ID#]" class="btn btn-default" title="Получить показания счетчика"><i class="glyphicon glyphicon-download-alt"></i></a>
+   <a href="?view_mode=getinfo&id=[#ID#]&tab=config"  title="Обновить параметры счетчиков (состояние, sn)"><i class="glyphicon glyphicon-download-alt"></i></a>
+   <a href="?view_mode=get_counters&id=[#ID#]&tab=config" class="btn btn-default" title="Получить показания счетчика"><i class="glyphicon glyphicon-download-alt"></i></a>
    <a href="?view_mode=indata_edit&id=[#ID#]&tab=config" class="btn btn-default" title="Edit"><i class="glyphicon glyphicon-pencil"></i></a>
-   <a href="?view_mode=indata_del&id=[#ID#]" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Delete"><i class="glyphicon glyphicon-remove"></i></a>
+   <a href="?view_mode=indata_del&id=[#ID#]&tab=config" onClick="return confirm('Are you sure? Please confirm.')" class="btn btn-default" title="Delete"><i class="glyphicon glyphicon-remove"></i></a>
   [#endif ACTION#]
   </div>
  </td>
