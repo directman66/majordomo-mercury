@@ -1558,7 +1558,18 @@ $result =$this->read($socket252);
          	if ( dechex(ord($result[$start_byte + $i * 3])) >= 40 )
 			$result[$start_byte + $i * 3] = chr(dechex(ord($result[$start_byte + $i * 3])) - 40);
 			if ( strlen($result) > $start_byte + 2 + $i * 3 )
-			$ret[$i] = hexdec($this->dd($result[$start_byte + $i * 3]).$this->dd($result[$start_byte + $i * 3 + 2]).$this->dd($result[$start_byte + $i * 3 + 1]))*$factor;
+				// Для всех запросов кроме мощности используем стандартный рассчет
+				if (substr($cmd,2,6)!='081600') {
+					$ret[$i] = hexdec($this->dd($result[$start_byte + $i * 3]).$this->dd($result[$start_byte + $i * 3 + 2]).$this->dd($result[$start_byte + $i * 3 + 1]))*$factor;
+				}
+				// При запросе мощности нужно маскировать два старших разряда старшего бита
+				else {
+					$hex = $this->dd($result[$start_byte + $i * 3]).$this->dd($result[$start_byte + $i * 3 + 2]).$this->dd($result[$start_byte + $i * 3 + 1]);
+					$bin=base_convert($hex, 16, 2);
+					// Обрезаем строку до 22 бит
+					while (strlen($bin)>22) $bin=substr($bin,1);
+					$ret[$i] = bindec($bin)*$factor;
+				}
 		}
 	}
 	else
