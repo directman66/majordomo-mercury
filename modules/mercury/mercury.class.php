@@ -1555,7 +1555,7 @@ $result =$this->read($socket252);
 	{
 		for ( $i = 0; $i < 4; $i++ )
 		{
-         	if ( dechex(ord($result[$start_byte + $i * 3])) >= 40 )
+         	//if ( dechex(ord($result[$start_byte + $i * 3])) >= 40 )
 			//$result[$start_byte + $i * 3] = chr(dechex(ord($result[$start_byte + $i * 3])) - 40);
 			if ( strlen($result) > $start_byte + 2 + $i * 3 )
 				// Для всех запросов кроме мощности используем стандартный рассчет
