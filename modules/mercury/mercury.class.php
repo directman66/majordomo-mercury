@@ -268,6 +268,7 @@ $this->getinfo($this->id);
 
  if ($this->view_mode=='updatecurrent') {
    $this->updatecurrent($out);
+   $this->redirect("?");
  }
 
    $this->searchdevices($out, $this->id);
