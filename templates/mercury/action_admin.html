@@ -67,9 +67,16 @@ var sql="update mercury_config  set value="+select+" where parametr='CURRENT'";
       <div class="col-sm-5">
 
 Выбранный счетчик:   
-<select onchange="document.country_change.submit();" class="form-control" name="current" id="current">
-    [#begin RESULT#]<option value="[#FIO#]"[#if id="<#FIO#>"#] selected[#endif#]>[#FIO#]   [#end RESULT#]
-</select>
+
+
+
+ <select name="current" class="input form-control" onchange="document.country_change.submit();">
+<!--  <option value="">[#FIO#]-->
+  [#begin RESULT#]
+<option value="[#FIO#]"[#if FIO="<#FIO#>"#] selected[#endif#]>[#FIO#]
+  [#end RESULT#]
+ </select>
+
 
 
 
