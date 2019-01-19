@@ -38,6 +38,127 @@ $userdata=SQLSelectOne($sql);
     }
     else
     {
+
+   print '
+
+        <link rel="stylesheet" href="/3rdparty/bootstrap/css/bootstrap.min.css" type="text/css">
+        <link rel="stylesheet" href="/css/admin.css" type="text/css">
+        <link rel="stylesheet" type="text/css" href="/css/umbra-css2/style.css" title="theme"/>
+        <link rel="stylesheet" href="/css/jquery.autocomplete.css" type="text/css">
+        <link rel="stylesheet" href="/css/jquery.betterTooltip.css" type="text/css">
+        <link href="/css/devices.css" rel="stylesheet" type="text/css"/>
+
+    <script type="text/javascript" src="/3rdparty/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/3rdparty/jquery/jquery-migrate-3.0.0.min.js"></script>
+
+    <script language="javascript" src="/js/scripts.js?v=1"></script>
+    
+    <script type="text/javascript" src="/3rdparty/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/js/jquery.autocomplete.js"></script>
+    <script type="text/javascript" src="/js/jquery.bgiframe.js"></script>
+    <script type="text/javascript" src="/js/jquery.betterTooltip.js"></script>
+    <script type="text/javascript" type="text/javascript" src="/js/jWindow.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/3rdparty/fancybox/jquery.fancybox.min.css?v=3.3.5" media="screen" />
+    <script type="text/javascript" src="/3rdparty/fancybox/jquery.fancybox.min.js?v=3.3.5"></script>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+<script type="text/javascript" src="/js/jquery.tiny-pubsub.js"></script>
+
+
+
+<!-- #######  YAY, I AM THE SOURCE EDITOR! #########-->
+<p>&nbsp;</p>
+<table style="margin-left: auto; margin-right: auto; width: 668px; height: 29px;" border="1" cellspacing="20" cellpadding="20">
+<tbody>
+<tr>
+<td style="width: 658px;">
+<p style="text-align: right;">Система мониторинга инженерных сетей частного дома</p>
+<p style="text-align: right;">ТСН &laquo;Морской Берег&raquo;</p>
+
+<p style="text-align: centr;">Личный кабинет: Пользователь - '.$userdata['FIO']." ".  $userdata['STREET'].'</p>
+Логин - '.$userdata['LOGIN'].'
+
+<hr />
+<p style="text-align: right;">&nbsp;</p>
+<table style="height: 25px; width: 653px;" cellspacing="5" cellpadding="5">
+<tbody>
+<tr style="height: 277px;">
+<td style="width: 118px; height: 277px;">&nbsp;
+<table style="height: 404px;" border="2" width="110">
+<tbody>
+<tr>
+
+
+<td style="width: 98.75px;">
+
+  <a href="?view_mode=indata_edit&id=[#ID#]&tab=config" class="btn btn-default" title="Edit"><i class="glyphicon glyphicon-pencil">&nbsp;Счетчики &nbsp;энгергии&nbsp;</i></a>
+<br>
+<br>
+<a href="?view_mode=indata_edit&id=[#ID#]&tab=config" class="btn btn-default" title="Edit"><i class="glyphicon glyphicon-pencil">&nbsp;Добавить новое обор.</i></a>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+<td style="width: 521px; height: 277px;">
+<table style="width: 522px; height: 208px;" border="2" cellspacing="5" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 512px;">
+<p>Счетчик электроэнергии: Меркурий 234 РО</p>
+<p>Серийный номер: 31568758</p>
+<p>Дата установки: 07.10.2017</p>
+</td>
+</tr>
+<tr>
+<td style="width: 512px;">
+<p>Показание счетчика: 44444 кВт</p>
+<p>&nbsp;</p>
+<p>Напряжение и ток на фазе А: <strong>220 В / 3 А</strong></p>
+<p>Напряжение и ток на фазе B: <strong>220 В / 3 А</strong></p>
+<p>Напряжение и ток на фазе C: <strong>220 В / 3 А</strong></p>
+<p>&nbsp;</p>
+<p>Общая потребляемая мощность: <strong>2500 Вт</strong></p>
+<p>&nbsp;Последний опрос счетчика: <strong>21.12.2018 15:00</strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: right;">&nbsp;</p>
+<p style="text-align: right;">&nbsp;</p>
+<p style="text-align: right;">&nbsp;</p>
+<p style="text-align: right;">&nbsp;</p>
+<p style="text-align: right;">&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: right;">&nbsp;</p>
+<p style="text-align: right;">&nbsp;</p>
+<p>&nbsp;</p>
+';
+
+
+
+
+
+
+
+
+
+
         print "<h1>Доброе время суток! Пользователь:".$userdata['FIO']."(". $userdata['STREET'].")</h1><br><br>";
 
         print "По данным системы мониторинга, потребление вашего счетчика составляет  ".$userdata['PvT'] .' Вт, напряжение на фазах '.$userdata['U']." В, измеренная сила тока ".$userdata['IaT'].' A.<br><br>';
