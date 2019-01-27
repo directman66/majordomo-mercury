@@ -231,6 +231,10 @@ body {
 	float:right;
 }
 
+.p-nright {
+	float:right;
+}
+
 .p-sh {
 	font-size: 18px;
 	color: #000;
