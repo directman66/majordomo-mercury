@@ -209,11 +209,11 @@ body {
 
 .blank-right{
 	width:calc(35% - 30px);
-	height: 100%;
 	color: #888;
 	float:right;
 	padding:  10px 8px 30px 8px;
 	background-color: #fff;
+	margin-bottom: 20px;
 }
 
 .graf {
