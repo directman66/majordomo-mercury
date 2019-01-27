@@ -178,7 +178,7 @@ print '	  			<div class="blank-right">
     for ($i=0;$i<$total;$i++) {
 
 echo '<div class="p-left"><b>'.$res[$i]["TITLE"].'</b></div>';
-echo '<div class="p-right">'.$res[$i]["data"].'</div><br>';
+echo '<div class="p-nright">'.$res[$i]["data"].'</div><br>';
 
 echo '<div class="p-left">'.$res[$i]["message"].'</div><br><br>';
 
