@@ -41,134 +41,181 @@ $userdata=SQLSelectOne($sql);
 
    print '
 
-        <link rel="stylesheet" href="/3rdparty/bootstrap/css/bootstrap.min.css" type="text/css">
-        <link rel="stylesheet" href="/css/admin.css" type="text/css">
-        <link rel="stylesheet" type="text/css" href="/css/umbra-css2/style.css" title="theme"/>
-        <link rel="stylesheet" href="/css/jquery.autocomplete.css" type="text/css">
-        <link rel="stylesheet" href="/css/jquery.betterTooltip.css" type="text/css">
-        <link href="/css/devices.css" rel="stylesheet" type="text/css"/>
+<!doctype html>
+<html lang="ru">
+	<head>
+		<meta charset="utf-8" />
+		<title>Личный кабинет</title>	
+		<link href="css\style.css" rel="stylesheet" type="text/css">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script type="text/javascript" src="/3rdparty/jquery/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="/3rdparty/jquery/jquery-migrate-3.0.0.min.js"></script>
+	</head>
+	<body>
+		<div class="list">
+			<div class="header">
+				<div class="title text-g">Система мониторинга инженерных сетей частного дома  ТСН «Морской Берег»
+				</div>
+				<div class="in-header">
+					<div class="in-title">
+							Личный кабинет
+					</div>
+					<div class="menu">
+						<ul>
+							<li><a href="#"><div class="ico img-ico-1"></div><span>Счетчик электроинергии</span></a><div class="line"></div></li>
+							<li><a href="#"><div class="ico img-ico-2"></div><span>Счетчик электроинергии</span></a><div class="line"></div></li>
+							<li><a href="#"><div class="ico img-ico-3"></div><span>Счетчик электроинергии</span></a><div class="line"></div></li>
+							<li><a href="#"><div class="ico img-ico-4"></div><span>Счетчик электроинергии</span></a><div class="line"></div></li>
+						</ul>
+						<div class="add"><a href="#"><div class="ico img-ico-add"></div><span>Добавить модуль</span></a></div>
+					</div>
+					<div style="clear:both"></div>
+					
+				</div>
+				<div class="ld">
+					Пользователь: <span>
 
-    <script language="javascript" src="/js/scripts.js?v=1"></script>
-    
-    <script type="text/javascript" src="/3rdparty/bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/js/jquery.cookie.js"></script>
-    <script type="text/javascript" src="/js/jquery.autocomplete.js"></script>
-    <script type="text/javascript" src="/js/jquery.bgiframe.js"></script>
-    <script type="text/javascript" src="/js/jquery.betterTooltip.js"></script>
-    <script type="text/javascript" type="text/javascript" src="/js/jWindow.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="/3rdparty/fancybox/jquery.fancybox.min.css?v=3.3.5" media="screen" />
-    <script type="text/javascript" src="/3rdparty/fancybox/jquery.fancybox.min.js?v=3.3.5"></script>
-
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-<script type="text/javascript" src="/js/jquery.tiny-pubsub.js"></script>
-
-
-
-<!-- #######  YAY, I AM THE SOURCE EDITOR! #########-->
-<p>&nbsp;</p>
-<table style="margin-left: auto; margin-right: auto; width: 668px; height: 29px;" border="1" cellspacing="20" cellpadding="20">
-<tbody>
-<tr>
-<td style="width: 658px;">
-<p style="text-align: right;">Система мониторинга инженерных сетей частного дома</p>
-<p style="text-align: right;">ТСН &laquo;Морской Берег&raquo;</p>
-
-<p style="text-align: centr;">Личный кабинет: Пользователь - '.$userdata['FIO']." ".  $userdata['STREET'].'</p>
-Логин - '.$userdata['LOGIN'].'
-
-<hr />
-<p style="text-align: right;">&nbsp;</p>
-<table style="height: 25px; width: 653px;" cellspacing="5" cellpadding="5">
-<tbody>
-<tr style="height: 277px;">
-<td style="width: 118px; height: 277px;">&nbsp;
-<table style="height: 404px;" border="2" width="110">
-<tbody>
-<tr>
+'.$userdata['FIO']."(". $userdata['STREET'].')
+</span><br>
+					Логин: <span>'.$userdata['LOGIN'].'
+</span>				
+				</div>
+				<div class="sh">
+					Счетчик электроэнергии: <span>Меркурий '.$userdata['MODEL'].'</span><br>
+					Серийный номер: <span>'.$userdata['SN'].'</span><br>
+					Дата производства счетчика: <span>'.$userdata['MADETD'].'</span><br>
+				</div>
+				<div style="clear:both"></div>
+			</div> 
+			<div class="blank">
+				<div class="blank-left">
+					<div class="graf">
 
 
-<td style="width: 98.75px;">
-
-  <a href="?view_mode=indata_edit&id=[#ID#]&tab=config" class="btn btn-default" title="Edit"><i class="glyphicon glyphicon-pencil">&nbsp;Счетчики &nbsp;энгергии&nbsp;</i></a>
-<br>
-<br>
-<a href="?view_mode=indata_edit&id=[#ID#]&tab=config" class="btn btn-default" title="Edit"><i class="glyphicon glyphicon-pencil">&nbsp;Добавить новое обор.</i></a>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-<td style="width: 521px; height: 277px;">
-<table style="width: 522px; height: 208px;" border="2" cellspacing="5" cellpadding="5">
-<tbody>
-<tr>
-<td style="width: 512px;">
-<p>Счетчик электроэнергии: Меркурий 234 РО</p>
-<p>Серийный номер: 31568758</p>
-<p>Дата установки: 07.10.2017</p>
-</td>
-</tr>
-<tr>
-<td style="width: 512px;">
-<p>Показание счетчика: 44444 кВт</p>
-<p>&nbsp;</p>
-<p>Напряжение и ток на фазе А: <strong>220 В / 3 А</strong></p>
-<p>Напряжение и ток на фазе B: <strong>220 В / 3 А</strong></p>
-<p>Напряжение и ток на фазе C: <strong>220 В / 3 А</strong></p>
-<p>&nbsp;</p>
-<p>Общая потребляемая мощность: <strong>2500 Вт</strong></p>
-<p>&nbsp;Последний опрос счетчика: <strong>21.12.2018 15:00</strong></p>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
-</tbody>
-</table>
-<p style="text-align: right;">&nbsp;</p>
-<p style="text-align: right;">&nbsp;</p>
-<p style="text-align: right;">&nbsp;</p>
-<p style="text-align: right;">&nbsp;</p>
-<p style="text-align: right;">&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-</td>
-</tr>
-</tbody>
-</table>
-<p style="text-align: right;">&nbsp;</p>
-<p style="text-align: right;">&nbsp;</p>
-<p>&nbsp;</p>
 ';
 
 
 
 
 
+/////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
+
+
+print '
+
+<div id="chart1" style="height: 300px"></div>
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+
+
+<script type="text/javascript" name="1">
+Highcharts.chart("chart1", {
+
+  chart: {
+    borderWidth: 0,
+    plotBorderWidth: 1,
+    spacingTop: 10
+    ,width: 1024 // 16:9 ratio
+
+  },
+
+title: {
+            text: "График расхода электроэнергии по месяцам:"
+        },
+
+
+
+  xAxis: {
+    categories: [
+';
+
+$sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".IaT' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
+$cmd_rec = SQLSelect($sql);
+$stroka="";
+foreach ($cmd_rec as $cmd_r)
+{$stroka.= '"'.$cmd_r['dt'].'",';
+}
+$stroka=preg_replace("/(.)$/", "", $stroka);
+echo $stroka;
+
+print ']  },  series: [{    data: [ ';
+
+
+$sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".IaT' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
+$cmd_rec = SQLSelect($sql);
+$stroka="";
+foreach ($cmd_rec as $cmd_r)
+{$stroka.= $cmd_r['value'].",";
+}
+$stroka=preg_replace("/(.)$/", "", $stroka);
+echo $stroka;
+
+print ']  }]});</script> ';
+
+
+/////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
 
 
 
 
+print '
 
-        print "<h1>Доброе время суток! Пользователь:".$userdata['FIO']."(". $userdata['STREET'].")</h1><br><br>";
+					</div>
+					<div class="graf">
+						типа график2
+					</div>
+				</div>';
 
-        print "По данным системы мониторинга, потребление вашего счетчика составляет  ".$userdata['PvT'] .' Вт, напряжение на фазах '.$userdata['U']." В, измеренная сила тока ".$userdata['IaT'].' A.<br><br>';
-        print "Регистры счетчика: Тариф 1: ".$userdata['Total1'].", Тариф 2: ".$userdata['Total2'] .'<br>';
+
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
+/////////////////////////////////////
+
+
 $obsh=$userdata['Total1']+$userdata['Total2'];
-        print "Общее значение счетчика накопленной энергии: ".$obsh .'<br><br>';
-        print "Расходы за день: ".$userdata['DAY_WATT']." Вт /  ".$userdata['DAY_RUB'] .' руб.<br>';
-        print "Расходы за неделю: ".$userdata['WEEK_WATT']." Вт /  ".$userdata['WEEK_RUB'] .'руб.<br>';
-        print "Расходы за месяц: ".$userdata['MONTH_WATT']." Вт /  ".$userdata['MONTH_RUB'] .'руб.<br>';
-        print "Расходы за год: ".$userdata['YEAR_WATT']." Вт /  ".$userdata['YEAR_RUB'] .'руб.<br>';
+print '
+				<div class="blank-right">
+				
+					<div class="p-left p-sh">Показание счетчика:</div><div class="p-right">'.$obsh.' кВт/ч</div></p><br>
+    				 	<div class="p-left">Тариф 1:</div><div class="p-right">'.$userdata['Total1'].'</div><br>
+    				 	<div class="p-left">Тариф 2:</div><div class="p-right">'.$userdata['Total2'].'</div><br>
+<br>
+   
+					<div class="p-left">Напряжение и ток на фазе А:</div><div class="p-right">'.$userdata['Uv1'].' В / '.$userdata['Ia1'].' А</div><br>
+					<div class="p-left">Напряжение и ток на фазе B:</div><div class="p-right">'.$userdata['Uv2'].' В / '.$userdata['Ia2'].' А</div><br>
+					<div class="p-left">Напряжение и ток на фазе C:</div><div class="p-right">'.$userdata['Uv3'].' В / '.$userdata['Ia3'].' А</div><br>
+					<div class="p-left">Общая потребляемая мощность:</div><div class="p-right">'.$userdata['PvT'].' Вт/ч</div><br>
+					<div class="p-left">Последний опрос счетчика:</div><div class="p-right">'.date('d-m-Y H:i:s',$userdata['TS']).'</div><br>
+					<div style="clear:both"></div>
+
+				</div>
+				<div style="clear:both"></div>
+			</div>
+		</div>
+	</body>
+</html>';
+
+
+/////////////////////////
+/////////////////////////
+/////////////////////////
+/////////////////////////
+/////////////////////////
+
+/////////////////////////
+/////////////////////////
+/////////////////////////
+/////////////////////////
+/////////////////////////
+
 
 if ($userdata['PREDSED']=='1') {
 echo "<br><br><h1>Профиль председателя.</h1><br>";
@@ -214,174 +261,7 @@ else
     print "Включите куки";
 }
 
-?>
 
-<div id="chart1" style="height: 300px"></div>
-<script src="https://code.highcharts.com/highcharts.js"></script>
-
-
-<script type="text/javascript" name="1">
-Highcharts.chart('chart1', {
-
-  chart: {
-    borderWidth: 0,
-    plotBorderWidth: 1,
-    spacingTop: 10
-    ,width: 350 // 16:9 ratio
-
-  },
-
-title: {
-            text: 'Сила тока:'
-        },
-
-
-
-  xAxis: {
-    categories: [
-<? 
-$sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".IaT' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
-$cmd_rec = SQLSelect($sql);
-$stroka="";
-foreach ($cmd_rec as $cmd_r)
-{$stroka.= '"'.$cmd_r['dt'].'",';
-}
-$stroka=preg_replace("/(.)$/", "", $stroka);
-echo $stroka;
-
-?>
-
-
-]
-  },
-
-  series: [{
-    data: [
-<? 
-$sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".IaT' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
-$cmd_rec = SQLSelect($sql);
-$stroka="";
-foreach ($cmd_rec as $cmd_r)
-{$stroka.= $cmd_r['value'].",";
-}
-$stroka=preg_replace("/(.)$/", "", $stroka);
-echo $stroka;
-
-?>
-]
-  }]
-
-});
-</script>
-
-
-<script src="https://code.highcharts.com/highcharts.js" name="123"></script>
-<div id="chart2" style="height: 300px"></div>
-
-		<script type="text/javascript" name="123">
-Highcharts.chart('chart2', {
-
-  chart: {
-    borderWidth: 0,
-    plotBorderWidth: 0,
-    spacingTop: 10
-    ,width: 350 // 16:9 ratio
-  },
-title: {
-            text: 'Напряжение:'
-        },
-
-  xAxis: {
-    categories: [
-<? 
-$sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".U' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
-$cmd_rec = SQLSelect($sql);
-$stroka="";
-foreach ($cmd_rec as $cmd_r)
-{$stroka.= '"'.$cmd_r['dt'].'",';
-}
-$stroka=preg_replace("/(.)$/", "", $stroka);
-echo $stroka;
-
-?>
-
-
-]
-  },
-
-  series: [{
-    data: [
-<? 
-$sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".U' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
-$cmd_rec = SQLSelect($sql);
-$stroka="";
-foreach ($cmd_rec as $cmd_r)
-{$stroka.= $cmd_r['value'].",";
-}
-$stroka=preg_replace("/(.)$/", "", $stroka);
-echo $stroka;
-
-?>
-]
-  }]
-
-});
-		</script>
-
-
-<script src="https://code.highcharts.com/highcharts.js" name="123"></script>
-<div id="chart3" style="height: 300px"></div>
-
-		<script type="text/javascript" name="123">
-Highcharts.chart('chart3', {
-
-  chart: {
-    borderWidth: 0,
-    plotBorderWidth: 0,
-    spacingTop: 10
-    ,width: 350
-
-  },
-title: {
-            text: 'Потребляемая мощность:'
-        },
-
-  xAxis: {
-    categories: [
-<? 
-$sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".PvT' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
-$cmd_rec = SQLSelect($sql);
-$stroka="";
-foreach ($cmd_rec as $cmd_r)
-{$stroka.= '"'.$cmd_r['dt'].'",';
-}
-$stroka=preg_replace("/(.)$/", "", $stroka);
-echo $stroka;
-
-?>
-
-
-]
-  },
-
-  series: [{
-    data: [
-<? 
-$sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".PvT' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
-$cmd_rec = SQLSelect($sql);
-$stroka="";
-foreach ($cmd_rec as $cmd_r)
-{$stroka.= $cmd_r['value'].",";
-}
-$stroka=preg_replace("/(.)$/", "", $stroka);
-echo $stroka;
-
-?>
-]
-  }]
-
-});
-		</script>
 
 
 
