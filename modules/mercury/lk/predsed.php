@@ -34,7 +34,8 @@
 				<div class="ld">
 					Пользователь: <span>
 
-'.$userdata['FIO'].'(Председатель)
+'.$userdata['FIO']."(председатель)";
+print '
 </span><br>
 					Логин: <span>'.$userdata['LOGIN'].'
 </span>				
@@ -77,8 +78,8 @@ Highcharts.chart("chart1", {
   chart: {
     borderWidth: 0,
     plotBorderWidth: 1,
-    spacingTop: 10
-    ,width: 1024 // 16:9 ratio
+    spacingTop: 10,
+    width: 1240 // 16:9 ratio
 
   },
 
@@ -141,10 +142,9 @@ print '
 
 
 $obsh=$userdata['Total1']+$userdata['Total2'];
-print '
-				<div class="blank-right">
+print '	  			<div class="blank-right">
 				
-					<div class="p-left p-sh">Показание счетчика:</div><div class="p-right">'.$obsh.' кВт/ч</div></p><br>
+					<div class="p-left p-sh"><b>Показание счетчика:</b></div><div class="p-right">'.$obsh.' кВт/ч</div></p><br>
     				 	<div class="p-left">Тариф 1:</div><div class="p-right">'.$userdata['Total1'].'</div><br>
     				 	<div class="p-left">Тариф 2:</div><div class="p-right">'.$userdata['Total2'].'</div><br>
 <br>
@@ -153,15 +153,77 @@ print '
 					<div class="p-left">Напряжение и ток на фазе B:</div><div class="p-right">'.$userdata['Uv2'].' В / '.$userdata['Ia2'].' А</div><br>
 					<div class="p-left">Напряжение и ток на фазе C:</div><div class="p-right">'.$userdata['Uv3'].' В / '.$userdata['Ia3'].' А</div><br>
 					<div class="p-left">Общая потребляемая мощность:</div><div class="p-right">'.$userdata['PvT'].' Вт/ч</div><br>
-					<div class="p-left">Последний опрос счетчика:</div><div class="p-right">'.date('d-m-Y H:i:s',$userdata['TS']).'</div><br>
+ 					<div class="p-left">Последний опрос счетчика:</div><div class="p-right">'.date('d-m-Y H:i:s',$userdata['TS']).'</div>
 					<div style="clear:both"></div>
+					</div>
+';
 
-				</div>
-				<div style="clear:both"></div>
-			</div>
-		</div>
-	</body>
-</html>';
+
+
+	print '	<br><br>';
+
+print '	  			<div class="blank-right">
+				
+					<div class="p-left p-sh"><b>Объявления:</b></div></p><br>';
+
+
+//print '<div class="blank-right"> ';
+
+
+//print '<div class="p-left p-sh"><b>Показание счетчика:</b></div></p><br></div>';
+
+
+    $res=SQLSelect("SELECT * FROM mercury_news order by ID desc limit 10");
+//    $res=SQLSelect("SELECT ID FROM zigbee2mqtt_devices WHERE LINKED_OBJECT='' AND LINKED_PROPERTY=''");
+    $total = count($res);
+    for ($i=0;$i<$total;$i++) {
+
+echo '<div class="p-left"><b>'.$res[$i]["TITLE"].'</b></div>';
+echo '<div class="p-nright">'.$res[$i]["data"].'</div><br>';
+
+echo '<div class="p-left">'.$res[$i]["message"].'</div><br><br>';
+    }
+
+print '
+
+     <form action="/modules/mercury/mercury.class.php" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+
+<!--     <fieldset> -->
+     <label ><b>Добавить новое объявление</b></label>
+     <div class="col-md-6 input-group">
+
+     <label class="control-label">Тема  объявления</label>
+     <input type="text"  class="form-control"  value="" style="width:95%"  name="tema" ><br>
+
+     <label >Текст объявления     </label>
+     <input type="text"  class="form-control"  value=""   style="height:150px; width:95%" name="message">
+     <div class="input-group-btn">
+     </div> </div>';
+
+print '
+
+ <button type="submit" name="subm" value="<#LANG_SUBMIT#>" class="btn btn-defaul btn-primary">Опубликовать</button>
+
+
+
+<input type="hidden" name="id" value="<#ID#>">
+<input type="hidden" name="message" value="<#message#>">
+<input type="hidden" name="tema" value="<#tema#>">
+<input type="hidden" name="addnews" value="addnews">
+
+     </fieldset>    
+     </form>
+
+';
+
+print '
+</div> ';
+
+
+print '	  								<div style="clear:both"></div> ';
+
+//print '	<div style="clear:both"></div> ';
+print '	</body></html>'; 
 
 
 /////////////////////////
