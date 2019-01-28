@@ -186,35 +186,30 @@ echo '<div class="p-left">'.$res[$i]["message"].'</div><br><br>';
 
 print '
 
-     <form action="/modules/mercury/mercury.class.php" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+     <form action="/modules/mercury/addnews.php" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
 
 <!--     <fieldset> -->
      <label ><b>Добавить новое объявление</b></label>
      <div class="col-md-6 input-group">
 
      <label class="control-label">Тема  объявления</label>
-     <input type="text"  class="form-control"  value="" style="width:95%"  name="tema" ><br>
+     <input type="text"  class="form-control"   style="width:95%"  name="tema" ><br>
 
      <label >Текст объявления     </label>
-     <input type="text"  class="form-control"  value=""   style="height:150px; width:95%" name="message">
+     <input type="text"  class="form-control"     style="height:150px; width:95%" name="message">
      <div class="input-group-btn">
      </div> </div>';
 
-print '
-
- <button type="submit" name="subm" value="<#LANG_SUBMIT#>" class="btn btn-defaul btn-primary">Опубликовать</button>
+print ' <button type="submit" name="subm" value="<#LANG_SUBMIT#>" class="btn btn-defaul btn-primary">Опубликовать</button> ';
 
 
 
-<input type="hidden" name="id" value="<#ID#>">
-<input type="hidden" name="message" value="<#message#>">
-<input type="hidden" name="tema" value="<#tema#>">
-<input type="hidden" name="addnews" value="addnews">
 
-     </fieldset>    
-     </form>
+//print '<input type="hidden" name="message" value="123"> ';
+//print '<input type="hidden" name="tema" value="111"> 	   ';
+print '<input type="hidden" name="addnews" value="addnews"> ';
 
-';
+print '</fieldset>    </form>';
 
 print '
 </div> ';
