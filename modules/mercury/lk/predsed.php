@@ -34,10 +34,10 @@
 				<div class="ld">
 					Пользователь: <span>
 
-'.$userdata['FIO']."(председатель)";
+'.$userdata['FIO'].'(председатель) ';
 print '
 </span><br>
-					Логин: <span>'.$userdata['LOGIN'].'
+					Логин: <span>'.$userdata['LOGIN'].'&nbsp;&nbsp;<a href="index.php" title="Выход">Выход</a> 
 </span>				
 				</div>
 				<div class="sh">
@@ -48,8 +48,44 @@ print '
 				<div style="clear:both"></div>
 			</div> 
 			<div class="blank">
-				<div class="blank-left">
-					<div class="graf">
+				<div class="blank-left"> ';
+
+print ' 			<div class="graf"> ';
+//				типа график2
+
+$sql="SELECT * FROM mercury_devices ";
+$pred=SQLSelect($sql);
+//echo '<table width="100%" cellspacing="0" cellpadding="4" border="1" style="color: #00a648;" >';
+echo '<table width="100%" cellspacing="0" cellpadding="4" border="1"  >';
+echo "<tr><td>".'ФИО'."</td><td>".'Адрес'."</td><td>".'Сост.'."</td><td>".'ONLINE'."</td><td>Обновлено</td><td>".'IaT'."</td><td>".'PvT'."</td><td>".'U'."</td><td>Показания</td><tr>";
+$sump=0;
+$sumi=0;
+$sumu=0;
+foreach ($pred as $rec) 
+{
+if ($rec['Total1']<>"") $obsh=$rec['Total1']+$rec['Total2'];
+if ($rec['PvT']<>"") $sump=$sump+$rec['PvT'];
+if ($rec['IaT']<>"") $sumi=$sumi+$rec['IaT'];
+if ($rec['TS']<>"") $ts=date('m/d/Y H:i:s',$rec['TS']);		
+
+if ($rec['ONLINE']==1)
+$online='<span class="label label-success" >Online</span> ';
+else
+$online='<span class="label label-warning">Offline</span> ';
+
+
+echo "<tr><td>".$rec['FIO']."</td><td>".$rec['STREET']."</td><td>".$rec['STATE']."</td><td>".$online."</td><td>".$ts."</td><td>".$rec['IaT']."</td><td>".$rec['PvT']."</td><td>".$rec['U']."</td><td>".$obsh."</td><tr>";
+}
+echo "<tr><td>Итого</td><td></td><td></td><td></td><td></td><td>".$sumi."</td><td>".$sump."</td><td></td><td></td></tr>";
+echo "</table>";
+
+
+
+
+print '	   			</div> ';
+
+
+print ' 								<div class="graf">
 
 
 ';
@@ -78,9 +114,10 @@ Highcharts.chart("chart1", {
   chart: {
     borderWidth: 0,
     plotBorderWidth: 1,
-    spacingTop: 10,
-    width: 1240 // 16:9 ratio
-
+    spacingTop: 10 ';
+//print '    ,width: 850 // 16:9 ratio ';
+//print '    ,width: 850 // 16:9 ratio ';
+print '
   },
 
 title: {
@@ -123,14 +160,12 @@ print ']  }]});</script> ';
 /////////////////////////////////////
 
 
+print '	</div> ';
 
 
-print '
-
-					</div>
-					<div class="graf">
-						типа график2
-					</div>
+print ' 			<div class="graf">
+				типа график2
+	   			</div>
 				</div>';
 
 
@@ -181,7 +216,7 @@ print '	  			<div class="blank-right">
 echo '<div class="p-left"><b>'.$res[$i]["TITLE"].'</b>
 </div>';
 echo '<div class="p-nright">'.$res[$i]["data"];
-echo '<a href="/modules/mercury/deletenews.php?id='.$res[$i]['ID'].'" title="Удалить объявление">x</a> ';
+echo '&nbsp;&nbsp;<a href="/modules/mercury/deletenews.php?id='.$res[$i]['ID'].'" title="Удалить объявление">x</a> ';
 //echo '<a href="#"  onclick="" title="Удалить объявление">x</a> ';
 echo '</div><br>';
 
@@ -236,4 +271,3 @@ print '	</body></html>';
 /////////////////////////
 /////////////////////////
 /////////////////////////
-
