@@ -1,4 +1,5 @@
 <?
+error_reporting(0);
    print '
 
 <!doctype html>
@@ -41,9 +42,9 @@
 				</div>
 				<div class="sh">
 					Счетчик электроэнергии: <span>Меркурий '.$userdata['MODEL'].'</span><br>
-					Серийный номер: <span>'.$userdata['SN'].'</span><br>
-					Дата производства счетчика: <span>'.$userdata['MADETD'].'</span><br>
-				</div>
+					Серийный номер: <span>'.$userdata['SN'].'</span><br>';
+print '					Дата производства счетчика: <span>'.$userdata['MADEDT'].'</span><br> ';
+print '				</div>
 				<div style="clear:both"></div>
 			</div> 
 			<div class="blank">
@@ -66,7 +67,14 @@
 print '
 
 <div id="chart1" style="height: 300px"></div>
+ ';
 
+$sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".IaT' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
+//$cmd_rec = SQLSelect($sql);
+//echo $sql;
+
+
+print '
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 
@@ -95,11 +103,18 @@ title: {
 ';
 
 $sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".IaT' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
-$cmd_rec = SQLSelect($sql);
+//$cmd_rec = SQLSelect($sql);
+$cmd_rec = $db->query($sql);
 $stroka="";
-foreach ($cmd_rec as $cmd_r)
-{$stroka.= '"'.$cmd_r['dt'].'",';
+//foreach ($cmd_rec as $cmd_r)
+//{$stroka.= '"'.$cmd_r['dt'].'",';}
+
+$cmd_rec->data_seek(0);
+while ($row = $cmd_rec->fetch_assoc()) {
+//    echo " id = " . $row['FIO'] . "\n";
+$stroka.= '"'.$row['dt'].'",';
 }
+
 $stroka=preg_replace("/(.)$/", "", $stroka);
 echo $stroka;
 
@@ -107,14 +122,18 @@ print ']  },  series: [{    data: [ ';
 
 
 $sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".IaT' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
-$cmd_rec = SQLSelect($sql);
+
+///$cmd_rec = SQLSelect($sql);
+
+$cmd_rec = $db->query($sql);
+
+
 $stroka="";
 foreach ($cmd_rec as $cmd_r)
 {$stroka.= $cmd_r['value'].",";
 }
 $stroka=preg_replace("/(.)$/", "", $stroka);
 echo $stroka;
-
 print ']  }]});</script> ';
 
 
@@ -174,15 +193,23 @@ print '	  			<div class="blank-right">
 //print '<div class="p-left p-sh"><b>Показание счетчика:</b></div></p><br></div>';
 
 
-    $res=SQLSelect("SELECT * FROM mercury_news order by ID desc limit 10");
+$sql="SELECT * FROM mercury_news order by ID desc limit 10";
+//    $res=SQLSelect("SELECT * FROM mercury_news order by ID desc limit 10");
 //    $res=SQLSelect("SELECT ID FROM zigbee2mqtt_devices WHERE LINKED_OBJECT='' AND LINKED_PROPERTY=''");
-    $total = count($res);
-    for ($i=0;$i<$total;$i++) {
+//    $total = count($res);
+//    for ($i=0;$i<$total;$i++) {
 
-echo '<div class="p-left"><b>'.$res[$i]["TITLE"].'</b></div>';
-echo '<div class="p-nright">'.$res[$i]["data"].'</div><br>';
 
-echo '<div class="p-left">'.$res[$i]["message"].'</div><br><br>';
+$cmd_rec = $db->query($sql);
+$stroka="";
+
+$cmd_rec->data_seek(0);
+while ($row = $cmd_rec->fetch_assoc()) {
+
+echo '<div class="p-left"><b>'.$row["TITLE"].'</b></div>';
+echo '<div class="p-nright">'.$row["data"].'</div><br>';
+
+echo '<div class="p-left">'.$row["message"].'</div><br><br>';
 
 
 
