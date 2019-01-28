@@ -1,4 +1,5 @@
 <?
+error_reporting(0);
    print '
 
 <!doctype html>
@@ -42,9 +43,11 @@ print '
 				</div>
 				<div class="sh">
 					Счетчик электроэнергии: <span>Меркурий '.$userdata['MODEL'].'</span><br>
-					Серийный номер: <span>'.$userdata['SN'].'</span><br>
-					Дата производства счетчика: <span>'.$userdata['MADETD'].'</span><br>
-				</div>
+					Серийный номер: <span>'.$userdata['SN'].'</span><br> ';
+//if ($userdata['MADETD']) {
+print ' 					Дата производства счетчика: <span>'.$userdata['MADETD'].'</span><br> ';
+//}
+print '				</div>
 				<div style="clear:both"></div>
 			</div> 
 			<div class="blank">
@@ -54,27 +57,54 @@ print ' 			<div class="graf"> ';
 //				типа график2
 
 $sql="SELECT * FROM mercury_devices ";
-$pred=SQLSelect($sql);
+//$pred=SQLSelect($sql);
+
+
+
+//$userdata=SQLSelectOne($sql);
+
+//	$query= mysqli_query($db,$sql);
+//    	$rec = mysqli_fetch_assoc($query);
+
+//$rec= mysqli_query($db, $sql, MYSQLI_USE_RESULT); 
+
+$rec = $db->query($sql);
+
+//print_r($rec);
 //echo '<table width="100%" cellspacing="0" cellpadding="4" border="1" style="color: #00a648;" >';
 echo '<table width="100%" cellspacing="0" cellpadding="4" border="1"  >';
 echo "<tr><td>".'ФИО'."</td><td>".'Адрес'."</td><td>".'Сост.'."</td><td>".'ONLINE'."</td><td>Обновлено</td><td>".'IaT'."</td><td>".'PvT'."</td><td>".'U'."</td><td>Показания</td><tr>";
 $sump=0;
 $sumi=0;
 $sumu=0;
-foreach ($pred as $rec) 
-{
-if ($rec['Total1']<>"") $obsh=$rec['Total1']+$rec['Total2'];
-if ($rec['PvT']<>"") $sump=$sump+$rec['PvT'];
-if ($rec['IaT']<>"") $sumi=$sumi+$rec['IaT'];
-if ($rec['TS']<>"") $ts=date('m/d/Y H:i:s',$rec['TS']);		
+//foreach ($pred as $rec) 
 
-if ($rec['ONLINE']==1)
+//	$total = count($rec); mysqli_num_rows($result)
+//	$total =  mysqli_num_rows($rec);
+	$total =  $rec->num_rows;
+
+//	echo 'total:'.$total;
+
+
+$rec->data_seek(0);
+while ($row = $rec->fetch_assoc()) {
+//    echo " id = " . $row['FIO'] . "\n";
+//}
+
+
+//    for ($i=0;$i<$total;$i++) {
+if ($row['Total1']<>"") $obsh=$row['Total1']+$row['Total2'];
+if ($row['PvT']<>"") $sump=$sump+$row['PvT'];
+if ($row['IaT']<>"") $sumi=$sumi+$row['IaT'];
+if ($row['TS']<>"") $ts=date('m/d/Y H:i:s',$row['TS']);		
+
+if ($row['ONLINE']==1)
 $online='<span class="label label-success" >Online</span> ';
 else
 $online='<span class="label label-warning">Offline</span> ';
 
-
-echo "<tr><td>".$rec['FIO']."</td><td>".$rec['STREET']."</td><td>".$rec['STATE']."</td><td>".$online."</td><td>".$ts."</td><td>".$rec['IaT']."</td><td>".$rec['PvT']."</td><td>".$rec['U']."</td><td>".$obsh."</td><tr>";
+//{
+echo "<tr><td>".$row['FIO']."</td><td>".$row['STREET']."</td><td>".$row['STATE']."</td><td>".$online."</td><td>".$ts."</td><td>".$row['IaT']."</td><td>".$row['PvT']."</td><td>".$row['U']."</td><td>".$obsh."</td><tr>";
 }
 echo "<tr><td>Итого</td><td></td><td></td><td></td><td></td><td>".$sumi."</td><td>".$sump."</td><td></td><td></td></tr>";
 echo "</table>";
@@ -131,11 +161,18 @@ title: {
 ';
 
 $sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".IaT' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
-$cmd_rec = SQLSelect($sql);
+//$cmd_rec = SQLSelect($sql);
+$cmd_rec = $db->query($sql);
 $stroka="";
-foreach ($cmd_rec as $cmd_r)
-{$stroka.= '"'.$cmd_r['dt'].'",';
+//foreach ($cmd_rec as $cmd_r)
+//{$stroka.= '"'.$cmd_r['dt'].'",';}
+
+$cmd_rec->data_seek(0);
+while ($row = $cmd_rec->fetch_assoc()) {
+//    echo " id = " . $row['FIO'] . "\n";
+$stroka.= '"'.$row['dt'].'",';
 }
+
 $stroka=preg_replace("/(.)$/", "", $stroka);
 echo $stroka;
 
@@ -143,7 +180,11 @@ print ']  },  series: [{    data: [ ';
 
 
 $sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".IaT' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
-$cmd_rec = SQLSelect($sql);
+///$cmd_rec = SQLSelect($sql);
+
+$cmd_rec = $db->query($sql);
+
+
 $stroka="";
 foreach ($cmd_rec as $cmd_r)
 {$stroka.= $cmd_r['value'].",";
@@ -207,20 +248,28 @@ print '	  			<div class="blank-right">
 
 //print '<div class="p-left p-sh"><b>Показание счетчика:</b></div></p><br></div>';
 
-
-    $res=SQLSelect("SELECT * FROM mercury_news order by ID desc limit 10");
+$sql="SELECT * FROM mercury_news order by ID desc limit 10";
+//    $res=SQLSelect("SELECT * FROM mercury_news order by ID desc limit 10");
 //    $res=SQLSelect("SELECT ID FROM zigbee2mqtt_devices WHERE LINKED_OBJECT='' AND LINKED_PROPERTY=''");
-    $total = count($res);
-    for ($i=0;$i<$total;$i++) {
+//    $total = count($res);
+//    for ($i=0;$i<$total;$i++) {
 
-echo '<div class="p-left"><b>'.$res[$i]["TITLE"].'</b>
+
+$cmd_rec = $db->query($sql);
+$stroka="";
+
+$cmd_rec->data_seek(0);
+while ($row = $cmd_rec->fetch_assoc()) {
+
+
+echo '<div class="p-left"><b>'.$row["TITLE"].'</b>
 </div>';
-echo '<div class="p-nright">'.$res[$i]["data"];
-echo '&nbsp;&nbsp;<a href="/modules/mercury/deletenews.php?id='.$res[$i]['ID'].'" title="Удалить объявление">x</a> ';
+echo '<div class="p-nright">'.$row["data"];
+echo '&nbsp;&nbsp;<a href="/modules/mercury/deletenews.php?id='.$row['ID'].'" title="Удалить объявление">x</a> ';
 //echo '<a href="#"  onclick="" title="Удалить объявление">x</a> ';
 echo '</div><br>';
 
-echo '<div class="p-left">'.$res[$i]["message"].'</div><br><br>';
+echo '<div class="p-left">'.$row["message"].'</div><br><br>';
     }
 
 print '
