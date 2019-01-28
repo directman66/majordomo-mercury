@@ -203,8 +203,11 @@ body {
 	color: #888;
 	float:left;
 	text-align: center;
-	background-color:#e2f9ec;
-	padding: 10px;
+	border: 0px solid #44a;	
+/*	background-color:#e2f9ec; */
+/*	background-color:#ffffff;  */
+/*	padding: 10px; */
+	margin-bottom: 20px;
 }
 
 .blank-right{
@@ -218,7 +221,8 @@ body {
 
 .graf {
 	width:calc(100% - 6px);
-	border: 3px solid #44a;	
+/*	border: 3px solid #44a;	 */
+	border: 0px solid #44a;	 
 	margin-bottom: 10px;
 	background-color:#fff;
 }
@@ -238,4 +242,17 @@ body {
 .p-sh {
 	font-size: 18px;
 	color: #000;
+}
+
+.table {
+	border: 0px solid white; /*Цвет фона*/ 
+/*	border: 0px; /*Цвет фона*/ 
+	border-collapse: collapse;
+	color: #888;
+}
+
+td {
+	border: 1px solid green;
+	padding: 2px;
+	color:#00a648;
 }
