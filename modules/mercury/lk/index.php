@@ -1,4 +1,5 @@
 <?
+error_reporting(0);
 // Страница авторизации
 
 // Функция для генерации случайной строки
@@ -15,8 +16,9 @@ function generateCode($length=6) {
 // Соединямся с БД
 
 chdir(dirname(__FILE__) . '/../../..');
+//chdir(dirname(__FILE__) . '/../..');
 include_once("./config.php");
-include_once("./lib/loader.php");
+//include_once("./lib/loader.php");
 
 
 $link=mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
