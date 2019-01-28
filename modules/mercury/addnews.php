@@ -22,8 +22,8 @@ debmes('Добавление новой новости '.$news, 'mercury');
 $news = SQLSelect("SELECT * FROM mercury_news");
 {
 $news['data']=date('Y-m-d H:i:s');;
-$news['message']=$tema;
-$news['TITLE']=$message;
+$news['message']=$message;
+$news['TITLE']=$tema;
 SQLInsert('mercury_news', $news);	
  }
 
