@@ -271,6 +271,20 @@ $this->getinfo($this->id);
    $this->redirect("?");
  }
 
+
+ if ($this->view_mode=='addnews') {
+
+$news = SQLSelect("SELECT * FROM mercury_news");
+{
+$news['data']=date('Y-m-d H:i:s');;
+$news['message']=$this->message;
+$news['TITLE']=$this->tema;
+SQLInsert('mercury_news', $news);	
+ }
+}
+
+
+
    $this->searchdevices($out, $this->id);
  if ($this->view_mode=='config'||$this->view_mode==''||$this->view_mode=='indata_edit') {
 //   $this->searchdevices($out, $this->id);
@@ -291,6 +305,11 @@ $this->getinfo($this->id);
 
   if ($this->view_mode=='getrates') {
    $this->getrates($this->id);
+   $this->updatecosts($this->id);
+  }
+
+  if ($this->view_mode=='updatecosts') {
+   $this->updatecosts($this->id);
   }
 
 
@@ -307,10 +326,12 @@ if (!$id){
 $all_rec = SQLSelect("SELECT * FROM mercury_devices");
 foreach ($all_rec as $rc) {
 $this->updaterates($rc['ID']);
+$this->updatecosts($id);
 }
 } else {
 
 $this->updaterates($id);
+$this->updatecosts($id);
 }
 }
 
@@ -332,6 +353,48 @@ $cmd_rec['WEEK_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-604800 ,
 $cmd_rec['YEAR_WATT']=round(getHistorySum($objectname.'.rashodt1', $now-31556926 ,$now))+round(getHistorySum($objectname.'.rashodt2', $now-31556926 ,$now));
 $cmd_rec['YEAR_RUB']=(round(getHistorySum($objectname.'.rashodt1', $now-31556926 ,$now)*SETTINGS_APPMERCURY_T1))+(round(getHistorySum($objectname.'.rashodt2', $now-31556926 ,$now)*SETTINGS_APPMERCURY_T2));
 SQLUpdate('mercury_devices',$cmd_rec);
+
+
+}
+
+function updatecosts($id) {
+
+
+$year=date('Y',time());		
+$month=date('m',time());		
+
+$lastvalue = SQLSelectOne("SELECT IFNULL(max(LASTVALUE),0) LASTVALUE FROM mercury_costs where IDDEV='$id' ")['LASTVALUE'];
+$value = SQLSelectOne("SELECT IFNULL(TOTAL,0) VALUE FROM mercury_devices where ID='$id' ")['VALUE'];
+
+
+$sql="SELECT * FROM mercury_costs where IDDEV='$id' and YEAR='$year' and MONTH='$month'";
+
+$cmd_rec = SQLSelectOne($sql);
+
+debmes($sql,'mercury');
+
+$cmd_rec['TITLE']='Расход в квт/ч за месяц';
+$cmd_rec['PARAMETR']='potreblenie';
+$cmd_rec['YEAR']=$year;
+$cmd_rec['IDDEV']=$id;
+$cmd_rec['VALUE']=$value;
+$cmd_rec['LASTVALUE']=$value;
+$cmd_rec['MONTH']=$month;
+
+if ($cmd_rec['ID']) {
+//update
+if ($cmd_rec['SUM']) {$cmd_rec['SUM']=$cmd_rec['SUM']+($value-$lastvalue);}else  {$cmd_rec['SUM']=$value;}
+
+debmes('update mercury_costs','mercury');
+SQLUpdate('mercury_costs',$cmd_rec);
+}
+else 
+{
+$cmd_rec['SUM']=$value-$lastvalue;
+//$cmd_rec['SUM']='0';
+debmes('insert mercury_costs','mercury');
+SQLInsert('mercury_costs',$cmd_rec);
+}
 }
 
 function processSubscription($event_name, $details='') {
@@ -1381,6 +1444,24 @@ SQLUpdate('properties',$property); }
  mercury_devices: KN varchar(100) NOT NULL DEFAULT ''
  mercury_devices: KT varchar(100) NOT NULL DEFAULT ''
 
+ mercury_costs: ID int(10) unsigned NOT NULL auto_increment
+ mercury_costs: IDDEV varchar(100) NOT NULL DEFAULT ''
+ mercury_costs: TITLE varchar(100) NOT NULL DEFAULT ''
+ mercury_costs: YEAR int(4) 
+ mercury_costs: MONTH int(2) 
+ mercury_costs: PARAMETR varchar(100) NOT NULL DEFAULT ''
+ mercury_costs: VALUE varchar(100) NOT NULL DEFAULT ''
+ mercury_costs: LASTVALUE varchar(100) NOT NULL DEFAULT ''
+ mercury_costs: SUM varchar(100) NOT NULL DEFAULT ''
+
+ mercury_news: ID int(10) unsigned NOT NULL auto_increment
+ mercury_news: TITLE varchar(100) NOT NULL DEFAULT ''
+ mercury_news: data datetime
+ mercury_news: message  varchar(2000) NOT NULL DEFAULT ''
+
+
+
+
 
 EOD;
   parent::dbInstall($data);
@@ -1390,6 +1471,22 @@ EOD;
  mercury_config: value varchar(10000)  
 EOD;
    parent::dbInstall($data);
+
+$news = SQLSelect("SELECT * FROM mercury_news");
+if (!$news[0]['ID']) 
+{
+$news['data']=date('Y-m-d H:i:s');;
+$news['message']='Уважаемые жители. Прочитайте важное объявление';
+$news['TITLE']='Важное объявление!!!';
+SQLInsert('mercury_news', $news);	
+
+$news['data']=date('Y-m-d H:i:s');;
+$news['message']='Уважаемые жители. Прочитайте важное объявление2';
+$news['TITLE']='Важное объявление 2!!!';
+SQLInsert('mercury_news', $news);	
+
+}
+
 
 $cmd_rec = SQLSelect("SELECT * FROM mercury_devices");
 if ($cmd_rec[0]['ID']) {null;}
