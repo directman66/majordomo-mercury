@@ -74,4 +74,3 @@ $sql="UPDATE mercury_devices SET USERIP='$insip', USERHASH='$hash' WHERE LOGIN='
 </form>
 
 </center></h4>
-
