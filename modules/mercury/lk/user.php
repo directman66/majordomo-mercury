@@ -36,7 +36,7 @@
 
 '.$userdata['FIO']."(". $userdata['STREET'].')
 </span><br>
-					Логин: <span>'.$userdata['LOGIN'].'
+					Логин: <span>'.$userdata['LOGIN'].'&nbsp;&nbsp;<a href="index.php" title="Выход">Выход</a> 
 </span>				
 				</div>
 				<div class="sh">
@@ -77,9 +77,11 @@ Highcharts.chart("chart1", {
   chart: {
     borderWidth: 0,
     plotBorderWidth: 1,
-    spacingTop: 10,
-    width: 1240 // 16:9 ratio
+    spacingTop: 10 ';
+//print '    ,width: 1240 // 16:9 ratio ';
+//print '    ,width: 1240 // 16:9 ratio ';
 
+print '
   },
 
 title: {
