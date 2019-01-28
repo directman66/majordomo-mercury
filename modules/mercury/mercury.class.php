@@ -223,6 +223,7 @@ $file = $cachedVoiceDir . 'mercurydebug.txt';
 $debug = file_get_contents($file);
 
 $debug = "Запускаем цикл по счетчикам <br>\n";
+debmes("Запускаем цикл по счетчикам",'mercury');
 file_put_contents($file, $debug);
 
 $cmd_rec = SQLSelect("SELECT ID FROM mercury_devices");
@@ -230,8 +231,13 @@ foreach ($cmd_rec as $cmd_r)
 {
 $myid=$cmd_r['ID'];
 $debug .= "Начинаем запрашивать счетчик $myid. <br>\n";
+debmes("Начинаем запрашивать счетчик $myid ",'mercury');
+
 file_put_contents($file, $debug);
 $this->getpu($myid);
+$this->updatecosts($myid);
+
+
 }
 
 }  
@@ -276,7 +282,7 @@ $this->getinfo($this->id);
 
 $news = SQLSelect("SELECT * FROM mercury_news");
 {
-$news['data']=date('Y-m-d H:i:s');;
+$news['data']=date('Y-m-d H:i:s');
 $news['message']=$this->message;
 $news['TITLE']=$this->tema;
 SQLInsert('mercury_news', $news);	
@@ -326,12 +332,11 @@ if (!$id){
 $all_rec = SQLSelect("SELECT * FROM mercury_devices");
 foreach ($all_rec as $rc) {
 $this->updaterates($rc['ID']);
-$this->updatecosts($id);
+//$this->updatecosts($id);
 }
 } else {
 
 $this->updaterates($id);
-$this->updatecosts($id);
 }
 }
 
@@ -359,11 +364,18 @@ SQLUpdate('mercury_devices',$cmd_rec);
 
 function updatecosts($id) {
 
+debmes('запущен updatecosts id='.$id,'mercury');
+
+if ($id<>""){
 
 $year=date('Y',time());		
 $month=date('m',time());		
 
 $lastvalue = SQLSelectOne("SELECT IFNULL(max(LASTVALUE),0) LASTVALUE FROM mercury_costs where IDDEV='$id' ")['LASTVALUE'];
+
+
+//first record
+if ($lastvalue==0) {$first=1;}
 $value = SQLSelectOne("SELECT IFNULL(TOTAL,0) VALUE FROM mercury_devices where ID='$id' ")['VALUE'];
 
 
@@ -380,6 +392,7 @@ $cmd_rec['IDDEV']=$id;
 $cmd_rec['VALUE']=$value;
 $cmd_rec['LASTVALUE']=$value;
 $cmd_rec['MONTH']=$month;
+$cmd_rec['UPDATED']=date('Y-m-d H:i:s');
 
 if ($cmd_rec['ID']) {
 //update
@@ -390,12 +403,13 @@ SQLUpdate('mercury_costs',$cmd_rec);
 }
 else 
 {
-$cmd_rec['SUM']=$value-$lastvalue;
-//$cmd_rec['SUM']='0';
+//$cmd_rec['SUM']=$value-$lastvalue;
+
+if ($first=="1") {$cmd_rec['SUM']='0';} else {$cmd_rec['SUM']=$value-$lastvalue;}
 debmes('insert mercury_costs','mercury');
 SQLInsert('mercury_costs',$cmd_rec);
 }
-}
+}}
 
 function processSubscription($event_name, $details='') {
   if ($event_name=='HOURLY') {
@@ -557,7 +571,8 @@ $myid=$cmd_r['ID'];
 $debug .= "Начинаем запрашивать счетчик $myid. <br>\n";
 file_put_contents($file, $debug);
 $this->getpu($myid);
-$this->getrates($this->id);
+$this->getrates($myid);
+$this->updatecosts($myid);
 }
 
 
@@ -1453,6 +1468,7 @@ SQLUpdate('properties',$property); }
  mercury_costs: VALUE varchar(100) NOT NULL DEFAULT ''
  mercury_costs: LASTVALUE varchar(100) NOT NULL DEFAULT ''
  mercury_costs: SUM varchar(100) NOT NULL DEFAULT ''
+ mercury_costs: UPDATED datetime
 
  mercury_news: ID int(10) unsigned NOT NULL auto_increment
  mercury_news: TITLE varchar(100) NOT NULL DEFAULT ''
