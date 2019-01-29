@@ -697,7 +697,7 @@ $this->send($socket, $this->calcCRC($device,"0800"));
 $res = $this->read($socket);
 
 //$sn = hexdec($this->dd($res[1])).hexdec($this->dd($res[2])).hexdec($this->dd($res[3])).hexdec($this->dd($res[4]));
-$sn = str_pad($hexdec($this->dd($res[1])),2,"0",STR_PAD_LEFT).str_pad(hexdec($this->dd($res[2])),2,"0",STR_PAD_LEFT).str_pad(hexdec($this->dd($res[3])),2,"0",STR_PAD_LEFT).str_pad(hexdec($this->dd($res[4])),2,"0",STR_PAD_LEFT);
+$sn = str_pad(hexdec($this->dd($res[1])),2,"0",STR_PAD_LEFT).str_pad(hexdec($this->dd($res[2])),2,"0",STR_PAD_LEFT).str_pad(hexdec($this->dd($res[3])),2,"0",STR_PAD_LEFT).str_pad(hexdec($this->dd($res[4])),2,"0",STR_PAD_LEFT);
 
 $made = hexdec($this->dd($res[5])).".".hexdec($this->dd($res[6])).".".hexdec($this->dd($res[7]));
 
