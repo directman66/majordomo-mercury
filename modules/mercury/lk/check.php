@@ -51,7 +51,7 @@ $sql="SELECT * FROM mercury_devices WHERE LOGIN = '".$_COOKIE['login']."'";
 
 echo DIR_MODULES.'mercury/lk';
 if (!$userdata['PREDSED']=='1') {
-		  require(DIR_MODULES.'mercury/lk3/user.php');
+		  require(DIR_MODULES.'mercury/lk/user.php');
 //		  require('./cms/lk/user.php');
 		
 				}
