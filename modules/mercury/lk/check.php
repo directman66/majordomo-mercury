@@ -11,6 +11,7 @@ chdir(dirname(__FILE__) . '/../../..');
 // $db = new mysql(DB_HOST, '', DB_USER, DB_PASSWORD, DB_NAME); //connecting to database
 
 $db=mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+$db->set_charset("utf8");
 
 // include_once("./load_settings.php");
 
