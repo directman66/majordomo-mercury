@@ -49,7 +49,7 @@ $sql="SELECT * FROM mercury_devices WHERE LOGIN = '".$_COOKIE['login']."'";
     else
     {
 
-echo DIR_MODULES.'mercury/lk3';
+echo DIR_MODULES.'mercury/lk';
 if (!$userdata['PREDSED']=='1') {
 		  require(DIR_MODULES.'mercury/lk3/user.php');
 //		  require('./cms/lk/user.php');
@@ -59,7 +59,7 @@ if (!$userdata['PREDSED']=='1') {
 		else 
 				{
 
-		  require(DIR_MODULES.'mercury/lk3/predsed.php');
+		  require(DIR_MODULES.'mercury/lk/predsed.php');
 //		  require('./cms/lk/predsed.php');
 
 			       }
