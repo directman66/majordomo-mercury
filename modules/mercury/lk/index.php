@@ -3,6 +3,7 @@ error_reporting(0);
 // Страница авторизации
 
 // Функция для генерации случайной строки
+
 function generateCode($length=6) {
     $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHI JKLMNOPRQSTUVWXYZ0123456789";
     $code = "";
@@ -20,6 +21,24 @@ chdir(dirname(__FILE__) . '/../../..');
 include_once("./config.php");
 //include_once("./lib/loader.php");
 
+
+print '
+<html lang="ru">
+	<head>
+		<meta charset="utf-8" />
+		<title>Личный кабинет</title>	
+		<link href="css\style.css" rel="stylesheet" type="text/css">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	</head>
+	<body>
+';
+
+print '		<div class="list">
+			<div class="header">
+				<div class="title text-g">Система мониторинга инженерных сетей ТСН «Морской Берег»
+				</div></div></div>
+';
 
 $link=mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
@@ -61,12 +80,12 @@ $sql="UPDATE mercury_devices SET USERIP='$insip', USERHASH='$hash' WHERE LOGIN='
     }
     else
     {
-        echo "Вы ввели неправильный логин/пароль";
+        echo "<h2><center>Вы ввели неправильный логин/пароль</center></h2>";
     }
 //Не прикреплять к IP(не безопасно) <input type="checkbox" name="not_attach_ip"><br>
 }
 ?>
-<center><h4>
+<center><h2>
 <form method="POST">
 
 Логин <input name="login" type="text" required><br>
@@ -75,4 +94,4 @@ $sql="UPDATE mercury_devices SET USERIP='$insip', USERHASH='$hash' WHERE LOGIN='
 <input name="submit" type="submit" value="Войти">
 </form>
 
-</center></h4>
+</center></h2>
