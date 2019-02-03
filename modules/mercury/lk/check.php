@@ -1,4 +1,9 @@
 <?
+//date_default_timezone_set('Asia/Yekaterinburg');
+error_reporting(0);
+date_default_timezone_set('Asia/Novosibirsk');
+
+
 
 // Скрипт проверки
 
@@ -11,7 +16,6 @@ chdir(dirname(__FILE__) . '/../../..');
 // $db = new mysql(DB_HOST, '', DB_USER, DB_PASSWORD, DB_NAME); //connecting to database
 
 $db=mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-$db->set_charset("utf8");
 
 // include_once("./load_settings.php");
 
@@ -50,7 +54,16 @@ $sql="SELECT * FROM mercury_devices WHERE LOGIN = '".$_COOKIE['login']."'";
     else
     {
 
-echo DIR_MODULES.'mercury/lk';
+///echo DIR_MODULES.'mercury/lk3';
+		 require(DIR_MODULES.'mercury/lk/menu.php');
+
+
+if (($_GET['viewmode']=='elec')||(!$_GET['viewmode'])) 
+//if (($_GET['viewmode']=='elec')) 
+
+{
+
+
 if (!$userdata['PREDSED']=='1') {
 		  require(DIR_MODULES.'mercury/lk/user.php');
 //		  require('./cms/lk/user.php');
@@ -64,8 +77,14 @@ if (!$userdata['PREDSED']=='1') {
 //		  require('./cms/lk/predsed.php');
 
 			       }
-
 }
+
+else {
+		  require(DIR_MODULES.'mercury/lk/made.php');
+
+
+
+}}
 }
 else
 {
