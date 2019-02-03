@@ -1128,6 +1128,7 @@ $Tot = $this->merc_gd($socket252,$this->calcCRC($device252,"050000"), 0.001, 1);
 $debug .= "Total: $Tot[0]<br>";
 if ($Tot[0]) {sg($objname.'.Total',round($Tot[0],0)); $sql['Total']=round($Tot[0],0);
 $sql['TS']=time();
+$sql['TS_TEXT']=date('d-m-Y H:i:s',time());
 }
 
 
@@ -1414,6 +1415,7 @@ SQLUpdate('properties',$property); }
  mercury_devices: STATE varchar(100) NOT NULL DEFAULT ''
  mercury_devices: STATEWORD varchar(100) NOT NULL DEFAULT ''
  mercury_devices: TS varchar(100) NOT NULL DEFAULT ''
+ mercury_devices: TS_TEXT varchar(100) NOT NULL DEFAULT ''
  mercury_devices: USERIP varchar(100) NOT NULL DEFAULT ''
  mercury_devices: USERHASH varchar(100) NOT NULL DEFAULT ''
  mercury_devices: Ia1 varchar(100) NOT NULL DEFAULT ''
