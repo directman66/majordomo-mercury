@@ -1,58 +1,7 @@
 <?
 error_reporting(0);
-   print '
-
-<!doctype html>
-<html lang="ru">
-	<head>
-		<meta charset="utf-8" />
-		<title>Личный кабинет</title>	
-		<link href="css\style.css" rel="stylesheet" type="text/css">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-	</head>
-	<body>
-		<div class="list">
-			<div class="header">
-				<div class="title text-g">Система мониторинга инженерных сетей частного дома  ТСН «Морской Берег»
-				</div>
-				<div class="in-header">
-					<div class="in-title">
-							Личный кабинет
-					</div>
-					<div class="menu">
-						<ul>
-							<li><a href="#"><div class="ico img-ico-1"></div><span>Счетчик электроинергии</span></a><div class="line"></div></li>
-							<li><a href="#"><div class="ico img-ico-2"></div><span>Счетчик электроинергии</span></a><div class="line"></div></li>
-							<li><a href="#"><div class="ico img-ico-3"></div><span>Счетчик электроинергии</span></a><div class="line"></div></li>
-							<li><a href="#"><div class="ico img-ico-4"></div><span>Счетчик электроинергии</span></a><div class="line"></div></li>
-						</ul>
-						<div class="add"><a href="#"><div class="ico img-ico-add"></div><span>Добавить модуль</span></a></div>
-					</div>
-					<div style="clear:both"></div>
-					
-				</div>
-				<div class="ld">
-					Пользователь: <span>
-
-'.$userdata['FIO']."(". $userdata['STREET'].')
-</span><br>
-					Логин: <span>'.$userdata['LOGIN'].'&nbsp;&nbsp;<a href="index.php" title="Выход">Выход</a> 
-</span>				
-				</div>
-				<div class="sh">
-					Счетчик электроэнергии: <span>Меркурий '.$userdata['MODEL'].'</span><br>
-					Серийный номер: <span>'.$userdata['SN'].'</span><br>';
-print '					Дата производства счетчика: <span>'.$userdata['MADEDT'].'</span><br> ';
-print '				</div>
-				<div style="clear:both"></div>
-			</div> 
-			<div class="blank">
-				<div class="blank-left">
-					<div class="graf">
-
-
-';
+//date_default_timezone_set('Asia/Yekaterinburg');
+date_default_timezone_set('Asia/Novosibirsk');
 
 
 
@@ -62,6 +11,14 @@ print '				</div>
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////
 /////////////////////////////////////
+
+print '
+
+			<div class="blank">
+				<div class="blank-left">
+					<div class="graf">
+';
+
 
 
 print '
@@ -144,14 +101,12 @@ print ']  }]});</script> ';
 
 
 
+print '	</div> ';
 
-print '
 
-					</div>
-					<div class="graf">
-						типа график2
-					</div>
-				</div>';
+//print '	<div class="graf">типа график2</div> ';
+
+print '</div>';
 
 
 /////////////////////////////////////
@@ -162,9 +117,25 @@ print '
 
 
 $obsh=$userdata['Total1']+$userdata['Total2'];
+
+
+if ($userdata['Total1']=="") $userdata['Total1']="0";
+if ($userdata['Total2']=="") $userdata['Total2']="0";
+
+if ($userdata['Uv1']=="") $userdata['Uv1']="0";
+if ($userdata['Uv2']=="") $userdata['Uv2']="0";
+if ($userdata['Uv3']=="") $userdata['Uv3']="0";
+
+if ($userdata['PvT']=="") $userdata['PvT']="0";
+
+
+
+
+
 print '	  			<div class="blank-right">
-				
-					<div class="p-left p-sh"><b>Показание счетчика:</b></div><div class="p-right">'.$obsh.' кВт/ч</div></p><br>
+
+					<div class="p-left p-sh"><b>Мгновенные значения:</b></div></p><br>				
+					<div class="p-left"><b>Показание счетчика:</b></div><div class="p-right">'.$obsh.' кВт</div></p><br>
     				 	<div class="p-left">Тариф 1:</div><div class="p-right">'.$userdata['Total1'].'</div><br>
     				 	<div class="p-left">Тариф 2:</div><div class="p-right">'.$userdata['Total2'].'</div><br>
 <br>
@@ -172,7 +143,7 @@ print '	  			<div class="blank-right">
 					<div class="p-left">Напряжение и ток на фазе А:</div><div class="p-right">'.$userdata['Uv1'].' В / '.$userdata['Ia1'].' А</div><br>
 					<div class="p-left">Напряжение и ток на фазе B:</div><div class="p-right">'.$userdata['Uv2'].' В / '.$userdata['Ia2'].' А</div><br>
 					<div class="p-left">Напряжение и ток на фазе C:</div><div class="p-right">'.$userdata['Uv3'].' В / '.$userdata['Ia3'].' А</div><br>
-					<div class="p-left">Общая потребляемая мощность:</div><div class="p-right">'.$userdata['PvT'].' Вт/ч</div><br>
+					<div class="p-left">Общая потребляемая мощность:</div><div class="p-right">'.$userdata['PvT'].' Вт</div><br>
  					<div class="p-left">Последний опрос счетчика:</div><div class="p-right">'.date('d-m-Y H:i:s',$userdata['TS']).'</div>
 					<div style="clear:both"></div>
 					</div>
