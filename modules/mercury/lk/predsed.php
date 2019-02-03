@@ -1,56 +1,14 @@
 <?
 error_reporting(0);
-   print '
+//date_default_timezone_set('Asia/Yekaterinburg');
+date_default_timezone_set('Asia/Novosibirsk');
 
-<!doctype html>
-<html lang="ru">
-	<head>
-		<meta charset="utf-8" />
-		<title>Личный кабинет</title>	
-		<link href="css\style.css" rel="stylesheet" type="text/css">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	</head>
-	<body>
-		<div class="list">
-			<div class="header">
-				<div class="title text-g">Система мониторинга инженерных сетей частного дома  ТСН «Морской Берег»
-				</div>
-				<div class="in-header">
-					<div class="in-title">
-							Личный кабинет
-					</div>
-					<div class="menu">
-						<ul>
-							<li><a href="#"><div class="ico img-ico-1"></div><span>Счетчик электроинергии</span></a><div class="line"></div></li>
-							<li><a href="#"><div class="ico img-ico-2"></div><span>Счетчик электроинергии</span></a><div class="line"></div></li>
-							<li><a href="#"><div class="ico img-ico-3"></div><span>Счетчик электроинергии</span></a><div class="line"></div></li>
-							<li><a href="#"><div class="ico img-ico-4"></div><span>Счетчик электроинергии</span></a><div class="line"></div></li>
-						</ul>
-						<div class="add"><a href="#"><div class="ico img-ico-add"></div><span>Добавить модуль</span></a></div>
-					</div>
-					<div style="clear:both"></div>
-					
-				</div>
-				<div class="ld">
-					Пользователь: <span>
+//print '	<div style="clear:both"></div> ';
 
-'.$userdata['FIO'].'(председатель) ';
-print '
-</span><br>
-					Логин: <span>'.$userdata['LOGIN'].'&nbsp;&nbsp;<a href="index.php" title="Выход">Выход</a> 
-</span>				
-				</div>
-				<div class="sh">
-					Счетчик электроэнергии: <span>Меркурий '.$userdata['MODEL'].'</span><br>
-					Серийный номер: <span>'.$userdata['SN'].'</span><br> ';
-//if ($userdata['MADETD']) {
-print ' 					Дата производства счетчика: <span>'.$userdata['MADETD'].'</span><br> ';
-//}
-print '				</div>
-				<div style="clear:both"></div>
-			</div> 
-			<div class="blank">
+//print '			</div>  ';
+
+print '			<div class="blank">
 				<div class="blank-left"> ';
 
 print ' 			<div class="graf"> ';
@@ -104,6 +62,13 @@ else
 $online='<span class="label label-warning">Offline</span> ';
 
 //{
+if ($row['IaT']=="") $row['IaT']="0";
+if ($row['PvT']=="") $row['PvT']="0";
+if ($row['U']=="") $row['U']="0";
+if ($obsh=="") $obsh="0";
+
+
+
 echo "<tr><td>".$row['FIO']."</td><td>".$row['STREET']."</td><td>".$row['STATE']."</td><td>".$online."</td><td>".$ts."</td><td>".$row['IaT']."</td><td>".$row['PvT']."</td><td>".$row['U']."</td><td>".$obsh."</td><tr>";
 }
 echo "<tr><td>Итого</td><td></td><td></td><td></td><td></td><td>".$sumi."</td><td>".$sump."</td><td></td><td></td></tr>";
@@ -204,10 +169,7 @@ print ']  }]});</script> ';
 print '	</div> ';
 
 
-print ' 			<div class="graf">
-				типа график2
-	   			</div>
-				</div>';
+print ' 			<div class="graf">график</div>	</div>';
 
 
 /////////////////////////////////////
@@ -218,9 +180,27 @@ print ' 			<div class="graf">
 
 
 $obsh=$userdata['Total1']+$userdata['Total2'];
-print '	  			<div class="blank-right">
-				
-					<div class="p-left p-sh"><b>Показание счетчика:</b></div><div class="p-right">'.$obsh.' кВт/ч</div></p><br>
+print '	  			<div class="blank-right">';
+
+
+if ($userdata['Total1']=="") $userdata['Total1']="0";
+if ($userdata['Total2']=="") $userdata['Total2']="0";
+
+if ($userdata['Uv1']=="") $userdata['Uv1']="0";
+if ($userdata['Uv2']=="") $userdata['Uv2']="0";
+if ($userdata['Uv3']=="") $userdata['Uv3']="0";
+
+if ($userdata['PvT']=="") $userdata['PvT']="0";
+
+
+
+
+
+
+print '				
+					<div class="p-left p-sh"><b>Мгновенные значения:</b></div></p><br>				
+					<div class="p-left"><b>Показание счетчика:</b></div><div class="p-right">'.$obsh.' кВт</div></p><br>
+
     				 	<div class="p-left">Тариф 1:</div><div class="p-right">'.$userdata['Total1'].'</div><br>
     				 	<div class="p-left">Тариф 2:</div><div class="p-right">'.$userdata['Total2'].'</div><br>
 <br>
@@ -228,7 +208,7 @@ print '	  			<div class="blank-right">
 					<div class="p-left">Напряжение и ток на фазе А:</div><div class="p-right">'.$userdata['Uv1'].' В / '.$userdata['Ia1'].' А</div><br>
 					<div class="p-left">Напряжение и ток на фазе B:</div><div class="p-right">'.$userdata['Uv2'].' В / '.$userdata['Ia2'].' А</div><br>
 					<div class="p-left">Напряжение и ток на фазе C:</div><div class="p-right">'.$userdata['Uv3'].' В / '.$userdata['Ia3'].' А</div><br>
-					<div class="p-left">Общая потребляемая мощность:</div><div class="p-right">'.$userdata['PvT'].' Вт/ч</div><br>
+					<div class="p-left">Общая потребляемая мощность:</div><div class="p-right">'.$userdata['PvT'].' Вт</div><br>
  					<div class="p-left">Последний опрос счетчика:</div><div class="p-right">'.date('d-m-Y H:i:s',$userdata['TS']).'</div>
 					<div style="clear:both"></div>
 					</div>
@@ -262,31 +242,38 @@ $cmd_rec->data_seek(0);
 while ($row = $cmd_rec->fetch_assoc()) {
 
 
-echo '<div class="p-left"><b>'.$row["TITLE"].'</b>
-</div>';
-echo '<div class="p-nright">'.$row["data"];
+echo '<br><div class="p-left"><b>'.$row["TITLE"].'</b></div>';
+echo '<div class="p-nright"><small>'.$row["data"].'</small>';
 echo '&nbsp;&nbsp;<a href="/modules/mercury/deletenews.php?id='.$row['ID'].'" title="Удалить объявление">x</a> ';
 //echo '<a href="#"  onclick="" title="Удалить объявление">x</a> ';
 echo '</div><br>';
 
-echo '<div class="p-left">'.$row["message"].'</div><br><br>';
+echo '<div class="p-left">'.$row["message"].'<br><br></div>';
     }
 
-print '
+print '<br>
 
      <form action="/modules/mercury/addnews.php" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
 
-<!--     <fieldset> -->
-     <label ><b>Добавить новое объявление</b></label>
+
+  <div class="p-nright">
+     <label ><b>Добавить новое объявление:</b></label>
      <div class="col-md-6 input-group">
 
      <label class="control-label">Тема  объявления</label>
      <input type="text"  class="form-control"   style="width:95%"  name="tema" ><br>
 
-     <label >Текст объявления     </label>
-     <input type="text"  class="form-control"     style="height:150px; width:95%" name="message">
-     <div class="input-group-btn">
-     </div> </div>';
+     <label >Текст объявления     </label> ';
+
+//print '     <input type="text"  class="form-control"     style="height:150px; width:95%" name="message"> ';
+
+print '<textarea rows="7" cols="55" name="message"> </textarea> ';
+
+print '     <div class="input-group-btn">
+     </div> </div>
+
+
+';
 
 print ' <button type="submit" name="subm" value="<#LANG_SUBMIT#>" class="btn btn-defaul btn-primary">Опубликовать</button> ';
 
