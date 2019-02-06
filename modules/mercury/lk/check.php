@@ -45,11 +45,20 @@ $sql="SELECT * FROM mercury_devices WHERE LOGIN = '".$_COOKIE['login']."'";
 
 
     if(($userdata['USERHASH']!== $_COOKIE['hash']) or ($userdata['LOGIN'] !== $_COOKIE['login'])
- or (($userdata['USERIP'] !== $_SERVER['REMOTE_ADDR'])  and ($userdata['USERIP'] !== "0")))
+// or (($userdata['USERIP'] !== $_SERVER['REMOTE_ADDR'])  and ($userdata['USERIP'] !== "0"))
+)
     {
         setcookie("id", "", time() - 3600*24*30*12, "/");
         setcookie("hash", "", time() - 3600*24*30*12, "/");
-        print "Хм, что-то не получилось";
+        print "Хм, что-то не получилось"; 
+print "<br>";
+print $userdata['USERHASH']."=".$_COOKIE['hash'];
+print "<br>";
+print $userdata['LOGIN']." !== ".$_COOKIE['login'];
+print "<br>";
+print $userdata['USERIP']." !== ".$_SERVER['REMOTE_ADDR'];
+
+
     }
     else
     {
