@@ -31,7 +31,7 @@ $rec = $db->query($sql);
 //print_r($rec);
 //echo '<table width="100%" cellspacing="0" cellpadding="4" border="1" style="color: #00a648;" >';
 echo '<table width="100%" cellspacing="0" cellpadding="4" border="1"  >';
-echo "<tr><td>№</td><td>".'ФИО'."</td><td>".'Адрес'."</td><td>".'Реле.'."</td><td>".'Обновлено'."</td><td>U1/U2/U3</td><td>Ia1/Ia2/Ia3</td><td>".'PvT'."</td><tr>";
+echo "<tr><td>№</td><td>".'ФИО'."</td><td>".'Адрес'."</td><td>".'Реле.'."</td><td>".'Обновлено'."</td><td>Показания кВт</td><td>U1/U2/U3</td><td>Ia1/Ia2/Ia3</td><td>".'PvT'."</td><tr>";
 $sump=0;
 $sumi=0;
 $sumu=0;
@@ -43,7 +43,7 @@ $sumu=0;
 
 //	echo 'total:'.$total;
 
-
+$i=1;
 $rec->data_seek(0);
 while ($row = $rec->fetch_assoc()) {
 //    echo " id = " . $row['FIO'] . "\n";
@@ -66,18 +66,22 @@ if ($row['IaT']=="") $row['IaT']="0";
 if ($row['PvT']=="") $row['PvT']="0";
 if ($row['U']=="") $row['U']="0";
 if ($obsh=="") $obsh="0";
+//$obsh=$userdata['Total1']+$userdata['Total2'];
 
 if ($row['STATE']=="1") {$state='вкл';}
 if ($row['STATE']=="0") {$state='выкл';}
 if ($row['STATE']=="") {$state='д.отс';}
 
+
 //echo "<tr><td>".$row['FIO']."</td><td>".$row['STREET']."</td><td>".$state."</td><td>".$ts."</td><td>".round($row['Ia1'],2)."</td><td>".round($row['Ia2'],2)."</td><td>".round($row['Ia3'],2)."</td><td>".round($row['PvT'],2)."</td><tr>";
 echo "<tr>
-<td>".$row['ID']."</td>
+<td>".$i."</td>
 <td>".$row['FIO']."</td><td>".$row['STREET']."</td><td>".$state."</td><td>".$ts."</td>
+<td>".round($obsh,2)."</td>
 <td>".round($row['Uv1'],$round)."<br>".round($row['Uv2'],$round)."<br>".round($row['Uv3'],$round)."</td>
 <td>".round($row['Ia1'],$round)."<br>".round($row['Ia2'],$round)."<br>".round($row['Ia3'],$round)."</td>
 <td>".round($row['PvT'],$round)."</td><tr>";
+$i=$i+1;
 }
 //echo "<tr><td>Итого</td><td></td><td></td><td></td><td></td><td>".$sumi."</td><td>".$sump."</td><td></td></tr>";
 echo "</table>";
