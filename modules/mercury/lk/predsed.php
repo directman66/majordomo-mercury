@@ -31,7 +31,7 @@ $rec = $db->query($sql);
 //print_r($rec);
 //echo '<table width="100%" cellspacing="0" cellpadding="4" border="1" style="color: #00a648;" >';
 echo '<table width="100%" cellspacing="0" cellpadding="4" border="1"  >';
-echo "<tr><td>".'ФИО'."</td><td>".'Адрес'."</td><td>".'Сост.'."</td><td>".'ONLINE'."</td><td>Обновлено</td><td>".'IaT'."</td><td>".'PvT'."</td><td>".'U'."</td><td>Показания</td><tr>";
+echo "<tr><td>№</td><td>".'ФИО'."</td><td>".'Адрес'."</td><td>".'Реле.'."</td><td>".'Обновлено'."</td><td>U1/U2/U3</td><td>Ia1/Ia2/Ia3</td><td>".'PvT'."</td><tr>";
 $sump=0;
 $sumi=0;
 $sumu=0;
@@ -49,7 +49,7 @@ while ($row = $rec->fetch_assoc()) {
 //    echo " id = " . $row['FIO'] . "\n";
 //}
 
-
+$round=2;
 //    for ($i=0;$i<$total;$i++) {
 if ($row['Total1']<>"") $obsh=$row['Total1']+$row['Total2'];
 if ($row['PvT']<>"") $sump=$sump+$row['PvT'];
@@ -67,11 +67,19 @@ if ($row['PvT']=="") $row['PvT']="0";
 if ($row['U']=="") $row['U']="0";
 if ($obsh=="") $obsh="0";
 
+if ($row['STATE']=="1") {$state='вкл';}
+if ($row['STATE']=="0") {$state='выкл';}
+if ($row['STATE']=="") {$state='д.отс';}
 
-
-echo "<tr><td>".$row['FIO']."</td><td>".$row['STREET']."</td><td>".$row['STATE']."</td><td>".$online."</td><td>".$ts."</td><td>".$row['IaT']."</td><td>".$row['PvT']."</td><td>".$row['U']."</td><td>".$obsh."</td><tr>";
+//echo "<tr><td>".$row['FIO']."</td><td>".$row['STREET']."</td><td>".$state."</td><td>".$ts."</td><td>".round($row['Ia1'],2)."</td><td>".round($row['Ia2'],2)."</td><td>".round($row['Ia3'],2)."</td><td>".round($row['PvT'],2)."</td><tr>";
+echo "<tr>
+<td>".$row['ID']."</td>
+<td>".$row['FIO']."</td><td>".$row['STREET']."</td><td>".$state."</td><td>".$ts."</td>
+<td>".round($row['Uv1'],$round)."<br>".round($row['Uv2'],$round)."<br>".round($row['Uv3'],$round)."</td>
+<td>".round($row['Ia1'],$round)."<br>".round($row['Ia2'],$round)."<br>".round($row['Ia3'],$round)."</td>
+<td>".round($row['PvT'],$round)."</td><tr>";
 }
-echo "<tr><td>Итого</td><td></td><td></td><td></td><td></td><td>".$sumi."</td><td>".$sump."</td><td></td><td></td></tr>";
+//echo "<tr><td>Итого</td><td></td><td></td><td></td><td></td><td>".$sumi."</td><td>".$sump."</td><td></td></tr>";
 echo "</table>";
 
 
@@ -199,16 +207,16 @@ if ($userdata['PvT']=="") $userdata['PvT']="0";
 
 print '				
 					<div class="p-left p-sh"><b>Мгновенные значения:</b></div></p><br>				
-					<div class="p-left"><b>Показание счетчика:</b></div><div class="p-right">'.$obsh.' кВт</div></p><br>
+					<div class="p-left"><b>Показание счетчика:</b></div><div class="p-right">'.round($obsh,2).' кВт</div></p><br>
 
-    				 	<div class="p-left">Тариф 1:</div><div class="p-right">'.$userdata['Total1'].'</div><br>
-    				 	<div class="p-left">Тариф 2:</div><div class="p-right">'.$userdata['Total2'].'</div><br>
+    				 	<div class="p-left">Тариф 1:</div><div class="p-right">'.round($userdata['Total1'],2).'</div><br>
+    				 	<div class="p-left">Тариф 2:</div><div class="p-right">'.round($userdata['Total2'],2).'</div><br>
 <br>
    
-					<div class="p-left">Напряжение и ток на фазе А:</div><div class="p-right">'.$userdata['Uv1'].' В / '.$userdata['Ia1'].' А</div><br>
-					<div class="p-left">Напряжение и ток на фазе B:</div><div class="p-right">'.$userdata['Uv2'].' В / '.$userdata['Ia2'].' А</div><br>
-					<div class="p-left">Напряжение и ток на фазе C:</div><div class="p-right">'.$userdata['Uv3'].' В / '.$userdata['Ia3'].' А</div><br>
-					<div class="p-left">Общая потребляемая мощность:</div><div class="p-right">'.$userdata['PvT'].' Вт</div><br>
+					<div class="p-left">Напряжение и ток на фазе А:</div><div class="p-right">'.round($userdata['Uv1'],2).' В / '.round($userdata['Ia1'],2).' А</div><br>
+					<div class="p-left">Напряжение и ток на фазе B:</div><div class="p-right">'.round($userdata['Uv2'],2).' В / '.round($userdata['Ia2'],2).' А</div><br>
+					<div class="p-left">Напряжение и ток на фазе C:</div><div class="p-right">'.round($userdata['Uv3'],2).' В / '.round($userdata['Ia3'],2).' А</div><br>
+					<div class="p-left">Общая потребляемая мощность:</div><div class="p-right">'.round($userdata['PvT'],2).' Вт</div><br>
  					<div class="p-left">Последний опрос счетчика:</div><div class="p-right">'.date('d-m-Y H:i:s',$userdata['TS']).'</div>
 					<div style="clear:both"></div>
 					</div>
