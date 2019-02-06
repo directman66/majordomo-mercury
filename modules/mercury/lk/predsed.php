@@ -31,7 +31,7 @@ $rec = $db->query($sql);
 //print_r($rec);
 //echo '<table width="100%" cellspacing="0" cellpadding="4" border="1" style="color: #00a648;" >';
 echo '<table width="100%" cellspacing="0" cellpadding="4" border="1"  >';
-echo "<tr><td>№</td><td>".'ФИО'."</td><td>".'Адрес'."</td><td>".'Реле.'."</td><td>".'Обновлено'."</td><td>Показания кВт</td><td>U1/U2/U3</td><td>Ia1/Ia2/Ia3</td><td>".'PvT'."</td><tr>";
+echo "<tr><td>№</td><td>".'ФИО'."</td><td>".'Адрес'."</td><td>".'Реле.'."</td><td>".'Обновлено'."</td><td>Показания кВт</td><td>U1/U2/U3 В</td><td>Ia1/Ia2/Ia3 А</td><td>".'PvT Вт'."</td><tr>";
 $sump=0;
 $sumi=0;
 $sumu=0;
