@@ -686,9 +686,14 @@ $sql=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID=".$id);
 //Опросить счётчики, находящиеся в сети и получить их сетевые адреса (групповой запрос)
 $this->send($socket, $this->calcCRC($device,"0805"));
 $res = $this->read($socket);
+
+debmes( "request: 0805 result: ".$res, 'mercury');
 $sn = hexdec($this->dd($res[1])).hexdec($this->dd($res[2])).hexdec($this->dd($res[3])).hexdec($this->dd($res[4]));
+
 $made = hexdec($this->dd($res[5])).".".hexdec($this->dd($res[6])).".".hexdec($this->dd($res[7]));
 
+debmes( "sn: ".$sn, 'mercury');
+debmes( "made: ".$made, 'mercury');
 
 
 
@@ -696,10 +701,17 @@ $made = hexdec($this->dd($res[5])).".".hexdec($this->dd($res[6])).".".hexdec($th
 $this->send($socket, $this->calcCRC($device,"0800"));
 $res = $this->read($socket);
 
+debmes( "request: 0800 result: ".$res, 'mercury');
+
+
 //$sn = hexdec($this->dd($res[1])).hexdec($this->dd($res[2])).hexdec($this->dd($res[3])).hexdec($this->dd($res[4]));
 $sn = str_pad(hexdec($this->dd($res[1])),2,"0",STR_PAD_LEFT).str_pad(hexdec($this->dd($res[2])),2,"0",STR_PAD_LEFT).str_pad(hexdec($this->dd($res[3])),2,"0",STR_PAD_LEFT).str_pad(hexdec($this->dd($res[4])),2,"0",STR_PAD_LEFT);
 
 $made = hexdec($this->dd($res[5])).".".hexdec($this->dd($res[6])).".".hexdec($this->dd($res[7]));
+
+debmes( "sn: ".$sn, 'mercury');
+debmes( "made: ".$made, 'mercury');
+
 
 str_pad($input, 10, "-=", STR_PAD_LEFT);
 $sql['SN']=$sn;
@@ -711,15 +723,26 @@ $sql['MADEDT']=$made;
 //версия ПО
 $this->send($socket, $this->calcCRC($device,"0803"));
 $res = $this->read($socket);
+
+debmes( "request: 0803 result: ".$res, 'mercury');
 $po= hexdec($this->dd($res[1])).".".hexdec($this->dd($res[2])).".".hexdec($this->dd($res[3]));
 $sql['PO']=$po;
-
+debmes( "PO: ".$po, 'mercury');
 
 //коэффициент трансформации
 $this->send($socket, $this->calcCRC($device,"0802"));
+
 $res = $this->read($socket);
+debmes( "request: 0802 result: ".$res, 'mercury');
+
 $kn= hexdec($this->dd($res[1])).".".hexdec($this->dd($res[2]));
-$kn= hexdec($this->dd($res[3])).".".hexdec($this->dd($res[4]));
+$kt= hexdec($this->dd($res[3])).".".hexdec($this->dd($res[4]));
+
+
+debmes( "kn: ".$kn, 'mercury');
+debmes( "kt: ".$kt, 'mercury');
+
+
 $sql['KN']=$kn;
 $sql['KT']=$kt;
 
@@ -728,11 +751,19 @@ $sql['KT']=$kt;
 $this->send($socket, $this->calcCRC($device,"0102020202020202"));
 $res = $this->read($socket);
 
+debmes( "request: 0102020202020202 result: ".$res, 'mercury');
+
 //чтение слова состояние нагрузки
 $this->send($socket, $this->calcCRC($device,"0818"));
 $res = $this->read($socket);
+
+debmes( "request: 0818 result: ".$res, 'mercury');
+
+
 $flimithex=$this->dd($res[1]).$this->dd($res[2]);
+debmes( "flimithex: ".$flimithex, 'mercury');
 $flimit = hexdec($this->dd($res[1]).$this->dd($res[2]));
+debmes( "flimit: ".$flimit, 'mercury');
 //echo strtoupper(substr($flimithex,0,4));
 //echo "<br>";
 //echo hex2bin($flimithex);
@@ -926,14 +957,25 @@ $this->read($socket);
 $this->send($socket, $this->calcCRC($device,"033100"));
 $res = $this->read($socket);
 
+debmes( "request: 033100 result: ".$res, 'mercury');
+
   sleep(2);
 $this->send($socket, $this->calcCRC($device,"0101010101010101"));
 $res = $this->read($socket);
+debmes( "request: 0101010101010101 result: ".$res, 'mercury');
+
 //чтение слова состояние нагрузки
 $this->send($socket, $this->calcCRC($device,"0818"));
 $res = $this->read($socket);
+
+debmes( "request: 0818 result: ".$res, 'mercury');
+
 $flimithex=$this->dd($res[1]).$this->dd($res[2]);
 $flimit = hexdec($this->dd($res[1]).$this->dd($res[2]));
+
+debmes( "flimit: ".$flimit, 'mercury');
+
+
 //echo strtoupper(substr($flimithex,0,4));
 //echo "<br>";
 //echo hex2bin($flimithex);
@@ -1033,6 +1075,8 @@ $this->read($socket252);
 
 
 
+
+
 //создаем устройство
 
 $classname='Mercury';
@@ -1046,10 +1090,20 @@ $sql=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID=".$id);
 
 $ncrc=$this->calcCRC($device252,"081621");
 
+debmes( "request: 081621 result: ".$ncrc, 'mercury');
+
 $Ia =$this->merc_gd($socket252,$ncrc, 0.001);
 $It = $Ia[0] + $Ia[1] + $Ia[2];
 
+debmes( "Ia: ".$Ia, 'mercury');
+
+debmes( "It: ".$It, 'mercury');
+
+
+
 $debug .= "Ia: $Ia[0] - $Ia[1] - $Ia[2] IaT:$It<br>";
+
+debmes( "summ: Ia: $Ia[0] - $Ia[1] - $Ia[2] IaT:$It", 'mercury');
 file_put_contents($file, $debug);
 
 if ($Ia[0]) {sg($objname.'.Ia1',$Ia[0]); $sql['Ia1']=$Ia[0];}
@@ -1063,11 +1117,19 @@ if ($It) {sg($objname.'.IaT',$It); $sql['IaT']=$It;}
 # Мощность по фазам
 # =====================================================
 $ncrc=$this->calcCRC($device252,"081600");
+
+debmes( "request: 081600 result: ".$ncrc, 'mercury');
+
 $Pv =$this->merc_gd($socket252,$ncrc, 0.01);
+
+debmes( "Pv: ".$Pv, 'mercury');
 
 if ( round($Pv[0], 2) != round($Pv[1] + $Pv[2] + $Pv[3], 2) )
 	$error = "error"; else $error = "";
 $debug .= "Pv: $Pv[0] - $Pv[1] - $Pv[2] - $Pv[3] $error<br>";
+
+debmes( $debug, 'mercury');
+
 if ($error == "")
 {
 //if (round($Pv[0],0)) sg($objname.'.PvT',round($Pv[0],0));
@@ -1096,7 +1158,9 @@ if ($Cos[0]) {sg($objname.'.Cos3',$Cos[3]); $sql['Cos3']=$Cos[3];}
 # Напряжение по фазам
 # =====================================================
 $Uv = $this->merc_gd($socket252,$this->calcCRC($device252,"081611"), 0.01);
+debmes( "request: 081611 result: ".$Uv, 'mercury');
 $debug .= "Uv: $Uv[0] - $Uv[1] - $Uv[2]<br>";
+debmes( $debug, 'mercury');
 
 if ($Uv[0]) {sg($objname.'.Uv1',round($Uv[0],0));$sql['Uv1']=round($Uv[0],0);}
 if ($Uv[1]) {sg($objname.'.Uv2',round($Uv[1],0));$sql['Uv2']=round($Uv[1],0);}
@@ -1125,6 +1189,9 @@ $sql['U']=$temp;
 # Показания электроэнергии
 # =====================================================
 $Tot = $this->merc_gd($socket252,$this->calcCRC($device252,"050000"), 0.001, 1);
+debmes( "Показания электроэнергии общей: ", 'mercury');
+debmes( "request: 050000 result: ".$Tot, 'mercury');
+
 $debug .= "Total: $Tot[0]<br>";
 if ($Tot[0]) {sg($objname.'.Total',round($Tot[0],0)); $sql['Total']=round($Tot[0],0);
 $sql['TS']=time();
@@ -1133,6 +1200,11 @@ $sql['TS_TEXT']=date('d-m-Y H:i:s',time());
 
 
 $Tot = $this->merc_gd($socket252,$this->calcCRC($device252,"050001"), 0.001, 1);
+
+debmes( "Показания электроэнергии T1: ", 'mercury');
+debmes( "request: 050001 result: ".$Tot, 'mercury');
+debmes( "Total1: ".$Tot[0], 'mercury');
+
 $debug .= "Total T1: $Tot[0]<br>";
 if ($Tot[0]) {sg($objname.'.Total1',$Tot[0]); $sql['Total1']=$Tot[0];}
 
@@ -1141,7 +1213,9 @@ $Tot = $this->merc_gd($socket252,$this->calcCRC($device252,"050002"), 0.001, 1);
 $debug .= "Total T2: $Tot[0]<br>";
 if ($Tot[0]) {sg($objname.'.Total2',$Tot[0]);$sql['Total2']=$Tot[0];}
 
-
+debmes( "Показания электроэнергии T2: ", 'mercury');
+debmes( "request: 050002 result: ".$Tot, 'mercury');
+debmes( "Total2: ".$Tot[0], 'mercury');
 
 
 SQLUpdate('mercury_devices',$sql);
