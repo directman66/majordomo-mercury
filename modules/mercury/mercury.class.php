@@ -478,10 +478,24 @@ $lastping=$mhdevices[$i]['LASTPING'];
 //echo time()-$lastping;
 if (time()-$lastping>300) {
 $online=ping(processTitle($ip));
+
+$cmd='
+$online=ping(processTitle('.$ip.'));
+if ($online) 
+{SQLexec("update mercury_devices set ONLINE="1", LASTPING=".time()." where IP='.$ip.'");} 
+else 
+{SQLexec("update mercury_devices set ONLINE="0", LASTPING=".time()." where IP='.$ip.'");}
+}
+';
+ SetTimeOut('mercury_devices_ping',$cmd, '10'); 
+
+/*
     if ($online) 
 {SQLexec("update mercury_devices set ONLINE='1', LASTPING=".time()." where IPADDR='$ip'");} 
 else 
 {SQLexec("update mercury_devices set ONLINE='0', LASTPING=".time()." where IPADDR='$ip'");}
+
+*/
 }}
 
 
