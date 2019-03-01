@@ -24,9 +24,21 @@ $cmd_rec->data_seek(0);
 while ($row = $cmd_rec->fetch_assoc()) {
 
 echo '<div class="p-left"><b>'.$row["TITLE"].'</b></div>';
-echo '<div class="p-nright">'.$row["data"].'</div><br>';
+echo '<div class="p-nright">'.$row["data"];
+
+if ($userdata['PREDSED']=='1') {
+
+
+echo '&nbsp;&nbsp;<a href="/modules/mercury/deletenews.php?id='.$row['ID'].'" title="Удалить объявление">x</a> ';
+
+
+
+}
+
+echo '</div><br>';
 
 echo '<div class="p-left">'.$row["message"].'</div><br><br>';
+
 
 
 
