@@ -480,14 +480,17 @@ if (time()-$lastping>300) {
 $online=ping(processTitle($ip));
 
 $cmd='
-$online=ping(processTitle('.$ip.'));
+$online=ping(processTitle("'.$ip.'"));
 if ($online) 
-{SQLexec("update mercury_devices set ONLINE="1", LASTPING=".time()." where IP='.$ip.'");} 
+{SQLexec("update mercury_devices set ONLINE=1, LASTPING='.time().' where IPADDR=\''.$ip.'\'");} 
 else 
-{SQLexec("update mercury_devices set ONLINE="0", LASTPING=".time()." where IP='.$ip.'");}
-}
+{SQLexec("update mercury_devices set ONLINE=0, LASTPING='.time().' where IPADDR=\''.$ip.'\'");}
+
 ';
- SetTimeOut('mercury_devices_ping',$cmd, '10'); 
+ SetTimeOut('mercury_devices_ping',$cmd, '1'); 
+
+
+
 
 /*
     if ($online) 
