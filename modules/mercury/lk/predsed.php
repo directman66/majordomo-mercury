@@ -121,7 +121,9 @@ Highcharts.chart("chart1", {
   chart: {
     borderWidth: 0,
     plotBorderWidth: 1,
-    spacingTop: 10 ';
+    spacingTop: 10 
+,  type: \'column\'
+';
 //print '    ,width: 850 // 16:9 ratio ';
 //print '    ,width: 850 // 16:9 ratio ';
 print '
@@ -153,7 +155,12 @@ $stroka.= '"'.$row['dt'].'",';
 $stroka=preg_replace("/(.)$/", "", $stroka);
 echo $stroka;
 
-print ']  },  series: [{    data: [ ';
+
+print ']  },  series: [{   
+  name : "Потребление электричества, кВт",
+ data: [ ';
+
+
 
 
 $sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects, pvalues,phistory where objects.ID=pvalues.OBJECT_ID and pvalues.PROPERTY_NAME='Mercury_".$userdata['ID'].".IaT' and phistory.VALUE_ID=pvalues.ID group by left(ADDED,10)";
