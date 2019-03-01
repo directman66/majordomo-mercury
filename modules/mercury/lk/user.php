@@ -81,7 +81,7 @@ $stroka=preg_replace("/(.)$/", "", $stroka);
 echo $stroka;
 
 print ']  },  series: [{   
-  name : "Потребление электричества, кВт",
+  name : "Расход электроэнергии, кВт",
  data: [ ';
 
 
