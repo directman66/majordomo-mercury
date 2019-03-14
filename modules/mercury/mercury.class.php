@@ -481,7 +481,7 @@ $lastping=$mhdevices[$i]['LASTPING'];
 
 if ((!$lastping)||(time()-$lastping>300))
 {
-$online=ping(processTitle($ip));
+
 
 $cmd='
 $online=ping(processTitle("'.$ip.'"));
@@ -491,7 +491,7 @@ else
 {SQLexec("update mercury_devices set ONLINE=0, LASTPING='.time().' where IPADDR=\''.$ip.'\'");}
 
 ';
- SetTimeOut('mercury_devices_ping'.$i, '1'); 
+ SetTimeOut('mercury_devices_ping'.$ip,$cmd, '1'); 
 
 
 
