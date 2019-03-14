@@ -220,20 +220,20 @@ setGlobal('cycle_mercuryControl','start');
 
 $cachedVoiceDir = ROOT . 'cms/cached/';
 $file = $cachedVoiceDir . 'mercurydebug.txt';
-$debug = file_get_contents($file);
+//$debug = file_get_contents($file);
 
-$debug = "Запускаем цикл по счетчикам <br>\n";
-debmes("Запускаем цикл по счетчикам",'mercury');
-file_put_contents($file, $debug);
+//$debug = "Запускаем цикл по счетчикам <br>\n";
+//debmes("Запускаем цикл по счетчикам",'mercury');
+//file_put_contents($file, $debug);
 
 $cmd_rec = SQLSelect("SELECT ID FROM mercury_devices");
 foreach ($cmd_rec as $cmd_r)
 {
 $myid=$cmd_r['ID'];
-$debug .= "Начинаем запрашивать счетчик $myid. <br>\n";
-debmes("Начинаем запрашивать счетчик $myid ",'mercury');
+//$debug .= "Начинаем запрашивать счетчик $myid. <br>\n";
+//debmes("Начинаем запрашивать счетчик $myid ",'mercury');
 
-file_put_contents($file, $debug);
+//file_put_contents($file, $debug);
 $this->getpu($myid);
 $this->updatecosts($myid);
 
@@ -476,7 +476,11 @@ for ($i = 0; $i < $total; $i++)
 $ip=$mhdevices[$i]['IPADDR'];
 $lastping=$mhdevices[$i]['LASTPING'];
 //echo time()-$lastping;
-if (time()-$lastping>300) {
+
+
+
+if ((!$lastping)||(time()-$lastping>300))
+{
 $online=ping(processTitle($ip));
 
 $cmd='
@@ -487,7 +491,7 @@ else
 {SQLexec("update mercury_devices set ONLINE=0, LASTPING='.time().' where IPADDR=\''.$ip.'\'");}
 
 ';
- SetTimeOut('mercury_devices_ping',$cmd, '1'); 
+ SetTimeOut('mercury_devices_ping'.$i, '1'); 
 
 
 
@@ -576,16 +580,16 @@ if ($enable==1) {
 
 $cachedVoiceDir = ROOT . 'cms/cached/';
 $file = $cachedVoiceDir . 'mercurydebug.txt';
-$debug = file_get_contents($file);
+//$debug = file_get_contents($file);
 
-$debug = "Запускаем цикл по счетчикам <br>\n";
+//$debug = "Запускаем цикл по счетчикам <br>\n";
 file_put_contents($file, $debug);
 
 $cmd_rec = SQLSelect("SELECT ID FROM mercury_devices");
 foreach ($cmd_rec as $cmd_r)
 {
 $myid=$cmd_r['ID'];
-$debug .= "Начинаем запрашивать счетчик $myid. <br>\n";
+//$debug .= "Начинаем запрашивать счетчик $myid. <br>\n";
 file_put_contents($file, $debug);
 $this->getpu($myid);
 $this->getrates($myid);
@@ -638,33 +642,34 @@ $file = $cachedVoiceDir . 'mercurydebug.txt';
 
 
 // Открываем файл для получения существующего содержимого
-$debug = file_get_contents($file);
+//$debug = file_get_contents($file);
 
 
-$debug = date('d/m/y H:s'). " запущен запрос состояния счетчика $id<br>\n";
-file_put_contents($file, $debug);
+//$debug = date('d/m/y H:s'). " запущен запрос состояния счетчика $id<br>\n";
+//file_put_contents($file, $debug);
 
 // Создаём сокет TCP/IP. 
 $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
-if ($socket === false) {
-$debug .=  "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "<br>";
-file_put_contents($file, $debug);
-} else {
-$debug .= "OK.<br>";
-file_put_contents($file, $debug);
-}
+//if ($socket === false) {
+//$debug .=  "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "<br>";
+//file_put_contents($file, $debug);
+//} 
+//else {
+//$debug .= "OK.<br>";
+//file_put_contents($file, $debug);
+//}
 
-$debug .=  "Пытаемся соединиться с '$address' на порту '$service_port'...";
-file_put_contents($file, $debug);
+//$debug .=  "Пытаемся соединиться с '$address' на порту '$service_port'...";
+//file_put_contents($file, $debug);
 $result = socket_connect($socket, $address, $service_port);
-if ($result === false) {
-$debug .= "Не удалось выполнить socket_connect().\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "<br>";
-file_put_contents($file, $debug);
-} else {
-$debug .=  "OK.<br>";
-file_put_contents($file, $debug);
-}
+//if ($result === false) {
+//$debug .= "Не удалось выполнить socket_connect().\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "<br>";
+//file_put_contents($file, $debug);
+//} else {
+//$debug .=  "OK.<br>";
+//file_put_contents($file, $debug);
+///}
 
 //открытие канала связи
 $ncrc=$this->calcCRC($device252,"0101010101010101");
@@ -802,21 +807,21 @@ $sql['STATE']=$state;
 $sql['STATEWORD']=$flimithex.':'.$flimit;
 
 
-$debug .=  "Закрываем сокет...";
-file_put_contents($file, $debug);
+//$debug .=  "Закрываем сокет...";
+//file_put_contents($file, $debug);
 
 socket_close($socket);
-$debug .=  "OK.\n\n";
-file_put_contents($file, $debug);
+//$debug .=  "OK.\n\n";
+//file_put_contents($file, $debug);
 
 
 
 
 
-$debug .= "Закрываем сокет...";
-file_put_contents($file, $debug);
+//$debug .= "Закрываем сокет...";
+//file_put_contents($file, $debug);
 socket_close($socket);
-$debug .= "OK.\n\n";
+//$debug .= "OK.\n\n";
 file_put_contents($file, $debug);
 
 SQLUpdate('mercury_devices',$sql);
@@ -837,35 +842,35 @@ $file = $cachedVoiceDir . 'mercurydebug.txt';
 
 
 // Открываем файл для получения существующего содержимого
-$debug = file_get_contents($file);
+//$debug = file_get_contents($file);
 
 $classname='Mercury';
 $objname=$classname.'_'.$id;
 
 
-$debug .= date('d/m/y H:s'). " запущен запрос на включение счетчика $id<br>\n";
-file_put_contents($file, $debug);
+//$debug .= date('d/m/y H:s'). " запущен запрос на включение счетчика $id<br>\n";
+//file_put_contents($file, $debug);
 
 
 /* Создаём сокет TCP/IP. */
 $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
-if ($socket === false) {
-$debug .=  "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "<br>";
-} else {
-$debug .=  "OK.<br>";
-}
+//if ($socket === false) {
+//$debug .=  "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "<br>";
+//} else {
+//$debug .=  "OK.<br>";
+//}
 
-$debug .=  "Пытаемся соединиться с '$address' на порту '$service_port'...";
-file_put_contents($file, $debug);
+//$debug .=  "Пытаемся соединиться с '$address' на порту '$service_port'...";
+//file_put_contents($file, $debug);
 $result = socket_connect($socket, $address, $service_port);
-if ($result === false) {
-$debug .=  "Не удалось выполнить socket_connect().\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "<br>";
-file_put_contents($file, $debug);
-} else {
-$debug .=  "OK.<br>";
-file_put_contents($file, $debug);
-}
+//if ($result === false) {
+//$debug .=  "Не удалось выполнить socket_connect().\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "<br>";
+//file_put_contents($file, $debug);
+//} else {
+//$debug .=  "OK.<br>";
+//file_put_contents($file, $debug);
+//}
 
 //$this->send($socket, $this->calcCRC($device,"0101010101010101"));
 $this->send($socket, $this->calcCRC($device,"0102020202020202"));
@@ -906,12 +911,12 @@ SQLUpdate('mercury_devices',$sql);
 
 
 
-$debug .=  "Закрываем сокет...";
-file_put_contents($file, $debug);
+//$debug .=  "Закрываем сокет...";
+//file_put_contents($file, $debug);
 
 socket_close($socket);
-$debug .=  "OK.\n\n";
-file_put_contents($file, $debug);
+//$debug .=  "OK.\n\n";
+//file_put_contents($file, $debug);
 
 }
 
@@ -937,35 +942,35 @@ $file = $cachedVoiceDir . 'mercurydebug.txt';
 
 
 // Открываем файл для получения существующего содержимого
-$debug = file_get_contents($file);
+//$debug = file_get_contents($file);
 
 $classname='Mercury';
 $objname=$classname.'_'.$id;
 
 
-$debug .= date('d/m/y H:s'). " запущен запрос на включение счетчика $id<br>\n";
-file_put_contents($file, $debug);
+//$debug .= date('d/m/y H:s'). " запущен запрос на включение счетчика $id<br>\n";
+//file_put_contents($file, $debug);
 
 
 /* Создаём сокет TCP/IP. */
 $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
-if ($socket === false) {
-$debug .=  "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "<br>";
-} else {
-$debug .=  "OK.<br>";
-}
+//if ($socket === false) {
+//$debug .=  "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "<br>";
+//} else {
+//$debug .=  "OK.<br>";
+//}
 
-$debug .=  "Пытаемся соединиться с '$address' на порту '$service_port'...";
-file_put_contents($file, $debug);
+//$debug .=  "Пытаемся соединиться с '$address' на порту '$service_port'...";
+//file_put_contents($file, $debug);
 $result = socket_connect($socket, $address, $service_port);
-if ($result === false) {
-$debug .=  "Не удалось выполнить socket_connect().\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "<br>";
-file_put_contents($file, $debug);
-} else {
-$debug .=  "OK.<br>";
-file_put_contents($file, $debug);
-}
+//if ($result === false) {
+//$debug .=  "Не удалось выполнить socket_connect().\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "<br>";
+//file_put_contents($file, $debug);
+//} else {
+//$debug .=  "OK.<br>";
+//file_put_contents($file, $debug);
+//}
 
 //$this->send($socket, $this->calcCRC($device,"0101010101010101"));
 $this->send($socket, $this->calcCRC($device,"0102020202020202"));
@@ -974,23 +979,23 @@ $this->read($socket);
 $this->send($socket, $this->calcCRC($device,"033100"));
 $res = $this->read($socket);
 
-debmes( "request: 033100 result: ".$res, 'mercury');
+//debmes( "request: 033100 result: ".$res, 'mercury');
 
   sleep(2);
 $this->send($socket, $this->calcCRC($device,"0101010101010101"));
 $res = $this->read($socket);
-debmes( "request: 0101010101010101 result: ".$res, 'mercury');
+//debmes( "request: 0101010101010101 result: ".$res, 'mercury');
 
 //чтение слова состояние нагрузки
 $this->send($socket, $this->calcCRC($device,"0818"));
 $res = $this->read($socket);
 
-debmes( "request: 0818 result: ".$res, 'mercury');
+//debmes( "request: 0818 result: ".$res, 'mercury');
 
 $flimithex=$this->dd($res[1]).$this->dd($res[2]);
 $flimit = hexdec($this->dd($res[1]).$this->dd($res[2]));
 
-debmes( "flimit: ".$flimit, 'mercury');
+//debmes( "flimit: ".$flimit, 'mercury');
 
 
 //echo strtoupper(substr($flimithex,0,4));
@@ -1018,12 +1023,12 @@ SQLUpdate('mercury_devices',$sql);
 
 
 
-$debug .=  "Закрываем сокет...";
-file_put_contents($file, $debug);
+//$debug .=  "Закрываем сокет...";
+//file_put_contents($file, $debug);
 
 socket_close($socket);
-$debug .=  "OK.\n\n";
-file_put_contents($file, $debug);
+//$debug .=  "OK.\n\n";
+//file_put_contents($file, $debug);
 }
 //////////////////////////////////////////////
 //////////////////////////////////////////////
@@ -1058,31 +1063,31 @@ $file = $cachedVoiceDir . 'mercurydebug.txt';
 
 
 // Открываем файл для получения существующего содержимого
-$debug = file_get_contents($file);
+//$debug = file_get_contents($file);
 // Добавляем нового человека в файл
 
 
-$debug .= date('d/m/y H:s'). " запущен запрос данных по счетчику $id<br>\n";
+//$debug .= date('d/m/y H:s'). " запущен запрос данных по счетчику $id<br>\n";
 
 /// Создаём сокет TCP/IP. 
 $socket252 = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 socket_set_option($socket252,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>5, "usec"=>0));
-if ($socket252 === false) {
-$debug .= "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "<br>\n";
-} else {
-$debug .= "Сокет создан. <br>\n";
+//if ($socket252 === false) {
+//$debug .= "Не удалось выполнить socket_create(): причина: " . socket_strerror(socket_last_error()) . "<br>\n";
+//} else {
+//$debug .= "Сокет создан. <br>\n";
 
-}
-file_put_contents($file, $debug);
+//}
+//file_put_contents($file, $debug);
 
-$debug .= "Пытаемся соединиться с '$address252' на порту '$service_port252'...<br>\n";
+//$debug .= "Пытаемся соединиться с '$address252' на порту '$service_port252'...<br>\n";
 $result = socket_connect($socket252, $address252, $service_port252);
-if ($result === false) {
-$debug .= "Не удалось выполнить socket_connect().<br>\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "<br>\n";
-} else {
-$debug .= "Соединение установлено.<br>\n";
-}
-file_put_contents($file, $debug);
+//if ($result === false) {
+//$debug .= "Не удалось выполнить socket_connect().<br>\nПричина: ($result) " . socket_strerror(socket_last_error($socket)) . "<br>\n";
+//} else {
+//$debug .= "Соединение установлено.<br>\n";
+//}
+//file_put_contents($file, $debug);
 
 $ncrc=$this->calcCRC($device252,"0101010101010101");
 //sg('test.ncrc',$ncrc);
@@ -1107,26 +1112,26 @@ $sql=SQLSelectOne("SELECT * FROM mercury_devices WHERE ID=".$id);
 
 $ncrc=$this->calcCRC($device252,"081621");
 
-debmes( "request: 081621 result: ".$ncrc, 'mercury');
+//debmes( "request: 081621 result: ".$ncrc, 'mercury');
 
 $Ia =$this->merc_gd($socket252,$ncrc, 0.001);
 $It = $Ia[0] + $Ia[1] + $Ia[2];
 
-debmes( "Ia: ".$Ia, 'mercury');
+//debmes( "Ia: ".$Ia, 'mercury');
 
-debmes( "It: ".$It, 'mercury');
+//debmes( "It: ".$It, 'mercury');
 
 
 
 $debug .= "Ia: $Ia[0] - $Ia[1] - $Ia[2] IaT:$It<br>";
 
-debmes( "summ: Ia: $Ia[0] - $Ia[1] - $Ia[2] IaT:$It", 'mercury');
+//debmes( "summ: Ia: $Ia[0] - $Ia[1] - $Ia[2] IaT:$It", 'mercury');
 file_put_contents($file, $debug);
 
-if ($Ia[0]) {sg($objname.'.Ia1',$Ia[0]); $sql['Ia1']=$Ia[0];}
-if ($Ia[1]) {sg($objname.'.Ia2',$Ia[1]); $sql['Ia2']=$Ia[1];}
-if ($Ia[2]) {sg($objname.'.Ia3',$Ia[2]); $sql['Ia3']=$Ia[2];}
-if ($It) {sg($objname.'.IaT',$It); $sql['IaT']=$It;}
+if (($Ia[0])&&($Ia[0]<1000)) {sg($objname.'.Ia1',$Ia[0]); $sql['Ia1']=$Ia[0];}
+if (($Ia[1])&&($Ia[1]<1000)) {sg($objname.'.Ia2',$Ia[1]); $sql['Ia2']=$Ia[1];}
+if (($Ia[2])&&($Ia[2]<1000)) {sg($objname.'.Ia3',$Ia[2]); $sql['Ia3']=$Ia[2];}
+if (($It)&&($It<1000)) {sg($objname.'.IaT',$It); $sql['IaT']=$It;}
 
 
 
@@ -1135,17 +1140,17 @@ if ($It) {sg($objname.'.IaT',$It); $sql['IaT']=$It;}
 # =====================================================
 $ncrc=$this->calcCRC($device252,"081600");
 
-debmes( "request: 081600 result: ".$ncrc, 'mercury');
+//debmes( "request: 081600 result: ".$ncrc, 'mercury');
 
 $Pv =$this->merc_gd($socket252,$ncrc, 0.01);
 
-debmes( "Pv: ".$Pv, 'mercury');
+//debmes( "Pv: ".$Pv, 'mercury');
 
 if ( round($Pv[0], 2) != round($Pv[1] + $Pv[2] + $Pv[3], 2) )
 	$error = "error"; else $error = "";
-$debug .= "Pv: $Pv[0] - $Pv[1] - $Pv[2] - $Pv[3] $error<br>";
+//$debug .= "Pv: $Pv[0] - $Pv[1] - $Pv[2] - $Pv[3] $error<br>";
 
-debmes( $debug, 'mercury');
+//debmes( $debug, 'mercury');
 
 if ($error == "")
 {
@@ -1164,7 +1169,7 @@ if ($Pv[3]) $sql['Pv3']=$Pv[3];
 # =====================================================
 $ncrc=$this->calcCRC($device252,"081630");
 $Cos = $this->merc_gd($socket252,$ncrc, 0.001);
-$debug .= "Cos: $Cos[0] - $Cos[1] - $Cos[2] - $Cos[3]<br>";
+//$debug .= "Cos: $Cos[0] - $Cos[1] - $Cos[2] - $Cos[3]<br>";
 
 
 if ($Cos[0]) {sg($objname.'.CosT',$Cos[0]); $sql['CosT']=$Cos[0];}
@@ -1175,23 +1180,26 @@ if ($Cos[0]) {sg($objname.'.Cos3',$Cos[3]); $sql['Cos3']=$Cos[3];}
 # Напряжение по фазам
 # =====================================================
 $Uv = $this->merc_gd($socket252,$this->calcCRC($device252,"081611"), 0.01);
-debmes( "request: 081611 result: ".$Uv, 'mercury');
-$debug .= "Uv: $Uv[0] - $Uv[1] - $Uv[2]<br>";
-debmes( $debug, 'mercury');
+//debmes( "request: 081611 result: ".$Uv, 'mercury');
+//$debug .= "Uv: $Uv[0] - $Uv[1] - $Uv[2]<br>";
+//debmes( $debug, 'mercury');
 
-if ($Uv[0]) {sg($objname.'.Uv1',round($Uv[0],0));$sql['Uv1']=round($Uv[0],0);}
-if ($Uv[1]) {sg($objname.'.Uv2',round($Uv[1],0));$sql['Uv2']=round($Uv[1],0);}
-if ($Uv[2]) {sg($objname.'.Uv3',round($Uv[2],0));$sql['Uv3']=round($Uv[2],0);}
+if (($Uv[0])&&($Uv[0]<1000)) {sg($objname.'.Uv1',round($Uv[0],0));$sql['Uv1']=round($Uv[0],0);}
+if (($Uv[1])&&($Uv[1]<1000)) {sg($objname.'.Uv2',round($Uv[1],0));$sql['Uv2']=round($Uv[1],0);}
+if (($Uv[2])&&($Uv[2]<1000)) {sg($objname.'.Uv3',round($Uv[2],0));$sql['Uv3']=round($Uv[2],0);}
 
 
 $arU=array();
 
-if (round($Uv[0],0)) {$arU[1]=round($Uv[0],0);}
-if (round($Uv[1],0)) {$arU[2]=round($Uv[1],0);}
-if (round($Uv[2],0)) {$arU[3]=round($Uv[2],0);}
+if ((round($Uv[0],0))&&(round($Uv[0],0)<1000)) {$arU[1]=round($Uv[0],0);}
+if ((round($Uv[1],0))&&(round($Uv[1],0)<1000)) {$arU[2]=round($Uv[1],0);}
+if ((round($Uv[2],0))&&(round($Uv[2],0)<1000)) {$arU[3]=round($Uv[2],0);}
 
 //echo $this->average($arU);
-if ( (round($Uv[0],0))&&(round($Uv[1],0))&&(round($Uv[2],0))){
+if ( (round($Uv[0],0))&&(round($Uv[1],0))&&(round($Uv[2],0))
+&&(round($Uv[0],0)<1000)
+&&(round($Uv[1],0)<1000)
+&&(round($Uv[2],0)<1000)){
 
 
 $temp=round($this->average($arU));
@@ -1206,10 +1214,10 @@ $sql['U']=$temp;
 # Показания электроэнергии
 # =====================================================
 $Tot = $this->merc_gd($socket252,$this->calcCRC($device252,"050000"), 0.001, 1);
-debmes( "Показания электроэнергии общей: ", 'mercury');
-debmes( "request: 050000 result: ".$Tot, 'mercury');
+//debmes( "Показания электроэнергии общей: ", 'mercury');
+//debmes( "request: 050000 result: ".$Tot, 'mercury');
 
-$debug .= "Total: $Tot[0]<br>";
+//$debug .= "Total: $Tot[0]<br>";
 if ($Tot[0]) {sg($objname.'.Total',round($Tot[0],0)); $sql['Total']=round($Tot[0],0);
 $sql['TS']=time();
 $sql['TS_TEXT']=date('d-m-Y H:i:s',time());
@@ -1218,11 +1226,11 @@ $sql['TS_TEXT']=date('d-m-Y H:i:s',time());
 
 $Tot = $this->merc_gd($socket252,$this->calcCRC($device252,"050001"), 0.001, 1);
 
-debmes( "Показания электроэнергии T1: ", 'mercury');
-debmes( "request: 050001 result: ".$Tot, 'mercury');
-debmes( "Total1: ".$Tot[0], 'mercury');
+//debmes( "Показания электроэнергии T1: ", 'mercury');
+//debmes( "request: 050001 result: ".$Tot, 'mercury');
+//debmes( "Total1: ".$Tot[0], 'mercury');
 
-$debug .= "Total T1: $Tot[0]<br>";
+//$debug .= "Total T1: $Tot[0]<br>";
 if ($Tot[0]) {sg($objname.'.Total1',$Tot[0]); $sql['Total1']=$Tot[0];}
 
 
@@ -1230,9 +1238,9 @@ $Tot = $this->merc_gd($socket252,$this->calcCRC($device252,"050002"), 0.001, 1);
 $debug .= "Total T2: $Tot[0]<br>";
 if ($Tot[0]) {sg($objname.'.Total2',$Tot[0]);$sql['Total2']=$Tot[0];}
 
-debmes( "Показания электроэнергии T2: ", 'mercury');
-debmes( "request: 050002 result: ".$Tot, 'mercury');
-debmes( "Total2: ".$Tot[0], 'mercury');
+//debmes( "Показания электроэнергии T2: ", 'mercury');
+//debmes( "request: 050002 result: ".$Tot, 'mercury');
+//debmes( "Total2: ".$Tot[0], 'mercury');
 
 
 SQLUpdate('mercury_devices',$sql);
@@ -1243,9 +1251,9 @@ SQLexec("update mercury_config set value=UNIX_TIMESTAMP() where parametr='LASTCY
 
 $debug .= "Закрываем сокет...";
 socket_close($socket252);
-$debug .= "OK.<br>\n<br>\n";
+//$debug .= "OK.<br>\n<br>\n";
 // Пишем содержимое обратно в файл
-file_put_contents($file, $debug);
+//file_put_contents($file, $debug);
 
  }
 //////////////////////////////////////////////
@@ -1736,19 +1744,19 @@ function calcCRC($device252,$msg)
 //////////////////////////////////////////////
 function send  ($socket252, $hex = "") {
 //$file = ROOT . 'cms/cached/mercurydebug.txt';
-$file = ROOT . 'cms/cached/mercurysend.txt';
-$debug .= file_get_contents($file);
+//$file = ROOT . 'cms/cached/mercurysend.txt';
+//$debug .= file_get_contents($file);
 
-$debug .= "Отправляем запрос ".$hex."<br>\n";
-file_put_contents($file, $debug);
+//$debug .= "Отправляем запрос ".$hex."<br>\n";
+//file_put_contents($file, $debug);
   $in = hex2bin($hex);
-$debug .=  " ".$hex." ";
+//$debug .=  " ".$hex." ";
 //echo SETTINGS_APPMERCURY_ENABLEDEBUG;
 if (SETTINGS_APPMERCURY_ENABLEDEBUG=="1")  echo "send:".$hex."<br>";
   socket_write($socket252, $in, strlen($in));
-$debug .=  "OK.<br>\n"; 
+//$debug .=  "OK.<br>\n"; 
 // Пишем содержимое обратно в файл
-file_put_contents($file, $debug);
+//file_put_contents($file, $debug);
 
    }
 
@@ -1792,15 +1800,15 @@ $result =$this->read($socket252);
 function read($socket252)
 {
 
-$file = ROOT . 'cms/cached/mercurydebug.txt';
+//$file = ROOT . 'cms/cached/mercurydebug.txt';
 
-$debug .= file_get_contents($file);
+//$debug .= file_get_contents($file);
 
-$debug .="Читаем ответ:<br>\n";
+//$debug .="Читаем ответ:<br>\n";
 $out = socket_read($socket252, 2048);
-$debug .= bin2hex($out)."<br>\n";
+//$debug .= bin2hex($out)."<br>\n";
 if (SETTINGS_APPMERCURY_ENABLEDEBUG=="1") echo  "answ:".bin2hex($out).'<br>';
-file_put_contents($file, $debug);
+//file_put_contents($file, $debug);
 
 return $out;
 }
