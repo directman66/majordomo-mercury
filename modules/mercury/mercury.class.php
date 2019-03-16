@@ -1759,20 +1759,50 @@ if (SETTINGS_APPMERCURY_ENABLEDEBUG=="1")  echo "send:".$hex."<br>";
 //file_put_contents($file, $debug);
 
    }
+   
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+// Проверка CRC
+function checkCRC($input) {
+	// Проверяем ответ
+	$answ='';
+	for ($i=0; $i < strlen($input); $i++) $answ.=$this->dd($input[$i]);
+	$answ=strtoupper($answ); 	// Переводим в верхний регистр
+	$crcA=substr($answ, -4); 	// Смотрим полученный CRC
+	$data=substr($answ, 0, -4);	// Информация для рассчета CRC
+	$crc=$this->calcCRC('',$data);	// Рассчитываем свой CRC
+	$crc=substr($crc, -4);
+	$result=false;
+	if ($crcA==$crc) $result=true;
+	//debmes("$cmd - $answ | CRC: $crcA - $crc",'mercury');
+	return $result;
+}
+
 
 //////////////////////////////////////////////
 //////////////////////////////////////////////
 function merc_gd($socket252, $cmd, $factor = 1, $total = 0)
 {
-$this->send($socket252, $cmd);
-$result =$this->read($socket252);
+
+// Запрашиваем до трех попыток пока не сойдется CRC, если неудачно - прерываем.
+$i=0;
+do {
+	$this->send($socket252, $cmd);
+	$result =$this->read($socket252);
+	$i++;
+} while ((($this->checkCRC($result))==false)&&($i<3));
+
+// Если три попытки неудачны и CRC неверен - прерываем функцию.
+if ($i==3) {
+	if (($this->checkCRC($result))==false) return;
+}
 
 	$ret = array();
 	
 	$start_byte = 1;
-	
+		
 	if ( $total != 1 )
-	{
+	{	
 		for ( $i = 0; $i < 4; $i++ )
 		{
          	//if ( dechex(ord($result[$start_byte + $i * 3])) >= 40 )
@@ -1791,6 +1821,7 @@ $result =$this->read($socket252);
 					$ret[$i] = bindec($bin)*$factor;
 				}
 		}
+		
 	}
 	else
 		$ret[0] = hexdec($this->dd($result[$start_byte+1]).$this->dd($result[$start_byte]).$this->dd($result[$start_byte+3]).$this->dd($result[$start_byte+2]))*$factor;
