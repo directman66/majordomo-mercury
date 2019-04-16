@@ -148,7 +148,7 @@ if (gg('cycle_mercuryRun')) {
 $cachedVoiceDir = ROOT . 'cms/cached/';
 $file = $cachedVoiceDir . 'mercurydebug.txt';
 
-$out['MSG_DEBUG']=file_get_contents($file);
+//$out['MSG_DEBUG']=file_get_contents($file);
 
 $cmd_rec = SQLSelectOne("SELECT VALUE FROM mercury_config where parametr='CURRENT'");
 $out['CURRENT']=$cmd_rec['VALUE'];
