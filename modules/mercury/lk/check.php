@@ -33,6 +33,8 @@ if (isset($_COOKIE['login']) and isset($_COOKIE['hash']))
 $sql="SELECT * FROM mercury_devices WHERE LOGIN = '".$_COOKIE['login']."'";
 //$userdata=SQLSelectOne($sql);
 
+  //      echo  $_COOKIE['hash']; 
+
 	$query= mysqli_query($db,$sql);
     	$userdata = mysqli_fetch_assoc($query);
 

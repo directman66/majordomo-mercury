@@ -1,8 +1,7 @@
 <?
-print '
-	  			<div class="card border-dark mb-3"> 
-					<div class="card-header">Объявления</div>
-						<div class="card-body text-dark">';
+print '<div class="card border-dark mb-3">  ';
+print '<div class="card-header">Объявления</div> ';
+print '<div class="card-body text-dark">';
 
 $sql="SELECT * FROM mercury_news order by ID desc limit 10";
 //    $res=SQLSelect("SELECT * FROM mercury_news order by ID desc limit 10");

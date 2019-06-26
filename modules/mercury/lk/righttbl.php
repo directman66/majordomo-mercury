@@ -12,10 +12,21 @@ if ($userdata['Uv3']=="") $userdata['Uv3']="0";
 
 if ($userdata['PvT']=="") $userdata['PvT']="0";
 
-print '
-	<div class="card border-dark mb-3">
-		<div class="card-body text-dark">			
-			<div class="row">
+
+print '<div class="card border-dark mb-3">  ';
+print '<div class="card-header">Счетчики</div> ';
+print '<div class="card-body text-dark">';
+
+
+//print '	  			<div class="card border-dark mb-3">  ';
+//print '					<div class="card-header">График</div> ';
+
+
+//print '	<div class="card border-dark mb-3">  ';
+
+//print '			<div class="card-body text-dark">			 ';
+//print '			<div class="card-header">			 ';
+print '						<div class="row">
 				<h5 class="card-title mr-auto">Показание счетчика:</h5>
 				<h5 class="card-title">'.round($obsh,2).' кВт</h5>
 			</div><hr>
