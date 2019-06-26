@@ -25,7 +25,7 @@ $sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects,
 
 print '
 
-<script src="highcharts.js"></script>
+<script src="highcharts\highcharts.js"></script>
 
 
 <script type="text/javascript" name="1">

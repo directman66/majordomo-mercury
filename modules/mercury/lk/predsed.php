@@ -104,7 +104,7 @@ print '
 <div id="chart1" style="height: 300px"></div>
 
 
-<script src="highcharts.js"></script>
+<script src="highcharts\highcharts.js"></script>
 
 
 <script type="text/javascript" name="1">
