@@ -69,7 +69,7 @@ print '
 				  </div>
 				  <h6 class="dropdown-header">Дата производства счетчика</h6>
 				  <div class="px-4">
-					<label>'.$userdata['MADETD'].'</label>
+					<label>'.$userdata['MADEDT'].'</label>
 				  </div>
 				  
 				  <div role="separator" class="dropdown-divider"></div>
