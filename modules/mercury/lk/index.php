@@ -49,7 +49,10 @@ $link=mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 if(isset($_POST['submit']))
 {
     // Вытаскиваем из БД запись, у которой логин равняеться введенному
-    $query = mysqli_query($link,"SELECT LOGIN, PASSWORD FROM mercury_devices WHERE LOGIN='".mysqli_real_escape_string($link,$_POST['login'])."' LIMIT 1");
+//    $query = mysqli_query($link,"SELECT LOGIN, PASSWORD FROM mercury_devices WHERE LOGIN='".mysqli_real_escape_string($link,$_POST['login'])."' LIMIT 1");
+$sqll="SELECT LOGIN, PASSWORD FROM mercury_devices WHERE LOGIN='".mysqli_real_escape_string($link,$_POST['login'])."' LIMIT 1";
+//echo $sqll;
+   $query = mysqli_query($link,$sqll);
     $data = mysqli_fetch_assoc($query);
 
     // Сравниваем пароли
@@ -145,9 +148,9 @@ body {
   <h1 class="h3 mb-3 font-weight-normal">Вход в личный кабинет</h1>
   <div id="errorShow"></div>
   <label for="inputEmail" class="sr-only">Логин</label>
-  <input name="password" type="login" id="inputEmail" class="form-control" placeholder="Логин" required autofocus>
+  <input name="login" type="login" id="inputEmail" class="form-control" placeholder="Логин" required autofocus>
   <label for="inputPassword" class="sr-only">Пароль</label>
-  <input name="login" type="password" id="inputPassword" class="form-control" placeholder="Пароль" required>
+  <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Пароль" required>
   <!--div class="checkbox mb-3">
     <label>
       <input type="checkbox" value="remember-me"> Remember me
