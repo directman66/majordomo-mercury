@@ -1,14 +1,8 @@
 <?
-print '	  			<div class="blank-right">
-				
-					<div class="p-left p-sh"><b>Объявления:</b></div></p><br>';
-
-
-//print '<div class="blank-right"> ';
-
-
-//print '<div class="p-left p-sh"><b>Показание счетчика:</b></div></p><br></div>';
-
+print '
+	  			<div class="card border-dark mb-3"> 
+					<div class="card-header">Объявления</div>
+						<div class="card-body text-dark">';
 
 $sql="SELECT * FROM mercury_news order by ID desc limit 10";
 //    $res=SQLSelect("SELECT * FROM mercury_news order by ID desc limit 10");
@@ -22,26 +16,20 @@ $stroka="";
 
 $cmd_rec->data_seek(0);
 while ($row = $cmd_rec->fetch_assoc()) {
+	echo '<div class="row">
+			<h6 class="card-title mr-auto">'.$row["TITLE"].'</h6>';
+	echo '<p class="card-title">'.$row["data"].'</p>';
 
-echo '<div class="p-left"><b>'.$row["TITLE"].'</b></div>';
-echo '<div class="p-nright">'.$row["data"];
-
-if ($userdata['PREDSED']=='1') {
-
-
-echo '&nbsp;&nbsp;<a href="/modules/mercury/deletenews.php?id='.$row['ID'].'" title="Удалить объявление">x</a> ';
-
-
-
+	
+	
+	if ($userdata['PREDSED']=='1') {
+		echo ' <a href="/modules/mercury/deletenews.php?id='.$row['ID'].'" title="Удалить объявление">
+		<button type="button" class="close" aria-label="Удалить объявление" style="margin-top: -3px;">
+		  <span aria-hidden="true">&times;</span>
+		</button></a>'
+		;		
+	}
+	echo '</div><hr>';
+	echo $row["message"].'<br><br>';
 }
 
-echo '</div><br>';
-
-echo '<div class="p-left">'.$row["message"].'</div><br><br>';
-
-
-
-
-
-    }
-print '	  								<div style="clear:both"></div> ';

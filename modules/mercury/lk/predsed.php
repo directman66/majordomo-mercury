@@ -4,15 +4,10 @@ error_reporting(0);
 date_default_timezone_set('Asia/Novosibirsk');
 
 
-//print '	<div style="clear:both"></div> ';
 
-//print '			</div>  ';
-
-print '			<div class="blank">
-				<div class="blank-left"> ';
-
-print ' 			<div class="graf"> ';
-//				типа график2
+print '<div class="container-fluid">
+<div class="row">
+<div class="col-xl-8">';
 
 $sql="SELECT * FROM mercury_devices ";
 //$pred=SQLSelect($sql);
@@ -28,10 +23,10 @@ $sql="SELECT * FROM mercury_devices ";
 
 $rec = $db->query($sql);
 
-//print_r($rec);
-//echo '<table width="100%" cellspacing="0" cellpadding="4" border="1" style="color: #00a648;" >';
-echo '<table width="100%" cellspacing="0" cellpadding="4" border="1"  >';
-echo "<tr><td>№</td><td>".'ФИО'."</td><td>".'Адрес'."</td><td>".'Реле.'."</td><td>".'Обновлено'."</td><td>Показания кВт</td><td>U1/U2/U3 В</td><td>Ia1/Ia2/Ia3 А</td><td>".'PvT Вт'."</td><tr>";
+echo '
+<div class="container-fluid" style="overflow:auto;">
+<table class="table">';
+echo '<tr class="thead-dark"><th>№</th><th>ФИО</th><th>Адрес</th><th>Реле</th><th>Обновлено'.'</th><th>Показания кВт</th><th>U1/U2/U3 В</th><th>Ia1/Ia2/Ia3 А</th><th>'.'PvT Вт'.'</th><tr>';
 $sump=0;
 $sumi=0;
 $sumu=0;
@@ -84,12 +79,9 @@ echo "<tr>
 $i=$i+1;
 }
 //echo "<tr><td>Итого</td><td></td><td></td><td></td><td></td><td>".$sumi."</td><td>".$sump."</td><td></td></tr>";
-echo "</table>";
+echo "</table></div>";
 
 
-
-
-print '	   			</div> ';
 
 
 print ' 								<div class="graf">
@@ -112,11 +104,12 @@ print '
 <div id="chart1" style="height: 300px"></div>
 
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="highcharts.js"></script>
 
 
 <script type="text/javascript" name="1">
-Highcharts.chart("chart1", {
+window.onload = function() {
+	Highcharts.chart("chart1", {
 
   chart: {
     borderWidth: 0,
@@ -176,35 +169,18 @@ foreach ($cmd_rec as $cmd_r)
 $stroka=preg_replace("/(.)$/", "", $stroka);
 echo $stroka;
 
-print ']  }]});</script> ';
-
-
-/////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////
-/////////////////////////////////////
+print ']  }]});}</script> </div>';
 
 
 print '	</div> ';
 
 
-print ' 			<div class="graf">график</div>	</div>';
+print '
+<div class="col-xl-4">';
 
+require(DIR_MODULES.'mercury/lk/righttbl.php');
+require(DIR_MODULES.'mercury/lk/msgbar.php');
 
-
-		  require(DIR_MODULES.'mercury/lk/righttbl.php');
-
-
-
-
-
-	print '	<br><br>';
-
-		  require(DIR_MODULES.'mercury/lk/msgbar.php');
-
-
-//print '	<div style="clear:both"></div> ';
-print '	</body></html>'; 
 
 
 /////////////////////////
@@ -213,48 +189,26 @@ print '	</body></html>';
 /////////////////////////
 /////////////////////////
 
-/////////////////////////
-/////////////////////////
-/////////////////////////
-/////////////////////////
-/////////////////////////
 
-
-print '<br>
-
-     <form action="/modules/mercury/addnews.php" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
-
-
-  <div class="p-nright">
-     <label ><b>Добавить новое объявление:</b></label>
-     <div class="col-md-6 input-group">
-
-     <label class="control-label">Тема  объявления</label>
-     <input type="text"  class="form-control"   style="width:95%"  name="tema" ><br>
-
-     <label >Текст объявления     </label> ';
-
-
-
-print '<textarea rows="7" cols="55" name="message"> </textarea> ';
-
-print '     <div class="input-group-btn">
-     </div> </div>
-
-
-';
-
-print ' <button type="submit" name="subm" value="<#LANG_SUBMIT#>" class="btn btn-defaul btn-primary">Опубликовать</button> ';
-print '<input type="hidden" name="addnews" value="addnews"> ';
-
-print '</fieldset>    </form>';
 
 print '
-</div> ';
+	<div class="text-dark">
+    <form action="/modules/mercury/addnews.php" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+	<fieldset>
+	<h6 class="card-title mr-auto">Добавить объявление</h6>
+	<hr>
+	Тема
+	<input type="text" class="form-control" name="tema">
+	Текст
+	<textarea class="form-control" rows="7" cols="55" name="message"> </textarea>
+	<br>
+    <button type="submit" name="subm" value="Опубликовать" class="form-control btn btn-defaul btn-primary">Опубликовать</button>	
+	<input type="hidden" name="addnews" value="addnews"> ';
 
-
-print '	  								<div style="clear:both"></div> ';
-
+print '
+	</fieldset>
+	</form>
+	</div></div></div>';
 
 print '	</body></html>'; 
 
@@ -265,8 +219,3 @@ print '	</body></html>';
 /////////////////////////
 /////////////////////////
 
-/////////////////////////
-/////////////////////////
-/////////////////////////
-/////////////////////////
-/////////////////////////

@@ -3,20 +3,12 @@ error_reporting(0);
 //date_default_timezone_set('Asia/Yekaterinburg');
 date_default_timezone_set('Asia/Novosibirsk');
 
-
-
-
-
-/////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////
 /////////////////////////////////////
 
 print '
-
-			<div class="blank">
-				<div class="blank-left">
-					<div class="graf">
+<div class="container-fluid">
+			<div class="row">
+					<div class="graf col-lg-4 col-md-12">
 ';
 
 
@@ -33,7 +25,7 @@ $sql="SELECT left(ADDED,10) dt, round(AVG(phistory.value),2) value FROM objects,
 
 print '
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="highcharts.js"></script>
 
 
 <script type="text/javascript" name="1">
@@ -111,9 +103,6 @@ print ']
 
 
 
-print '	</div> ';
-
-
 //print '	<div class="graf">типа график2</div> ';
 
 print '</div>';
@@ -126,14 +115,14 @@ print '</div>';
 /////////////////////////////////////
 
 
-
+print '<div class="col-lg-4 col-md-6">';
 
 		  require(DIR_MODULES.'mercury/lk/righttbl.php');
-                  print '	<br><br>';
+print '</div><div class="col-lg-4 col-md-6">';
  		  require(DIR_MODULES.'mercury/lk/msgbar.php');
+print '</div></div></div>';
 
 
-//print '	<div style="clear:both"></div> ';
 print '	</body></html>'; 
 
 
@@ -143,9 +132,5 @@ print '	</body></html>';
 /////////////////////////
 /////////////////////////
 
-/////////////////////////
-/////////////////////////
-/////////////////////////
-/////////////////////////
-/////////////////////////
+
 

@@ -75,15 +75,12 @@ if (($_GET['viewmode']=='elec')||(!$_GET['viewmode']))
 
 if (!$userdata['PREDSED']=='1') {
 		  require(DIR_MODULES.'mercury/lk/user.php');
-//		  require('./cms/lk/user.php');
-		
 				}
 
 		else 
 				{
 
 		  require(DIR_MODULES.'mercury/lk/predsed.php');
-//		  require('./cms/lk/predsed.php');
 
 			       }
 }

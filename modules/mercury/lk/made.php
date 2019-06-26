@@ -1,5 +1,6 @@
 <?
 print '
-				<div class="ld">
-Модуль в разработке
-	   			</div>	';
+<div class="jumbotron">
+  <h1 class="display-4">Модуль в разработке</h1>
+</div>
+';

@@ -12,21 +12,42 @@ if ($userdata['Uv3']=="") $userdata['Uv3']="0";
 
 if ($userdata['PvT']=="") $userdata['PvT']="0";
 
-print '	  			<div class="blank-right">';
-
-print '				
-
-					<div class="p-left p-sh"><b>Показание счетчика:</b></div><div class="p-right">'.round($obsh,2).' кВт</div></p><br>
-
-    				 	<div class="p-left">Тариф 1:</div><div class="p-right">'.round($userdata['Total1'],2).'</div><br>
-    				 	<div class="p-left">Тариф 2:</div><div class="p-right">'.round($userdata['Total2'],2).'</div><br>
-<br>
-					<div class="p-left p-sh"><b>Мгновенные значения:</b></div></p><br>				   
-					<div class="p-left">Напряжение и ток на фазе А:</div><div class="p-right">'.round($userdata['Uv1'],2).' В / '.round($userdata['Ia1'],2).' А</div><br>
-					<div class="p-left">Напряжение и ток на фазе B:</div><div class="p-right">'.round($userdata['Uv2'],2).' В / '.round($userdata['Ia2'],2).' А</div><br>
-					<div class="p-left">Напряжение и ток на фазе C:</div><div class="p-right">'.round($userdata['Uv3'],2).' В / '.round($userdata['Ia3'],2).' А</div><br>
-					<div class="p-left">Общая потребляемая мощность:</div><div class="p-right">'.round($userdata['PvT'],2).' Вт</div><br>
- 					<div class="p-left">Последний опрос счетчика:</div><div class="p-right">'.date('d-m-Y H:i:s',$userdata['TS']).'</div>
-					<div style="clear:both"></div>
-					</div>
+print '
+	<div class="card border-dark mb-3">
+		<div class="card-body text-dark">			
+			<div class="row">
+				<h5 class="card-title mr-auto">Показание счетчика:</h5>
+				<h5 class="card-title">'.round($obsh,2).' кВт</h5>
+			</div><hr>
+			<div class="row">
+				<p class="card-title mr-auto">Тариф 1</p>
+				<h6 class="card-title">'.round($userdata['Total1'],2).' кВт</h6>
+			</div>						
+			<div class="row">
+				<p class="card-title mr-auto">Тариф 2</p>
+				<h6 class="card-title">'.round($userdata['Total2'],2).' кВт</h6>
+			</div>	
+		<h5 class="card-title">Мгновенные значения:</h5><hr>
+			<div class="row">
+				<p class="card-title mr-auto">Напряжение и ток на фазе А:</p>
+				<h6 class="card-title">'.round($userdata['Uv1'],2).' В / '.round($userdata['Ia1'],2).' А</h6>
+			</div>						
+			<div class="row">
+				<p class="card-title mr-auto">Напряжение и ток на фазе B:</p>
+				<h6 class="card-title">'.round($userdata['Uv2'],2).' В / '.round($userdata['Ia2'],2).' А</h6>
+			</div>	
+			<div class="row">
+				<p class="card-title mr-auto">Напряжение и ток на фазе C:</p>
+				<h6 class="card-title">'.round($userdata['Uv3'],2).' В / '.round($userdata['Ia3'],2).' А</h6>
+			</div>	
+			<div class="row">
+				<p class="card-title mr-auto">Общая потребляемая мощность:</p>
+				<h6 class="card-title">'.round($userdata['PvT'],2).' Вт</h6>
+			</div>	
+			<div class="row">
+				<p class="card-title mr-auto">Последний опрос счетчика:</p>
+				<h6 class="card-title">'.date('d-m-Y H:i:s',$userdata['TS']).'</h6>
+			</div>							
+		</div>
+	</div>
 ';

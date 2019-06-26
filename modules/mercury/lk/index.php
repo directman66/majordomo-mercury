@@ -1,3 +1,4 @@
+
 <?
 error_reporting(0);
 // Страница авторизации
@@ -27,17 +28,20 @@ print '
 	<head>
 		<meta charset="utf-8" />
 		<title>Личный кабинет</title>	
-		<link href="css\style.css" rel="stylesheet" type="text/css">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+		<link rel="stylesheet" href="bootstrap4\dist\css\bootstrap.min.css" >
+		<script src="bootstrap4\dist\js\jquery.min.js"></script>
+		<script src="bootstrap4\dist\js\popper.min.js"></script>
+		<script src="bootstrap4\dist\js\bootstrap.min.js"></script>
 	</head>
 	<body>
 ';
 
-print '		<div class="list">
-			<div class="header">
-				<div class="title text-g">Система мониторинга инженерных сетей ТСН «Морской Берег»
-				</div></div></div>
+print '<header class="navbar navbar-expand-md fixed-top bg-success">
+  <div class="container d-flex justify-content-center">
+    <span class="text-white">Система мониторинга инженерных сетей ТСН «Морской Берег»</span>
+  </div>
+</header>
 ';
 
 $link=mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
@@ -80,18 +84,77 @@ $sql="UPDATE mercury_devices SET USERIP='$insip', USERHASH='$hash' WHERE LOGIN='
     }
     else
     {
-        echo "<h2><center>Вы ввели неправильный логин/пароль</center></h2>";
+        //echo "<h2><center>Вы ввели неправильный логин/пароль</center></h2>";
+		echo '<script>
+		window.onload = function() {
+		var string="<div class=\"alert alert-warning\" role=\"alert\">Вы ввели неправильный логин/пароль</div>";
+		document.getElementById("errorShow").innerHTML=string;
+		}
+		</script>';
     }
 //Не прикреплять к IP(не безопасно) <input type="checkbox" name="not_attach_ip"><br>
 }
 ?>
-<center><h2>
-<form method="POST">
 
-Логин <input name="login" type="text" required><br>
-Пароль <input name="password" type="password" required><br>
+<style>
+html,
+body {
+  height: 100%;
+}
 
-<input name="submit" type="submit" value="Войти">
+body {
+  display: flex;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="login"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+</style>
+<form class="form-signin" method="POST" align=center>
+  <!--img class="mb-4" src="img/mercury.png" alt="" width="72" height="72"-->
+  <h1 class="h3 mb-3 font-weight-normal">Вход в личный кабинет</h1>
+  <div id="errorShow"></div>
+  <label for="inputEmail" class="sr-only">Логин</label>
+  <input name="password" type="login" id="inputEmail" class="form-control" placeholder="Логин" required autofocus>
+  <label for="inputPassword" class="sr-only">Пароль</label>
+  <input name="login" type="password" id="inputPassword" class="form-control" placeholder="Пароль" required>
+  <!--div class="checkbox mb-3">
+    <label>
+      <input type="checkbox" value="remember-me"> Remember me
+    </label>
+  </div-->
+  <button class="btn btn-lg btn-success btn-block" name="submit" type="submit">Войти</button>
+  <!--p class="mt-5 mb-3 text-muted">&copy; 2017-{{< year >}}</p-->
 </form>
 
-</center></h2>
+

@@ -4,39 +4,82 @@ print '
 	<head>
 		<meta charset="utf-8" />
 		<title>Личный кабинет</title>	
-		<link href="css\style.css" rel="stylesheet" type="text/css">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+		<link rel="stylesheet" href="bootstrap4\dist\css\bootstrap.min.css" >
+		<script src="bootstrap4\dist\js\jquery.min.js"></script>
+		<script src="bootstrap4\dist\js\popper.min.js"></script>
+		<script src="bootstrap4\dist\js\bootstrap.min.js"></script>
 	</head>
 	<body>
 ';
 
-print '		<div class="list">
-			<div class="header">
-				<div class="title text-g">Система мониторинга инженерных сетей ТСН «Морской Берег»
-				</div></div></div>
+print '<header class="navbar navbar-expand-md fixed-top bg-success">
+  <div class="container d-flex justify-content-center">
+    <span class="text-white">Система мониторинга инженерных сетей ТСН «Морской Берег»</span>
+  </div>
+</header>
 ';
 
 //$sql="SELECT * FROM mercury_devices WHERE LOGIN = '".$_COOKIE['login']."'";
 //	$query= mysqli_query($db,$sql);
 //    	$userdata = mysqli_fetch_assoc($query);
 
-print '
-<center><h2>
-Логин: '.$_GET['login'].'<br>
+print '<style>
+html,
+body {
+  height: 100%;
+}
 
+body {
+  display: flex;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+}
 
-<form action="/modules/mercury/cpwde.php" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+</style>';
 
-Старый &nbsp;&nbsp;пароль&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input name="oldpwd" type="text" required><br>
-Новый &nbsp;&nbsp;пароль &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="newpwd1" type="password" required><br>
-Новый пароль (повторно)&nbsp;<input name="newpwd2" type="password" required><br>
-<input type="hidden" name="login" value="'.$_GET['login'].'">
+print '<form action="/modules/mercury/cpwde.php" method="post" class="form-signin" enctype="multipart/form-data" name="frmEdit" align=center>
+  <!--img class="mb-4" src="img/mercury.png" alt="" width="72" height="72"-->
+  <h1 class="h3 mb-3 font-weight-normal">Логин: '.$_GET['login'].'</h1>
+  <div id="errorShow"></div>
+  <label for="inputEmail" class="sr-only">Старый пароль</label>
+  <input name="oldpwd" type="password" id="inputEmail" class="form-control" placeholder="Старый пароль" required autofocus>
+  
+  <label for="inputEmail2" class="sr-only">Новый пароль</label>
+  <input name="newpwd1" type="password" id="inputEmail2" class="form-control" placeholder="Новый пароль" required >
+  
+  <label for="inputEmail3" class="sr-only">Новый пароль (повторно)</label> 
+  <input name="newpwd2" type="password" id="inputEmail3" class="form-control" placeholder="Новый пароль (повторно)" required >
+    
+  
+  <input type="hidden" name="login" value="'.$_GET['login'].'">
+  <!--div class="checkbox mb-3">
+    <label>
+      <input type="checkbox" value="remember-me"> Remember me
+    </label>
+  </div-->
+  <button class="btn btn-lg btn-success btn-block" name="submit" type="submit">Применить</button>
+  <!--p class="mt-5 mb-3 text-muted">&copy; 2017-{{< year >}}</p-->
+</form>';
 
-<input name="submit" type="submit" value="Применить">
-
-
-</form>
-
-</center></h2>
-';
