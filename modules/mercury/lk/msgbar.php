@@ -1,4 +1,4 @@
-<?
+<?php
 print '<div class="card border-dark mb-3">  ';
 print '<div class="card-header">Объявления</div> ';
 print '<div class="card-body text-dark">';
