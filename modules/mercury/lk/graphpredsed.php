@@ -1,4 +1,4 @@
-<?
+<?php
 
 print '
 <div id="chart1" style="height: 300px"></div>
