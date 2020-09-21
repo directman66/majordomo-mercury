@@ -1,4 +1,4 @@
-<?
+<?php
 //date_default_timezone_set('Asia/Yekaterinburg');
 error_reporting(0);
 date_default_timezone_set('Asia/Novosibirsk');
