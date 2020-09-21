@@ -1,4 +1,4 @@
-<?
+<?php
 
 $obsh=$userdata['Total1']+$userdata['Total2'];
 
