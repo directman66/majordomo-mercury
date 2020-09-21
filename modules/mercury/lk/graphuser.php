@@ -1,4 +1,4 @@
-<?
+<?php
 //print '<div class="row"><div class="graf col-lg-4 col-md-12">';
 
 
