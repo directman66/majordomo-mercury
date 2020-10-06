@@ -1774,7 +1774,7 @@ function checkCRC($input) {
 	$crc=substr($crc, -4);
 	$result=false;
 	if ($crcA==$crc) $result=true;
-	//debmes("$cmd - $answ | CRC: $crcA - $crc",'mercury');
+	//debmes("$answ | CRC: $crcA - $crc",'mercury');
 	return $result;
 }
 
@@ -1784,18 +1784,9 @@ function checkCRC($input) {
 function merc_gd($socket252, $cmd, $factor = 1, $total = 0)
 {
 
-// Запрашиваем до трех попыток пока не сойдется CRC, если неудачно - прерываем.
-$i=0;
-do {
 	$this->send($socket252, $cmd);
 	$result =$this->read($socket252);
-	$i++;
-} while ((($this->checkCRC($result))==false)&&($i<3));
-
-// Если три попытки неудачны и CRC неверен - прерываем функцию.
-if ($i==3) {
 	if (($this->checkCRC($result))==false) return;
-}
 
 	$ret = array();
 	
